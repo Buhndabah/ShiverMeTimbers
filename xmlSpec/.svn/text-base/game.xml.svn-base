@@ -1,0 +1,44 @@
+<?xml version = "1.0"?>
+<GameData>
+<screenTitle>Basic Game Framework</screenTitle>
+<username>malloy</username>
+<frameMax>600</frameMax>
+
+<view>
+  <viewWidth>640</viewWidth>
+  <viewHeight>480</viewHeight>
+</view>
+
+<world>
+  <worldWidth>640</worldWidth>
+  <worldHeight>480</worldHeight>
+</world>
+
+<back>
+  <backRed>255</backRed>
+  <backGreen>255</backGreen>
+  <backBlue>255</backBlue>
+</back>
+
+<font name="font">
+  <fontFile>font/dyslexic-bold.otf</fontFile>
+  <fontSize>14</fontSize>
+  <fontRed>139</fontRed>
+  <fontGreen>0</fontGreen>
+  <fontBlue>0</fontBlue>
+  <fontUnused>0</fontUnused>
+</font>
+<maxStringSize>50</maxStringSize>
+
+<greenorb>
+  <greenorbFile>images/greenball.bmp</greenorbFile>
+  <greenorbSrcX>0</greenorbSrcX>
+  <greenorbSrcY>0</greenorbSrcY>
+  <greenorbWidth>32</greenorbWidth>
+  <greenorbHeight>32</greenorbHeight>
+  <greenorbLoc greenorbX="320" greenorbY="240"/>
+  <greenorbSpeed greenorbSpeedX="200" greenorbSpeedY="200"/>
+  <greenorbTransparency>true</greenorbTransparency>
+</greenorb>
+
+</GameData>

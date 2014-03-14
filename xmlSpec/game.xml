@@ -1,0 +1,115 @@
+<?xml version = "1.0"?>
+<GameData>
+<screenTitle>Project #2</screenTitle>
+<username>sewells</username>
+<frameMax>400</frameMax>
+<frameCap>60</frameCap>
+<framesAreCapped>true</framesAreCapped>
+<maxFramesToAvg>100</maxFramesToAvg>
+<numSnowballs>5</numSnowballs>
+
+
+<view>
+  <viewWidth>641</viewWidth>
+  <viewHeight>358</viewHeight>
+</view>
+
+<world>
+  <worldWidth>1000</worldWidth>
+  <worldHeight>666</worldHeight>
+</world>
+
+<font name="font">
+  <fontFile>font/dyslexic-bold.otf</fontFile>
+  <fontSize>14</fontSize>
+  <fontRed>0</fontRed>
+  <fontGreen>0</fontGreen>
+  <fontBlue>0</fontBlue>
+  <fontUnused>0</fontUnused>
+</font>
+<maxStringSize>50</maxStringSize>
+
+
+<back>
+  <backFile>images/testgrid2.png</backFile>
+  <backFactor>1</backFactor>
+  <backSrcX>0</backSrcX>
+  <backSrcY>0</backSrcY>
+  <backWidth>1000</backWidth>
+  <backHeight>666</backHeight>
+  <backLoc backX="0" backY="0"/>
+  <backSpeed backSpeedX="0" backSpeedY="0"/>
+  <backTransparency>false</backTransparency>
+</back>
+
+<snowball>
+  <snowballFile>images/snowball.png</snowballFile>
+  <snowballSrcX>0</snowballSrcX>
+  <snowballSrcY>0</snowballSrcY>
+  <snowballWidth>60</snowballWidth>
+  <snowballHeight>60</snowballHeight>
+  <snowballLoc snowballX="320" snowballY="240"/>
+  <snowballSpeed snowballSpeedX="200" snowballSpeedY="200"/>
+  <snowballTransparency>true</snowballTransparency>
+</snowball>
+
+<spinsnowball>
+  <spinsnowballFile>images/rotating_snowball.png</spinsnowballFile>
+  <spinsnowballLoc spinsnowballX="320" spinsnowballY="240"/>
+
+  <spinsnowballFrames>4</spinsnowballFrames>
+  <spinsnowballFrameInterval>60</spinsnowballFrameInterval>
+  <spinsnowballChunks>25</spinsnowballChunks>
+
+  <spinsnowballSrcX>0</spinsnowballSrcX>
+  <spinsnowballSrcY>0</spinsnowballSrcY>
+  <spinsnowballWidth>60</spinsnowballWidth>
+  <spinsnowballHeight>60</spinsnowballHeight>
+  <spinsnowballSpeed spinsnowballSpeedX="200" spinsnowballSpeedY="200"/>
+  <spinsnowballTransparency>true</spinsnowballTransparency>
+</spinsnowball>
+
+<coolyeti>
+  <coolyetiFile>images/coolyeti.png</coolyetiFile>
+  <coolyetiLoc coolyetiX="190" coolyetiY="20"/>
+
+  <coolyetiFrames>4</coolyetiFrames>
+  <coolyetiFrameInterval>160</coolyetiFrameInterval>
+  <coolyetiChunks>25</coolyetiChunks>
+
+  <coolyetiMoveSpeed>100</coolyetiMoveSpeed>
+
+  <coolyetiSrcX>0</coolyetiSrcX>
+  <coolyetiSrcY>0</coolyetiSrcY>
+  <coolyetiWidth>149</coolyetiWidth>
+  <coolyetiHeight>150</coolyetiHeight>
+  <coolyetiSpeed coolyetiSpeedX="0" coolyetiSpeedY="0"/>
+  <coolyetiTransparency>true</coolyetiTransparency>
+</coolyeti>
+
+<yeti>
+  <yetiFile>images/yeti2.png</yetiFile>
+  <yetiSrcX>0</yetiSrcX>
+  <yetiSrcY>0</yetiSrcY>
+  <yetiWidth>200</yetiWidth>
+  <yetiHeight>200</yetiHeight>
+  <yetiDeltaAngle>100</yetiDeltaAngle>
+  <yetiLoc yetiX="320" yetiY="240"/>
+  <yetiSpeed yetiSpeedX="-200" yetiSpeedY="-200"/>
+  <yetiTransparency>true</yetiTransparency>
+</yeti>
+
+<penguin>
+  <penguinFile>images/penguin.png</penguinFile>
+  <penguinSrcX>0</penguinSrcX>
+  <penguinSrcY>0</penguinSrcY>
+  <penguinWidth>200</penguinWidth>
+  <penguinHeight>200</penguinHeight>
+  <penguinAngle>60</penguinAngle>
+  <penguinDeltaAngle>-15</penguinDeltaAngle>
+  <penguinLoc penguinX="320" penguinY="240"/>
+  <penguinSpeed penguinSpeedX="100" penguinSpeedY="-300"/>
+  <penguinTransparency>true</penguinTransparency>
+</penguin>
+
+</GameData>
