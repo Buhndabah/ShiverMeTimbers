@@ -16,7 +16,7 @@ Viewport::Viewport() :
   worldHeight(gdata.getXmlInt("worldHeight")),
   objWidth(0), objHeight(0),
   objectToTrack(NULL) 
-{}
+{ }
 
 void Viewport::setObjectToTrack(const Drawable *obj) { 
   objectToTrack = obj; 

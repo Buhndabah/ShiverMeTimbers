@@ -7,9 +7,8 @@ Gamedata& Gamedata::getInstance() {
   return instance;
 }
 
-Gamedata::Gamedata(const string& fn ) :
-  parser(fn),
-  gameData(parser.getXmlData()),
+Gamedata::Gamedata(const std::string& fn ) :
+  xmlData(fn),
   roto(false)
 { }
 
@@ -17,55 +16,24 @@ float Gamedata::getRandInRange(int min, int max) const {
   return min + (rand()/(std::numeric_limits<int>::max()+1.0f))*(max-min);
 }
 
-bool Gamedata::getXmlBool(const string& tag) const {
-  std::map<string, string>::const_iterator ptr = gameData.find(tag);
-  if ( ptr == gameData.end() )
-    throw string("Game: Didn't find boolean tag ")+tag+string(" in xml");
-  else {
-    if ( ptr->second == "true" ) return true;
-    else return false;
-  }
+bool Gamedata::getXmlBool(const std::string& tag) const {
+  return xmlData.getXmlBool(tag);
 }
 
-int Gamedata::getXmlInt(const string& tag) const {
-  std::map<string, string>::const_iterator ptr = gameData.find(tag);
-  if ( ptr == gameData.end() )
-    throw string("Game: Didn't find integer tag ")+tag+string(" in xml");
-  else {
-    std::stringstream strm;
-    strm << ptr->second;
-    int data;
-    strm >> data;
-    return data;
-  }
+int Gamedata::getXmlInt(const std::string& tag) const {
+  return xmlData.getXmlInt(tag);
 }
 
-float Gamedata::getXmlFloat(const string& tag) const {
-  std::map<string, string>::const_iterator ptr = gameData.find(tag);
-  if ( ptr == gameData.end() )
-    throw string("Game: Didn't find float tag ")+tag+string(" in xml");
-  else {
-    std::stringstream strm;
-    strm << ptr->second;
-    float data;
-    strm >> data;
-    return data;
-  }
+float Gamedata::getXmlFloat(const std::string& tag) const {
+  return xmlData.getXmlFloat(tag);
 }
 
-const string& Gamedata::getXmlStr(const string& tag) const {
-  std::map<string, string>::const_iterator ptr = gameData.find(tag);
-  if ( ptr == gameData.end() )
-    throw string("Game: Didn't find string tag ")+tag+string(" in xml");
-  else return ptr->second;
+const std::string Gamedata::getXmlStr(const std::string& tag) const {
+  return xmlData.getXmlStr(tag);
 }
 
 void Gamedata::displayData() const {
-  std::map<string, string>::const_iterator ptr = gameData.begin();
-  while ( ptr != gameData.end() ) {
-    cout << ptr->first << ", " << ptr->second << endl;
-    ++ptr;
-  }
+    xmlData.displayData();
 }
 
 

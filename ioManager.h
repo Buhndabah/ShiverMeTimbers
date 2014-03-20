@@ -43,7 +43,7 @@ private:
 };
 
 template <typename T>
-void IOManager::printMessageValueAt(const string& msg, T value, 
+void IOManager::printMessageValueAt(const std::string& msg, T value, 
      Uint32 x, Uint32 y) const {
    std::stringstream strm;
    std::string message = msg;
@@ -58,7 +58,7 @@ void IOManager::printMessageValueAt(const string& msg, T value,
    }
    else {
      throw 
-     string("Couldn't allocate text sureface in printMessageValueAt");
+     std::string("Couldn't allocate text sureface in printMessageValueAt");
    }
 }
 

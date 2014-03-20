@@ -34,7 +34,7 @@ Manager::Manager() :
   TITLE( Gamedata::getInstance().getXmlStr("screenTitle") )
 {
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-    throw string("Unable to initialize SDL: ");
+    throw std::string("Unable to initialize SDL: ");
   }
   atexit(SDL_Quit);
   int numSnowballs = Gamedata::getInstance().getXmlInt("numSnowballs");

@@ -1,8 +1,7 @@
 #ifndef GAMEDATA__H
 #define GAMEDATA__H
 #include <string>
-#include <map>
-#include "parseXML.h"
+#include "xmldata.h"
 
 class Gamedata {
 public:
@@ -10,7 +9,7 @@ public:
   void displayData() const;
 
   bool getXmlBool(const std::string&) const;
-  const std::string& getXmlStr(const std::string&) const;
+  const std::string getXmlStr(const std::string&) const;
   float getXmlFloat(const std::string&) const;
   int getXmlInt(const std::string&) const;
   bool getRoto() const {return roto;}
@@ -20,8 +19,7 @@ public:
   // An auxilliary function:
   float getRandInRange(int min, int max) const;
 private:
-  ParseXML parser;
-  const map<std::string, std::string> gameData;
+  Xmldata xmlData;
   bool roto;
 
   Gamedata(const std::string& fn = "xmlSpec/game.xml");

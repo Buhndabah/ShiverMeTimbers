@@ -7,7 +7,7 @@ LDFLAGS = `sdl-config --libs` -lSDL_ttf -lSDL_image -lexpat -lSDL_gfx
 
 # Generates list of object files from all the
 #   source files in directory
-OBJS = $(addsuffix .o, $(basename $(shell find *.cpp)))
+OBJS = $(addsuffix .o, $(basename $(shell find ./ ! -name "mapdata.cpp" -name "*.cpp")))
 DEPS = $(OBJS:.o=.d)
 
 # Set executable name

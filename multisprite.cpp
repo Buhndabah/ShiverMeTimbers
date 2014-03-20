@@ -27,7 +27,7 @@ MultiSprite::MultiSprite( const std::string& name) :
   timeSinceLastFrame( 0 ),
   frameWidth(frames[0]->getWidth()),
   frameHeight(frames[0]->getHeight())
-{ }
+{}
 
 MultiSprite::MultiSprite(const MultiSprite& s) :
   Drawable(s), 

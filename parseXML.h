@@ -52,5 +52,4 @@ private:
   ParseXML& operator=(const ParseXML&);
   ParseXML(const ParseXML&);
 };
-
 #endif

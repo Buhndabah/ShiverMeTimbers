@@ -20,7 +20,7 @@ Sprite::Sprite(const std::string& name) :
   worldHeight(Gamedata::getInstance().getXmlInt("worldHeight"))
 { }
 
-Sprite::Sprite(const string& n, const Vector2f& pos, const Vector2f& vel):
+Sprite::Sprite(const std::string& n, const Vector2f& pos, const Vector2f& vel):
   Drawable(n, pos, vel), 
   frame( FrameFactory::getInstance().getFrame(n) ),
   frameWidth(frame->getWidth()),
@@ -29,7 +29,7 @@ Sprite::Sprite(const string& n, const Vector2f& pos, const Vector2f& vel):
   worldHeight(Gamedata::getInstance().getXmlInt("worldHeight"))
 { }
 
-Sprite::Sprite(const string& n, const Vector2f& pos, const Vector2f& vel,
+Sprite::Sprite(const std::string& n, const Vector2f& pos, const Vector2f& vel,
                const Frame* frm):
   Drawable(n, pos, vel), 
   frame( frm ),
