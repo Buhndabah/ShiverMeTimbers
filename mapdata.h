@@ -29,7 +29,7 @@ private:
     void createTiles();
     void createLayers();
 
-    std::map<unsigned int, std::string> tiles;
+    std::map<std::string, std::string> tiles;
     std::list<std::list<Tile> > mapLayers;
 
     unsigned int tileWidth;

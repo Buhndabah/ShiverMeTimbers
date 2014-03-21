@@ -45,27 +45,12 @@ void Mapdata::debug() const{
 }
 
 void Mapdata::createTiles() {
-    std::list<const rapidxml::xml_node<>* > tileDefs = parser.findNodes("tile");
-    for(std::list<const rapidxml::xml_node<>* >::const_iterator iterator = tileDefs.begin();iterator!=tileDefs.end(); ++iterator)
-    {   
-        int id;
-        std::string name;
-        for(rapidxml::xml_attribute<>* attr=(*iterator)->first_attribute();attr;attr=attr->next_attribute())
-        {
-            if(strcmp(std::string(attr->name()).c_str(),"id")==0)
-            {
-                std::stringstream strm;
-                strm << std::string(attr->value());
-                strm >> id;
-            }
-            else if(strcmp(std::string(attr->name()).c_str(),"name")==0)
-            {
-                name=std::string(attr->value());
-            }
-            else
-                throw std::string("Unknown attribute \"")+attr->name()+std::string("\" found for tile.");
-        }
-        tiles.insert(std::pair<int, std::string>(id, name));
+    std::list<std::map<std::string, std::string> > tileList = parser.parseNodesWithTag("tile");
+    // for each map in list
+    for(std::list<std::map<std::string, std::string> >::const_iterator iter=tileList.begin();iter!=tileList.end();++iter)
+    {
+        std::map<std::string, std::string> temp = *iter;
+        tiles.insert(std::pair<std::string,std::string>(temp[std::string("id")], std::string(temp[std::string("name")])));
     }
 }
 
@@ -80,7 +65,7 @@ void Mapdata::createLayers()
         // walk through nodes under that
         for(rapidxml::xml_node<>* node= (*iterator)->first_node();node; node=node->next_sibling())
         {
-            int id=0;
+            std::string id;
             bool collision=false;
             // walk through their attributes
             for(rapidxml::xml_attribute<>* attr = node->first_attribute();attr; attr=attr->next_attribute())
@@ -104,7 +89,6 @@ void Mapdata::createLayers()
             unsigned int worldHeight = Gamedata::getInstance().getXmlInt("worldHeight");
             unsigned int tileLocX =(worldWidth/2)-((i/mapWidth)*tileWidth)+(i*tileWidth/2)-(mapWidth*tileWidth/2);
             unsigned int tileLocY =(worldHeight/2) -(i*tileHeight/2)+((i / mapHeight)*tileHeight*2);
-            
             newLayer.push_back(Tile(tiles[id],Vector2f(tileLocX,tileLocY),collision));
             i++;
         }
