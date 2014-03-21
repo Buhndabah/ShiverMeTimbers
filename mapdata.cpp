@@ -21,11 +21,6 @@ Mapdata::Mapdata(const std::string& fn) :
 {
     std::stringstream strm; 
     std::map<std::string, std::string> rootData = parser.parseNode(parser.findNodes("map").front());
-#ifdef DEBUG
-    std::cerr << "Printing header information for map " << fn << std::endl;
-    for(auto &t : rootData)
-        std::cerr << t.first << " " << t.second << std::endl;
-#endif
     strm<<rootData[std::string("tilewidth")];
     strm >> tileWidth;
     strm.clear();
@@ -51,7 +46,7 @@ void Mapdata::debug() const{
 
 void Mapdata::createTiles() {
     std::list<const rapidxml::xml_node<>* > tileDefs = parser.findNodes("tile");
-    for(std::list<const rapidxml::xml_node<>* >::const_iterator iterator= tileDefs.begin();iterator != tileDefs.end(); ++iterator)
+    for(std::list<const rapidxml::xml_node<>* >::const_iterator iterator = tileDefs.begin();iterator!=tileDefs.end(); ++iterator)
     {   
         int id;
         std::string name;
@@ -117,6 +112,7 @@ void Mapdata::createLayers()
     }
 }
 
+
 void Mapdata::draw() const {
     for(std::list<std::list<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
     {   
@@ -139,6 +135,5 @@ void Mapdata::update(Uint32& ticks) {
 
 void Mapdata::displayData() const {
     parser.displayData();
-    //xmlData.displayData();
 }
 

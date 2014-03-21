@@ -18,7 +18,7 @@ public:
     int getW() const { return mapWidth;}
     int getH() const { return mapHeight;}
     int getTileWidth() const { return tileWidth;}
-    int getTileHeight const { return tileHeight;}
+    int getTileHeight() const { return tileHeight;}
 
 private:
     XMLParser parser;
