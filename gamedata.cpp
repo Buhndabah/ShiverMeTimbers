@@ -1,3 +1,4 @@
+#include <cstring>
 #include <sstream>
 #include <limits>
 #include "gamedata.h"
@@ -8,7 +9,7 @@ Gamedata& Gamedata::getInstance() {
 }
 
 Gamedata::Gamedata(const std::string& fn ) :
-  xmlData(fn),
+  parser(fn),
   roto(false)
 { }
 
@@ -17,23 +18,31 @@ float Gamedata::getRandInRange(int min, int max) const {
 }
 
 bool Gamedata::getXmlBool(const std::string& tag) const {
-  return xmlData.getXmlBool(tag);
+    return (strcmp(std::string(parser.find_value(tag)).c_str(),"true") ? false:true);
 }
 
 int Gamedata::getXmlInt(const std::string& tag) const {
-  return xmlData.getXmlInt(tag);
+    std::stringstream strm;
+    strm<< std::string(parser.find_value(tag));
+    int data;
+    strm >> data;
+    return data;
 }
 
 float Gamedata::getXmlFloat(const std::string& tag) const {
-  return xmlData.getXmlFloat(tag);
+    std::stringstream strm;
+    strm << std::string(parser.find_value(tag));
+    float data;
+    strm >> data;
+    return data;
 }
 
 const std::string Gamedata::getXmlStr(const std::string& tag) const {
-  return xmlData.getXmlStr(tag);
+    return parser.find_value(tag);
 }
 
 void Gamedata::displayData() const {
-    xmlData.displayData();
+    parser.displayData();
 }
 
 

@@ -5,6 +5,7 @@
 #include "multisprite.h"
 #include "rotatesprite.h"
 #include "gamedata.h"
+#include "mapdata.h"
 #include "manager.h"
 
 Manager::~Manager() { 
@@ -37,6 +38,7 @@ Manager::Manager() :
     throw std::string("Unable to initialize SDL: ");
   }
   atexit(SDL_Quit);
+  Mapdata::getInstance();
   int numSnowballs = Gamedata::getInstance().getXmlInt("numSnowballs");
   snowballs.reserve(numSnowballs+4);
 
@@ -62,6 +64,7 @@ void Manager::draw() const {
 	(*it)->draw();
 	++it;
   }
+  Mapdata::getInstance().draw();
   io.printMessageCenteredAt(TITLE, 10);
   io.printMessageValueAt("fps: ", clock.getFps(), 10, 10);
   io.printMessageAt("Controls: T to track next sprite", 10, 30);
@@ -91,6 +94,7 @@ void Manager::update() {
     SDL_SaveBMP(screen, filename.c_str());
   }
   world.update();
+  Mapdata::getInstance().update(ticks);
   viewport.update();	//update the viewport last
 }
 

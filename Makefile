@@ -1,13 +1,13 @@
 # Written by DJ Edmonson
 # Warnings frequently signal eventual errors:
-CXXFLAGS=`sdl-config --cflags` -g -W -Wall -Weffc++ -Wextra -pedantic -O0
+CXXFLAGS=`sdl-config --cflags` -std=c++11 -g -W -Wall -Weffc++ -Wextra -pedantic -O0
 
 # Linker flags for both OS X and Linux
 LDFLAGS = `sdl-config --libs` -lSDL_ttf -lSDL_image -lexpat -lSDL_gfx
 
 # Generates list of object files from all the
 #   source files in directory
-OBJS = $(addsuffix .o, $(basename $(shell find ./ ! -name "mapdata.cpp" -name "*.cpp")))
+OBJS = $(addsuffix .o, $(basename $(shell find *.cpp)))
 DEPS = $(OBJS:.o=.d)
 
 # Set executable name
