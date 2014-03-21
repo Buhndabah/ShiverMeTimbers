@@ -15,6 +15,11 @@ public:
 
     void debug() const;
 
+    int getW() const { return mapWidth;}
+    int getH() const { return mapHeight;}
+    int getTileWidth() const { return tileWidth;}
+    int getTileHeight const { return tileHeight;}
+
 private:
     XMLParser parser;
     Mapdata(const std::string& fn = "xmlSpec/testMap.xml");
