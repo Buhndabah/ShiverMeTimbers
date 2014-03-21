@@ -1,5 +1,5 @@
 <?xml version = "1.0"?>
-<map width="3" height="3" tilewidth="64" tileheight="32">
+<map width="3" height="3" tilewidth="126" tileheight="64">
     <tileset>
         <tile id="1" name="tile1"/>
         <tile id ="2" name="tile2"/>
@@ -12,7 +12,7 @@
         <tile id="9" name="tile9"/>
     </tileset>
     <layer name="ground">
-        <element id="1"/>
+        <element id="1" collision ="true"/>
         <element id="2"/>
         <element id="3"/>
         <element id="4"/>

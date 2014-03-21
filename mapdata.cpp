@@ -77,28 +77,40 @@ void Mapdata::createTiles() {
 void Mapdata::createLayers() 
 {
     std::list<const rapidxml::xml_node<>* > layers = parser.findNodes("layer");
+    // Walk through "layer nodes"
     for(std::list<const rapidxml::xml_node<>* >::const_iterator iterator = layers.begin(); iterator!= layers.end();++iterator)
     {
         std::list<Tile> newLayer;
         unsigned int i =0;
+        // walk through nodes under that
         for(rapidxml::xml_node<>* node= (*iterator)->first_node();node; node=node->next_sibling())
         {
-            rapidxml::xml_attribute<>* attr = node->first_attribute();
-            if(strcmp(attr->name(),"id")!=0)
-            {
-                throw std::string("Bad attribute for tile \"")+attr->name()+std::string("\"");
+            int id=0;
+            bool collision=false;
+            // walk through their attributes
+            for(rapidxml::xml_attribute<>* attr = node->first_attribute();attr; attr=attr->next_attribute())
+            {   
+                std::stringstream strm;
+                strm << attr->value();
+                if(strcmp(attr->name(),"id")==0)
+                {
+                    strm >>id;
+                }
+                else if(strcmp(attr->name(), "collision")==0)
+                {
+                    strm>>collision;
+                }
+                else 
+                {
+                    throw std::string("Bad attribute for tile \"")+attr->name()+std::string("\"");
+                }
             }
-            std::stringstream strm;
-            strm << attr->value();
-            int id;
-            strm >>id;
-
             unsigned int worldWidth = Gamedata::getInstance().getXmlInt("worldWidth");
             unsigned int worldHeight = Gamedata::getInstance().getXmlInt("worldHeight");
             unsigned int tileLocX =(worldWidth/2)-((i/mapWidth)*tileWidth)+(i*tileWidth/2)-(mapWidth*tileWidth/2);
             unsigned int tileLocY =(worldHeight/2) -(i*tileHeight/2)+((i / mapHeight)*tileHeight*2);
             
-            newLayer.push_back(Tile(tiles[id],Vector2f(tileLocX,tileLocY)));
+            newLayer.push_back(Tile(tiles[id],Vector2f(tileLocX,tileLocY),collision));
             i++;
         }
         mapLayers.push_back(newLayer);

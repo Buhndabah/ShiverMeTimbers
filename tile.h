@@ -9,6 +9,7 @@ public:
     Tile() : sprite(), collidable(false) {};
     Tile(const std::string&);
     Tile(const std::string&, const Vector2f&);
+    Tile(const std::string&, const Vector2f&, const bool);
     Tile(const std::string&, bool);
     Tile(const Tile& t);
     ~Tile() { }
