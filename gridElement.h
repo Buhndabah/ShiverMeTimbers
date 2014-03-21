@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 #include "vector2f.h"
-//#include "drawable.h"
 #include "multisprite.h"
+#include "dummyGrid.h"
 
 class GridElement {
 public:
@@ -38,6 +38,7 @@ public:
   void setGridVelocity(const Vector2f& vel) { gridVelocity = vel; }
 
 
+
   void update(Uint32 ticks);
   void moveUp();
   void moveUpLeft();
@@ -51,11 +52,14 @@ public:
 
 
 private:
-//  Drawable* gridSprite;
+  void clearMoveDir();
+
   float moveSpeed;
   MultiSprite gridSprite;
   Vector2f gridPosition;
   Vector2f gridVelocity;
+  const DummyGrid& dummy; //the grid the gridElement is attached to
+  std::vector<bool> moveDir; //boolean vector telling the gridElement which direction it is moving in
 };
 
 #endif

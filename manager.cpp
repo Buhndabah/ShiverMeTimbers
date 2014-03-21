@@ -40,23 +40,24 @@ Manager::Manager() :
   int numSnowballs = Gamedata::getInstance().getXmlInt("numSnowballs");
   snowballs.reserve(numSnowballs+4);
 
-  Player* newplayer = new Player("coolyeti");
-  player = newplayer;
+  player = new GridElement("coolyeti");
 //  snowballs.push_back(new MultiSprite("spinsnowball"));
   //snowballs.push_back(new MultiSprite("coolyeti"));
-  snowballs.push_back(newplayer);
+//  snowballs.push_back(player);
   //snowballs.push_back(new RotateSprite("yeti"));
   //snowballs.push_back(new MultiSprite("spinsnowball"));
   //snowballs.push_back(new RotateSprite("penguin"));
-//  for(int i=0; i<numSnowballs; ++i)
-//	snowballs.push_back(new Sprite("snowball"));
-  viewport.setObjectToTrack(snowballs[currentSprite]);
-  //viewport.setObjectToTrack(snowballs[1]);
+  for(int i=0; i<numSnowballs; ++i)
+	snowballs.push_back(new Sprite("snowball"));
+//  viewport.setObjectToTrack(snowballs[currentSprite]);
+  viewport.setObjectToTrack(&player->getSprite());
+//  viewport.setObjectToTrack(snowballs[1]);
 }
 
 
 void Manager::draw() const {
   world.draw();
+  player->getSprite().draw();
   std::vector<Drawable*>::const_iterator it = snowballs.begin();
   while(it != snowballs.end()){
 	(*it)->draw();
@@ -64,8 +65,8 @@ void Manager::draw() const {
   }
   io.printMessageCenteredAt(TITLE, 10);
   io.printMessageValueAt("fps: ", clock.getFps(), 10, 10);
-  io.printMessageAt("Controls: T to track next sprite", 10, 30);
-  io.printMessageAt("               R to rotate special sprites", 10, 50);
+//  io.printMessageAt("Controls: T to track next sprite", 10, 30);
+//  io.printMessageAt("               R to rotate special sprites", 10, 50);
   io.printMessageAt("Stephen Wells", 500, 450);
   viewport.draw();
 
@@ -75,6 +76,7 @@ void Manager::draw() const {
 void Manager::update() {
   ++clock;
   Uint32 ticks = clock.getElapsedTicks();
+  player->update(ticks);
   std::vector<Drawable*>::iterator it = snowballs.begin();
   while(it != snowballs.end()){
 	(*it)->update(ticks);
@@ -105,6 +107,8 @@ void Manager::play() {
 
   while ( not done ) {
 
+std::cout << "display: " << player->getSprite().getPosition() << std::endl;
+std::cout << "grid: " << player->getGridPosition() << std::endl << std::endl;
     //adjust the player's velocity according to the key(s) being held down
     if(w){
       if(a)
@@ -164,11 +168,12 @@ void Manager::play() {
       //change tracking sprite
       if (keystate[SDLK_t] && !keyCatch) {
 	keyCatch = true;
-	if(currentSprite + 1 < snowballs.size())
-	  currentSprite++;
-	else
-	  currentSprite = 0;
-	viewport.setObjectToTrack(snowballs[currentSprite]);
+	if(currentSprite  < snowballs.size())
+	  viewport.setObjectToTrack(snowballs[currentSprite++]);
+	else{
+          viewport.setObjectToTrack(&player->getSprite());
+          currentSprite = 0;
+        }
       }
 
       //rotate RotateSprite's

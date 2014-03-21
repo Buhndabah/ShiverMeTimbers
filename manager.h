@@ -5,7 +5,7 @@
 #include "sprite.h"
 #include "world.h"
 #include "viewport.h"
-#include "player.h"
+#include "gridElement.h"
 
 class Manager {
 public:
@@ -25,7 +25,7 @@ private:
   std::vector<Drawable *> snowballs;
   unsigned int currentSprite;
 
-  Player *player;
+  GridElement *player;
 
   bool makeVideo;
   int frameCount;

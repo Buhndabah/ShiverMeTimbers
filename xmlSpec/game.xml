@@ -29,6 +29,11 @@
 </font>
 <maxStringSize>50</maxStringSize>
 
+<grid>
+  <tilesX>4</tilesX>
+  <tilesY>4</tilesY>
+  <tilesWidth>45</tilesWidth> 
+</grid>
 
 <back>
   <backFile>images/testgrid2.png</backFile>
@@ -71,7 +76,7 @@
 
 <coolyeti>
   <coolyetiFile>images/coolyeti.png</coolyetiFile>
-  <coolyetiLoc coolyetiX="190" coolyetiY="20"/>
+  <coolyetiLoc coolyetiX="280" coolyetiY="31"/>
 
   <coolyetiFrames>4</coolyetiFrames>
   <coolyetiFrameInterval>160</coolyetiFrameInterval>
@@ -103,7 +108,7 @@
   <penguinFile>images/penguin.png</penguinFile>
   <penguinSrcX>0</penguinSrcX>
   <penguinSrcY>0</penguinSrcY>
-  <penguinWidth>200</penguinWidth>
+ <penguinWidth>200</penguinWidth>
   <penguinHeight>200</penguinHeight>
   <penguinAngle>60</penguinAngle>
   <penguinDeltaAngle>-15</penguinDeltaAngle>

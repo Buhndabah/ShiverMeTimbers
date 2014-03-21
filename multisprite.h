@@ -10,6 +10,7 @@ public:
   MultiSprite(const MultiSprite&);
   virtual ~MultiSprite() { } 
 
+  MultiSprite& operator=(const MultiSprite&);
   virtual void draw() const;
   virtual void update(Uint32 ticks);
   virtual const Frame* getFrame() const { 
