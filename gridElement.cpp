@@ -35,35 +35,73 @@ void GridElement::update(Uint32 ticks) {
 
 
   Vector2f incr = gridVelocity * static_cast<float>(ticks) * 0.001;
+  Vector2f oldGridPos;// = gridPosition;
   Vector2f newGridPos;// = gridPosition;
   float dist;
   bool atEdge = false;
 
+  //Check right X border
+std::cout << "HURRBADURRBA " << gridPosition[0] + incr[0] << std::endl << std::endl;
   if((gridPosition[0] + incr[0] > dummy.getW() * dummy.getTileWidth())){
-    newGridPos[0] = dummy.getW() * dummy.getTileWidth();
-    dist = newGridPos[0] - gridPosition[0];
-//    if(moveDir[2])
-      
+    oldGridPos = gridPosition;
+    gridPosition[0] = dummy.getW() * dummy.getTileWidth();
+    dist = gridPosition[0] - oldGridPos[0];
+
+    if(moveDir[0]) //if moving up
+      gridPosition[1] = gridPosition[1] - dist;
+    if(moveDir[7]) //if moving right
+      gridPosition[1] = gridPosition[1] + dist;
+
+    dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
     ticks = dist / static_cast<float>(moveSpeed);
     atEdge = true;
   }
+  //Check left X border
   else if(gridPosition[0] + incr[0] < 0){
-    newGridPos[0] = 0;
-    dist = sqrt( pow(newGridPos[0] - gridPosition[0],2));
-    ticks = dist/ static_cast<float>(moveSpeed);
+    oldGridPos = gridPosition;
+    gridPosition[0] = 0;
+    dist = -oldGridPos[0];
+
+    if(moveDir[3]) //if moving down
+      gridPosition[1] = gridPosition[1] - dist;
+    if(moveDir[6]) //if moving left
+      gridPosition[1] = gridPosition[1] + dist;
+
+    dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
+    ticks = dist / static_cast<float>(moveSpeed);
     atEdge = true;
+ 
   }
+  //Check bottom Y border
   else if(gridPosition[1] + incr[1] > dummy.getH() * dummy.getTileWidth()){
-    newGridPos[1] = dummy.getH() * dummy.getTileWidth();
-    dist = sqrt( pow(newGridPos[0] - gridPosition[0],2));
+    oldGridPos = gridPosition;
+    gridPosition[1] = dummy.getH() * dummy.getTileWidth();
+    dist = gridPosition[1] - oldGridPos[1];
+
+    if(moveDir[3]) //if moving down
+      gridPosition[0] = gridPosition[0] - dist; 
+    if(moveDir[7]) //if moving right
+      gridPosition[0] = gridPosition[0] + dist; 
+
+    dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
     ticks = dist/ static_cast<float>(moveSpeed);
     atEdge = true;
   }
+  //Check top Y border
   else if(gridPosition[1] + incr[1] < 0){
-    newGridPos[1] = 0;
-    dist = sqrt( pow(newGridPos[0] - gridPosition[0],2));
+    oldGridPos = gridPosition;
+    gridPosition[1] = 0;
+    dist = -oldGridPos[1];
+
+    if(moveDir[0]) //if moving up
+      gridPosition[0] = gridPosition[0] - dist; 
+    if(moveDir[6]) //if moving left
+      gridPosition[0] = gridPosition[0] + dist; 
+
+    dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
     ticks = dist/ static_cast<float>(moveSpeed);
     atEdge = true;
+ 
   }
   else
     gridPosition += incr;
