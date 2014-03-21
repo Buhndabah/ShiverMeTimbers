@@ -51,7 +51,7 @@ const char* XMLParser::find_value(const std::string& tag) const
                         break;
                     }   
                 }
-            }
+             }
         }
     }
     if(ret_value) 
@@ -60,15 +60,47 @@ const char* XMLParser::find_value(const std::string& tag) const
     }
     else throw std::string("Xml: Didn't find tag ")+tag+std::string(" in xml");
 }
-
+#define DEV
 #ifdef DEV
-// search tree for matching nodes, and return array of key:value pairs
-std::list<std::map<std::string, std::string>> XMLParser::findNodes(const std::string& tag) const {
-    std::list<std::map<std::string, std::string>> retVec;
-    rapidxml::xml_node<>* root_node = doc.first_node();
+
+std::list<const rapidxml::xml_node<>* > XMLParser::findNodes(const std::string& tag) const {
+    std::list<const rapidxml::xml_node<>*> ret_list=findNodes(tag, doc.first_node());
+    if(!ret_list.empty()) return ret_list;
+    else throw std::string("Parser: couldn't find tag ")+tag+std::string(" in xml");
+}
     
 
+// search tree for matching nodes, and return list of them
+std::list<const rapidxml::xml_node<>* > XMLParser::findNodes(const std::string& tag, const rapidxml::xml_node<>* n) const {
 
+    std::list<const rapidxml::xml_node<>*> ret_list;
+    if(strcmp(n->name(), tag.c_str())==0)
+    {
+        ret_list.push_back(n);
+        return ret_list;
+    }
+
+    for(rapidxml::xml_node<>* node = n->first_node();node;node=node->next_sibling())
+    {   
+        std::list<const rapidxml::xml_node<>*> temp=findNodes(tag,node);
+        ret_list.splice(ret_list.end(),temp);
+    }
+    return ret_list;
+}
+
+std::map<std::string,std::string> XMLParser::parseNode(const rapidxml::xml_node<>* node) const
+{
+    std::map<std::string,std::string> map;
+    for(rapidxml::xml_attribute<>* attr = node->first_attribute();attr;attr=attr->next_attribute())
+    {
+        map.insert(std::pair<std::string, std::string>(std::string(attr->name()),std::string(attr->value())));
+    }
+    return map;
+}
+
+
+
+// wwalk through each child, check name, if match return map, then check their children
 
 #endif
 void XMLParser::displayData() const {

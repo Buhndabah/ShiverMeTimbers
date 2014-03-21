@@ -2,29 +2,31 @@
 #define MAP__H
 #include <string>
 #include "xmlparser.h"
+#include "tile.h"
 
 class Mapdata {
 public:
     static Mapdata& getInstance();
     void displayData() const;
 
-    void load();
+    //void load();
     void draw() const;
-    void update(Uint32 ticks);
+    void update(Uint32& ticks);
 
-    bool getXmlBool(const std::string&) const;
-    const std::string& getXmlStr(const std::string&) const;
-    float getXmlFloat(const std::string&) const;
-    int getXmlInt(const std::string&) const;
+    void debug() const;
 
-    
 private:
-    Xmldata xmlData;
-    Mapdata(const std::string& fn = "xmlSpec/example.tmx");
+    XMLParser parser;
+    Mapdata(const std::string& fn = "xmlSpec/testMap.xml");
     Mapdata(const Mapdata&);
     Mapdata& operator=(const Mapdata&);
 
-    Tile* mapTiles;
+    void createTiles();
+    void createLayers();
+
+    std::map<unsigned int, std::string> tiles;
+    std::list<std::list<Tile> > mapLayers;
+
     unsigned int tileWidth;
     unsigned int tileHeight;
     unsigned int mapWidth;

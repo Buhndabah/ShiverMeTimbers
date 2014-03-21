@@ -1,7 +1,7 @@
 #ifndef GAMEDATA__H
 #define GAMEDATA__H
 #include <string>
-#include "xmldata.h"
+#include "xmlparser.h"
 
 class Gamedata {
 public:
@@ -19,7 +19,7 @@ public:
   // An auxilliary function:
   float getRandInRange(int min, int max) const;
 private:
-  Xmldata xmlData;
+  XMLParser parser;
   bool roto;
 
   Gamedata(const std::string& fn = "xmlSpec/game.xml");

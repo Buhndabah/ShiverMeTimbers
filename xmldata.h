@@ -16,6 +16,7 @@ public:
     float getXmlFloat(const std::string&) const;
     int getXmlInt(const std::string&) const;
 
+
 private:
     XMLParser parser;
 };
