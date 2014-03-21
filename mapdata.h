@@ -15,6 +15,11 @@ public:
 
     void debug() const;
 
+    int getW() const { return mapWidth;}
+    int getH() const { return mapHeight;}
+    int getTileWidth() const { return tileWidth;}
+    int getTileHeight() const { return tileHeight;}
+
 private:
     XMLParser parser;
     Mapdata(const std::string& fn = "xmlSpec/testMap.xml");
@@ -24,7 +29,7 @@ private:
     void createTiles();
     void createLayers();
 
-    std::map<unsigned int, std::string> tiles;
+    std::map<std::string, std::string> tiles;
     std::list<std::list<Tile> > mapLayers;
 
     unsigned int tileWidth;

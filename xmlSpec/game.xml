@@ -79,8 +79,8 @@
 <tile1>
   <tile1File>images/test_tile1.png</tile1File>
   <tile1Loc tile1X="30" tile1Y="10"/>
-  <tile1Width>64</tile1Width>
-  <tile1Height>32</tile1Height>
+  <tile1Width>128</tile1Width>
+  <tile1Height>64</tile1Height>
   <tile1SrcX>0</tile1SrcX>
   <tile1SrcY>0</tile1SrcY>
   <tile1Speed tile1SpeedX="0" tile1SpeedY="0"/>
@@ -90,8 +90,8 @@
 <tile2>
   <tile2File>images/test_tile2.png</tile2File>
   <tile2Loc tile2X="30" tile2Y="10"/>
-  <tile2Width>64</tile2Width>
-  <tile2Height>32</tile2Height>
+  <tile2Width>128</tile2Width>
+  <tile2Height>64</tile2Height>
   <tile2SrcX>0</tile2SrcX>
   <tile2SrcY>0</tile2SrcY>
   <tile2Speed tile2SpeedX="0" tile2SpeedY="0"/>
@@ -100,8 +100,8 @@
 <tile3>
   <tile3File>images/test_tile3.png</tile3File>
   <tile3Loc tile3X="30" tile3Y="10"/>
-  <tile3Width>64</tile3Width>
-  <tile3Height>32</tile3Height>
+  <tile3Width>128</tile3Width>
+  <tile3Height>64</tile3Height>
   <tile3SrcX>0</tile3SrcX>
   <tile3SrcY>0</tile3SrcY>
   <tile3Speed tile3SpeedX="0" tile3SpeedY="0"/>
@@ -110,8 +110,8 @@
 <tile4>
   <tile4File>images/test_tile4.png</tile4File>
   <tile4Loc tile4X="30" tile4Y="10"/>
-  <tile4Width>64</tile4Width>
-  <tile4Height>32</tile4Height>
+  <tile4Width>128</tile4Width>
+  <tile4Height>64</tile4Height>
   <tile4SrcX>0</tile4SrcX>
   <tile4SrcY>0</tile4SrcY>
   <tile4Speed tile4SpeedX="0" tile4SpeedY="0"/>
@@ -120,8 +120,8 @@
 <tile5>
   <tile5File>images/test_tile5.png</tile5File>
   <tile5Loc tile5X="30" tile5Y="10"/>
-  <tile5Width>64</tile5Width>
-  <tile5Height>32</tile5Height>
+  <tile5Width>128</tile5Width>
+  <tile5Height>64</tile5Height>
   <tile5SrcX>0</tile5SrcX>
   <tile5SrcY>0</tile5SrcY>
   <tile5Speed tile5SpeedX="0" tile5SpeedY="0"/>
@@ -130,8 +130,8 @@
 <tile6>
   <tile6File>images/test_tile6.png</tile6File>
   <tile6Loc tile6X="30" tile6Y="10"/>
-  <tile6Width>64</tile6Width>
-  <tile6Height>32</tile6Height>
+  <tile6Width>128</tile6Width>
+  <tile6Height>64</tile6Height>
   <tile6SrcX>0</tile6SrcX>
   <tile6SrcY>0</tile6SrcY>
   <tile6Speed tile6SpeedX="0" tile6SpeedY="0"/>
@@ -140,8 +140,8 @@
 <tile7>
   <tile7File>images/test_tile7.png</tile7File>
   <tile7Loc tile7X="30" tile7Y="10"/>
-  <tile7Width>64</tile7Width>
-  <tile7Height>32</tile7Height>
+  <tile7Width>128</tile7Width>
+  <tile7Height>64</tile7Height>
   <tile7SrcX>0</tile7SrcX>
   <tile7SrcY>0</tile7SrcY>
   <tile7Speed tile7SpeedX="0" tile7SpeedY="0"/>
@@ -150,8 +150,8 @@
 <tile8>
   <tile8File>images/test_tile8.png</tile8File>
   <tile8Loc tile8X="30" tile8Y="10"/>
-  <tile8Width>64</tile8Width>
-  <tile8Height>32</tile8Height>
+  <tile8Width>128</tile8Width>
+  <tile8Height>64</tile8Height>
   <tile8SrcX>0</tile8SrcX>
   <tile8SrcY>0</tile8SrcY>
   <tile8Speed tile8SpeedX="0" tile8SpeedY="0"/>
@@ -160,8 +160,8 @@
 <tile9>
   <tile9File>images/test_tile9.png</tile9File>
   <tile9Loc tile9X="30" tile9Y="10"/>
-  <tile9Width>64</tile9Width>
-  <tile9Height>32</tile9Height>
+  <tile9Width>128</tile9Width>
+  <tile9Height>64</tile9Height>
   <tile9SrcX>0</tile9SrcX>
   <tile9SrcY>0</tile9SrcY>
   <tile9Speed tile9SpeedX="0" tile9SpeedY="0"/>

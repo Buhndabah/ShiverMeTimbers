@@ -63,6 +63,9 @@ const char* XMLParser::find_value(const std::string& tag) const
 #define DEV
 #ifdef DEV
 
+// search tree for matching nodes, and return list of them
+//
+// starting from root...
 std::list<const rapidxml::xml_node<>* > XMLParser::findNodes(const std::string& tag) const {
     std::list<const rapidxml::xml_node<>*> ret_list=findNodes(tag, doc.first_node());
     if(!ret_list.empty()) return ret_list;
@@ -70,7 +73,7 @@ std::list<const rapidxml::xml_node<>* > XMLParser::findNodes(const std::string& 
 }
     
 
-// search tree for matching nodes, and return list of them
+// .. and starting from specific node
 std::list<const rapidxml::xml_node<>* > XMLParser::findNodes(const std::string& tag, const rapidxml::xml_node<>* n) const {
 
     std::list<const rapidxml::xml_node<>*> ret_list;
@@ -98,7 +101,16 @@ std::map<std::string,std::string> XMLParser::parseNode(const rapidxml::xml_node<
     return map;
 }
 
-
+std::list<std::map<std::string,std::string> > XMLParser::parseNodesWithTag(const std::string& tag) const
+{
+    std::list<std::map<std::string,std::string> > ret_list;
+    std::list<const rapidxml::xml_node<>* > nodes = findNodes(tag);
+    for(std::list<const rapidxml::xml_node<>* >::const_iterator iterator= nodes.begin();iterator!=nodes.end(); ++iterator)
+    {
+        ret_list.push_back(parseNode(*iterator));
+    }
+    return ret_list;
+}
 
 // wwalk through each child, check name, if match return map, then check their children
 
