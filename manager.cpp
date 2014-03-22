@@ -38,7 +38,9 @@ Manager::Manager() :
     throw std::string("Unable to initialize SDL: ");
   }
   atexit(SDL_Quit);
+  std::cerr << "did this break it" << std::endl;
   Mapdata::getInstance();
+  std::cerr<<"yup" << std::endl;
   int numSnowballs = Gamedata::getInstance().getXmlInt("numSnowballs");
   snowballs.reserve(numSnowballs+4);
 

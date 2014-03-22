@@ -25,6 +25,7 @@ private:
     Mapdata(const std::string& fn = "xmlSpec/testMap.xml");
     Mapdata(const Mapdata&);
     Mapdata& operator=(const Mapdata&);
+    ~Mapdata() {}
 
     void createTiles();
     void createLayers();
