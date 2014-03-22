@@ -17,7 +17,7 @@ public:
 
     virtual void draw() const;
     virtual void update(Uint32& ticks) const;
-     
+    const Vector2f& getCoord() const { return sprite->getPosition(); } 
 
 private:
     Sprite *sprite;

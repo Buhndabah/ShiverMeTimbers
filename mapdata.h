@@ -20,6 +20,8 @@ public:
     int getTileWidth() const { return tileWidth;}
     int getTileHeight() const { return tileHeight;}
 
+    const Vector2f& getOrigin() const;
+
 private:
     XMLParser parser;
     Mapdata(const std::string& fn = "xmlSpec/testMap.xml");

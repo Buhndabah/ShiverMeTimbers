@@ -61,13 +61,13 @@ Manager::Manager() :
 
 void Manager::draw() const {
   world.draw();
+  Mapdata::getInstance().draw();
   player->getSprite().draw();
   std::vector<Drawable*>::const_iterator it = snowballs.begin();
   while(it != snowballs.end()){
 	(*it)->draw();
 	++it;
   }
-  Mapdata::getInstance().draw();
   io.printMessageCenteredAt(TITLE, 10);
   io.printMessageValueAt("fps: ", clock.getFps(), 10, 10);
 //  io.printMessageAt("Controls: T to track next sprite", 10, 30);
