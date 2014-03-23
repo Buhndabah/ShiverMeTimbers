@@ -9,7 +9,7 @@ HUD& HUD::getInstance() {
 HUD::HUD() :
     components(),
     visible(true)
-{ components.push_back(new HUDClock(Vector2f(100,50),true));}
+{ components.push_back(new HUDClock(Vector2f(100,50),true, 600));}
 
 void HUD::draw() const {
     if(visible) {

@@ -7,6 +7,7 @@
 
 class HUDClock : public HUDComponent {
 public:
+    HUDClock(const Vector2f& p, bool v, int i);
     HUDClock(const Vector2f& p,bool v);
     HUDClock(const HUDClock& rhs);
     virtual ~HUDClock() {}
@@ -15,5 +16,7 @@ public:
 private:
     const IOManager& io;
     const Clock& clock;
+    int startTime;  // in seconds
+    bool countDown; // true if clock counts down
 };
 #endif
