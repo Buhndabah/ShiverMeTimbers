@@ -96,6 +96,10 @@ void Mapdata::createLayers()
     }
 }
 
+// for now returns coordinate of bottom tile on bottom layer
+Vector2f Mapdata::getOrigin() const {
+    return ( (*(*mapLayers.begin()).begin()).getCoord() + Vector2f(0,tileHeight/2) );
+}
 
 void Mapdata::draw() const {
     for(std::list<std::list<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)

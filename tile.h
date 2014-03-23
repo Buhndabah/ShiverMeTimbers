@@ -12,11 +12,12 @@ public:
     Tile(const std::string&, const Vector2f&, const bool);
     Tile(const std::string&, bool);
     Tile(const Tile& t);
-    ~Tile() { }
+    ~Tile() {} 
     Tile& operator=(const Tile&);
 
     virtual void draw() const;
     virtual void update(Uint32& ticks) const;
+    const Vector2f& getCoord() const { return sprite->getPosition(); } 
 
 private:
     Sprite *sprite;

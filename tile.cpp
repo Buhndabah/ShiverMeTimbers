@@ -27,7 +27,7 @@ Tile::Tile(const Tile& t) :
 
 Tile& Tile::operator=(const Tile& rhs) {
     sprite = new Sprite(*(rhs.sprite));
-    collidable = collidable;
+    collidable = rhs.collidable;
     return *this;
 }
 

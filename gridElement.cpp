@@ -210,6 +210,7 @@ void GridElement::moveRight() {
 }
 
 void GridElement::stop() {
+  clearMoveDir();
   getSprite().velocityX(0.);
   getSprite().velocityY(0.);
 

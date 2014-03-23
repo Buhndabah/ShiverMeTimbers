@@ -5,7 +5,6 @@
 #include "multisprite.h"
 #include "rotatesprite.h"
 #include "gamedata.h"
-#include "mapdata.h"
 #include "manager.h"
 
 Manager::~Manager() { 
@@ -27,6 +26,8 @@ Manager::Manager() :
   currentSprite(0),
 
   player(NULL),
+  map(Mapdata::getInstance()),
+  hud(HUD::getInstance()),
 
   makeVideo( false ),
   frameCount( 0 ),
@@ -37,8 +38,12 @@ Manager::Manager() :
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     throw std::string("Unable to initialize SDL: ");
   }
+
+  hud.addTextComponent("title", Vector2f(0,10),TITLE,true);
+  hud.addTextComponent("credits", Vector2f(750,10), "Stephen Wells and John Butchko", false);
+  hud.addFPS(Vector2f(10,10));
+
   atexit(SDL_Quit);
-  Mapdata::getInstance();
   int numSnowballs = Gamedata::getInstance().getXmlInt("numSnowballs");
   snowballs.reserve(numSnowballs+4);
 
@@ -59,20 +64,18 @@ Manager::Manager() :
 
 void Manager::draw() const {
   world.draw();
+  map.draw();
   player->getSprite().draw();
   std::vector<Drawable*>::const_iterator it = snowballs.begin();
   while(it != snowballs.end()){
 	(*it)->draw();
 	++it;
   }
-  Mapdata::getInstance().draw();
-  io.printMessageCenteredAt(TITLE, 10);
-  io.printMessageValueAt("fps: ", clock.getFps(), 10, 10);
+  //io.printMessageCenteredAt(TITLE, 10);
 //  io.printMessageAt("Controls: T to track next sprite", 10, 30);
 //  io.printMessageAt("               R to rotate special sprites", 10, 50);
-  io.printMessageAt("Stephen Wells", 500, 450);
   viewport.draw();
-
+  hud.draw();
   SDL_Flip(screen);
 }
 
@@ -96,7 +99,8 @@ void Manager::update() {
     SDL_SaveBMP(screen, filename.c_str());
   }
   world.update();
-  Mapdata::getInstance().update(ticks);
+  map.update(ticks);
+  hud.update(ticks);
   viewport.update();	//update the viewport last
 }
 
@@ -164,6 +168,7 @@ std::cout << "grid: " << player->getGridPosition() << std::endl << std::endl;
       }
 
       if (keystate[SDLK_p] && !keyCatch) {
+        hud.onPause();
         keyCatch = true;
         if ( clock.isPaused() ) clock.unpause();
         else clock.pause();

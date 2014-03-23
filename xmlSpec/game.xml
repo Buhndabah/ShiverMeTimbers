@@ -47,6 +47,17 @@
   <backTransparency>false</backTransparency>
 </back>
 
+<pauseScreen>
+    <pauseScreenFile>images/pauseScreen.png</pauseScreenFile>
+    <pauseScreenSrcX>0</pauseScreenSrcX>
+    <pauseScreenSrcY>0</pauseScreenSrcY>
+    <pauseScreenWidth>1000</pauseScreenWidth>
+    <pauseScreenHeight>666</pauseScreenHeight>
+    <pauseScreenLoc pauseScreenX="0" pauseScreenY="0"/>
+    <pauseScreenSpeed pauseScreenSpeedX="0" pauseScreenSpeedY="0"/>
+    <pauseScreenTransparency>true</pauseScreenTransparency>
+</pauseScreen>
+
 <snowball>
   <snowballFile>images/snowball.png</snowballFile>
   <snowballSrcX>0</snowballSrcX>
