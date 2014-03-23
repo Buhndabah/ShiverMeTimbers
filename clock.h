@@ -1,8 +1,11 @@
+#ifndef CLOCK_H
+#define CLOCK_H
 #include <SDL.h>
 #include <string>
 #include <queue>
 
 class Manager;
+class HUDFPS;
 
 class Clock {
 public:
@@ -12,6 +15,7 @@ public:
 
 private:
   friend class Manager;
+  friend class HUDFPS;
 
   bool started;
   bool paused;
@@ -52,3 +56,4 @@ private:
   Clock(const Clock&);
   Clock&operator=(const Clock&);
 };
+#endif 

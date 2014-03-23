@@ -6,16 +6,14 @@
 class HUD {
 public:
     static HUD& getInstance();
-    HUD(const std::list<HUDComponent*> &l, bool b) : components(l), visible(b) {};
-    HUD(const std::list<HUDComponent*> &l) : components(l),visible(true) {};
-
 
     void toggleFade() { fade = !fade; }
     void toggle() {visible=!visible;};
     void draw() const;
     void update(Uint32) const;
     void addComponent(HUDComponent*);
-
+    void addTextComponent(const Vector2f&,const std::string&, bool);
+    void addFPS(const Vector2f&);
 private:
     HUD(); 
     HUD(const HUD&);

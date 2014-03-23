@@ -3,16 +3,16 @@
 #include <sstream>
 #include "hudClock.h"
 
-HUDClock::HUDClock(const Vector2f& p, bool v, int i) :
-    HUDComponent(p,v),
+HUDClock::HUDClock(const std::string& n, const Vector2f& p, bool v, int i) :
+    HUDComponent(n,p,v),
     io(IOManager::getInstance()),
     clock(Clock::getInstance()),
     startTime(i),
     countDown(true)
 { }
 
-HUDClock::HUDClock(const Vector2f& p, bool v) : 
-    HUDComponent(p, v), 
+HUDClock::HUDClock(const std::string& n, const Vector2f& p, bool v) : 
+    HUDComponent(n,p,v), 
     io(IOManager::getInstance()),
     clock(Clock::getInstance()),
     startTime(0),

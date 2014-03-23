@@ -1,12 +1,18 @@
 #ifndef HUDCOMPONENT_H
 #define HUDCOMPONENT_H
+#include <string>
 #include "sprite.h"
 #include "vector2f.h"
 
 class HUDComponent {
 public:
-    HUDComponent(const Vector2f& p,bool v) : position(p), visible(v) {}
+    HUDComponent(const std::string& n, const Vector2f& p,bool v) : 
+        name(n),
+        position(p), 
+        visible(v) 
+    {}
     HUDComponent(const HUDComponent& rhs) :
+        name(rhs.name),
         position(rhs.position),
         visible(rhs.visible)
     {} 
@@ -21,6 +27,7 @@ public:
     const Vector2f& getPosition() const { return position; }
 
 private:
+    std::string name;
     Vector2f position;
     bool visible;
 };

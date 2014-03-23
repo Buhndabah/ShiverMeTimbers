@@ -7,8 +7,8 @@
 
 class HUDClock : public HUDComponent {
 public:
-    HUDClock(const Vector2f& p, bool v, int i);
-    HUDClock(const Vector2f& p,bool v);
+    HUDClock(const std::string& n, const Vector2f& p, bool v, int i);
+    HUDClock(const std::string& n, const Vector2f& p,bool v);
     HUDClock(const HUDClock& rhs);
     HUDClock& operator=(const HUDClock&);
     virtual ~HUDClock() {}

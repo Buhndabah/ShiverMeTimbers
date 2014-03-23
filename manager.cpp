@@ -38,9 +38,10 @@ Manager::Manager() :
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     throw std::string("Unable to initialize SDL: ");
   }
+  hud.addTextComponent(Vector2f(0,10),TITLE,true);
+  hud.addTextComponent(Vector2f(500,450), "Stephen Wells and John Butchko", false);
+  hud.addFPS(Vector2f(10,10));
   atexit(SDL_Quit);
-  std::cerr << "did this break it" << std::endl;
-  std::cerr<<"yup" << std::endl;
   int numSnowballs = Gamedata::getInstance().getXmlInt("numSnowballs");
   snowballs.reserve(numSnowballs+4);
 
@@ -68,11 +69,9 @@ void Manager::draw() const {
 	(*it)->draw();
 	++it;
   }
-  io.printMessageCenteredAt(TITLE, 10);
-  io.printMessageValueAt("fps: ", clock.getFps(), 10, 10);
+  //io.printMessageCenteredAt(TITLE, 10);
 //  io.printMessageAt("Controls: T to track next sprite", 10, 30);
 //  io.printMessageAt("               R to rotate special sprites", 10, 50);
-  io.printMessageAt("Stephen Wells", 500, 450);
   viewport.draw();
   hud.draw();
   SDL_Flip(screen);

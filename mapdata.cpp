@@ -97,7 +97,7 @@ void Mapdata::createLayers()
 }
 
 // for now returns coordinate of bottom tile on bottom layer
-const Vector2f& Mapdata::getOrigin() const {
+Vector2f Mapdata::getOrigin() const {
     return ( (*(*mapLayers.begin()).begin()).getCoord() + Vector2f(0,tileHeight/2) );
 }
 

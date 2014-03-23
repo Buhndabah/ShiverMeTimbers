@@ -6,7 +6,7 @@
 class DummyComponent : public HUDComponent {
 public:
     DummyComponent();
-    DummyComponent(Vector2f& pos, bool v);
+    DummyComponent(const std::string& n, const Vector2f& pos, bool v);
 
     virtual ~DummyComponent() {}
 
