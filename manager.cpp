@@ -5,7 +5,6 @@
 #include "multisprite.h"
 #include "rotatesprite.h"
 #include "gamedata.h"
-#include "mapdata.h"
 #include "manager.h"
 
 Manager::~Manager() { 
@@ -27,6 +26,8 @@ Manager::Manager() :
   currentSprite(0),
 
   player(NULL),
+  map(Mapdata::getInstance()),
+  hud(HUD::getInstance()),
 
   makeVideo( false ),
   frameCount( 0 ),
@@ -39,7 +40,6 @@ Manager::Manager() :
   }
   atexit(SDL_Quit);
   std::cerr << "did this break it" << std::endl;
-  Mapdata::getInstance();
   std::cerr<<"yup" << std::endl;
   int numSnowballs = Gamedata::getInstance().getXmlInt("numSnowballs");
   snowballs.reserve(numSnowballs+4);
@@ -61,7 +61,7 @@ Manager::Manager() :
 
 void Manager::draw() const {
   world.draw();
-  Mapdata::getInstance().draw();
+  map.draw();
   player->getSprite().draw();
   std::vector<Drawable*>::const_iterator it = snowballs.begin();
   while(it != snowballs.end()){
@@ -74,7 +74,7 @@ void Manager::draw() const {
 //  io.printMessageAt("               R to rotate special sprites", 10, 50);
   io.printMessageAt("Stephen Wells", 500, 450);
   viewport.draw();
-
+  hud.draw();
   SDL_Flip(screen);
 }
 
@@ -98,7 +98,8 @@ void Manager::update() {
     SDL_SaveBMP(screen, filename.c_str());
   }
   world.update();
-  Mapdata::getInstance().update(ticks);
+  map.update(ticks);
+  hud.update(ticks);
   viewport.update();	//update the viewport last
 }
 

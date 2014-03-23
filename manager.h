@@ -6,6 +6,8 @@
 #include "world.h"
 #include "viewport.h"
 #include "gridElement.h"
+#include "mapdata.h"
+#include "hud.h"
 
 class Manager {
 public:
@@ -26,6 +28,8 @@ private:
   unsigned int currentSprite;
 
   GridElement *player;
+  Mapdata& map;
+  HUD& hud;
 
   bool makeVideo;
   int frameCount;

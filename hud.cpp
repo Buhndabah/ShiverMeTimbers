@@ -1,6 +1,6 @@
 #include "hud.h"
 #include "dummyComponent.h"
-
+#include "hudClock.h"
 HUD& HUD::getInstance() {
     static HUD instance;
     return instance;
@@ -9,7 +9,7 @@ HUD& HUD::getInstance() {
 HUD::HUD() :
     components(),
     visible(true)
-{ components.push_back(new DummyComponent());}
+{ components.push_back(new HUDClock(Vector2f(100,50),true));}
 
 void HUD::draw() const {
     if(visible) {

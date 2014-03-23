@@ -15,7 +15,7 @@ public:
 
     virtual void draw() const=0;
     virtual void update(Uint32 ticks) =0;
-
+    bool isVisible() const { return visible; }
     virtual void setVisible() { visible =!visible; }
 
     const Vector2f& getPosition() const { return position; }
