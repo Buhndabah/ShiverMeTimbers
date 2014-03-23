@@ -38,9 +38,11 @@ Manager::Manager() :
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     throw std::string("Unable to initialize SDL: ");
   }
+
   hud.addTextComponent(Vector2f(0,10),TITLE,true);
   hud.addTextComponent(Vector2f(500,450), "Stephen Wells and John Butchko", false);
   hud.addFPS(Vector2f(10,10));
+
   atexit(SDL_Quit);
   int numSnowballs = Gamedata::getInstance().getXmlInt("numSnowballs");
   snowballs.reserve(numSnowballs+4);
@@ -166,6 +168,7 @@ std::cout << "grid: " << player->getGridPosition() << std::endl << std::endl;
       }
 
       if (keystate[SDLK_p] && !keyCatch) {
+        hud.onPause();
         keyCatch = true;
         if ( clock.isPaused() ) clock.unpause();
         else clock.pause();

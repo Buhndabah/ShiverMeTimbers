@@ -14,6 +14,7 @@ public:
     void addComponent(HUDComponent*);
     void addTextComponent(const Vector2f&,const std::string&, bool);
     void addFPS(const Vector2f&);
+    void onPause() const;
 private:
     HUD(); 
     HUD(const HUD&);

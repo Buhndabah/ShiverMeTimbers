@@ -3,7 +3,8 @@
 HUDText::HUDText(const std::string& n, const Vector2f& p, bool v) :
     HUDComponent(n,p,v),
     io(IOManager::getInstance()),
-    text("")
+    text(""),
+    centered(false)
 { }
 
 HUDText::HUDText(const std::string& n, const Vector2f& p, bool v, const std::string s, bool c) :
@@ -23,13 +24,16 @@ HUDText& HUDText::operator=(const HUDText& rhs)
 
 void HUDText::draw() const 
 {
-    if(centered)
+    if(isVisible())
     {
-        io.printMessageCenteredAt(text,getPosition()[0]);
-    }
-    else
-    {
-        io.printMessageAt(text, getPosition()[0], getPosition()[1]);
+        if(centered)
+        {
+            io.printMessageCenteredAt(text,getPosition()[0]);
+        }
+        else
+        {
+            io.printMessageAt(text, getPosition()[0], getPosition()[1]);
+        }
     }
 }
 

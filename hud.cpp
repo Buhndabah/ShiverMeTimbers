@@ -1,8 +1,10 @@
 #include "hud.h"
+#include "gamedata.h"
 #include "dummyComponent.h"
 #include "hudClock.h"
 #include "hudText.h"
 #include "hudFPS.h"
+#include "hudImage.h"
 
 HUD& HUD::getInstance() {
     static HUD instance;
@@ -16,6 +18,7 @@ HUD::HUD() :
 { 
     components.push_back(new HUDClock("clock", Vector2f(100,50),true, 600));
     components.push_back(new HUDText("testText", Vector2f(100,75),true,"TEST TEXT CYKA CYKA BLYAT",false));
+    addComponent(new HUDImage("pause screen", Vector2f(0,0), false, "pauseScreen"));
 }
 
 void HUD::draw() const {
@@ -24,6 +27,13 @@ void HUD::draw() const {
         {
             (*it)->draw();
         }
+    }
+}
+
+void HUD::onPause() const {
+    for(std::list<HUDComponent*>::const_iterator it=components.begin();it!=components.end();++it)
+    {
+        (*it)->setVisible();
     }
 }
 

@@ -25,7 +25,7 @@ public:
     virtual void setVisible() { visible =!visible; }
 
     const Vector2f& getPosition() const { return position; }
-
+    const std::string& getName() const { return name; }
 private:
     std::string name;
     Vector2f position;
