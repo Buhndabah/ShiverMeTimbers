@@ -1,6 +1,7 @@
 #include <sstream>
 #include "ioManager.h"
 #include "viewport.h"
+#include "hud.h"
 
 Viewport& Viewport::getInstance() {
   static Viewport viewport;
@@ -8,6 +9,7 @@ Viewport& Viewport::getInstance() {
 }
 
 Viewport::Viewport() : 
+  hud(HUD::getInstance()),
   gdata(Gamedata::getInstance()),
   position(0, 0),
   viewWidth(gdata.getXmlInt("viewWidth")), 
@@ -16,7 +18,9 @@ Viewport::Viewport() :
   worldHeight(gdata.getXmlInt("worldHeight")),
   objWidth(0), objHeight(0),
   objectToTrack(NULL) 
-{ }
+{ 
+    hud.addTextComponent("trackObj", Vector2f(0,30),"", true);
+}
 
 void Viewport::setObjectToTrack(const Drawable *obj) { 
   objectToTrack = obj; 
@@ -25,8 +29,9 @@ void Viewport::setObjectToTrack(const Drawable *obj) {
 }
 
 void Viewport::draw() const {
-  IOManager::getInstance().
-    printMessageCenteredAt("Tracking "+objectToTrack->getName(), 30);
+    hud.setComponentText("trackObj", "Tracking "+objectToTrack->getName());
+  //IOManager::getInstance().
+    //printMessageCenteredAt("Tracking "+objectToTrack->getName(), 30);
 }
 
 void Viewport::update() {

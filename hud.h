@@ -12,9 +12,10 @@ public:
     void draw() const;
     void update(Uint32) const;
     void addComponent(HUDComponent*);
-    void addTextComponent(const Vector2f&,const std::string&, bool);
+    void addTextComponent(const std::string&,const Vector2f&,const std::string&, bool);
     void addFPS(const Vector2f&);
     void onPause() const;
+    void setComponentText(const std::string&, const std::string&) const;
 private:
     HUD(); 
     HUD(const HUD&);

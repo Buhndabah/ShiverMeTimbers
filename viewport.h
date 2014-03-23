@@ -2,6 +2,7 @@
 #define VIEWPORT__H
 #include "drawable.h"
 #include "gamedata.h"
+#include "hud.h"
 
 class Viewport {
 public:
@@ -19,6 +20,7 @@ public:
   const Drawable* getObjectToTrack() const { return objectToTrack; } 
 
 private:
+  HUD& hud;
   const Gamedata& gdata;
   Vector2f position;
   unsigned viewWidth;

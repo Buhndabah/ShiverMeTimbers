@@ -28,7 +28,7 @@ void HUDText::draw() const
     {
         if(centered)
         {
-            io.printMessageCenteredAt(text,getPosition()[0]);
+            io.printMessageCenteredAt(text,getPosition()[1]);
         }
         else
         {

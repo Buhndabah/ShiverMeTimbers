@@ -16,8 +16,8 @@ HUD::HUD() :
     visible(true),
     fade(false)
 { 
-    components.push_back(new HUDClock("clock", Vector2f(100,50),true, 600));
-    components.push_back(new HUDText("testText", Vector2f(100,75),true,"TEST TEXT CYKA CYKA BLYAT",false));
+    components.push_back(new HUDClock("clock", Vector2f(10,30),true, 600));
+    components.push_back(new HUDText("testText", Vector2f(375,600),true,"TEST TEXT CYKA CYKA BLYAT",false));
     addComponent(new HUDImage("pause screen", Vector2f(0,0), false, "pauseScreen"));
 }
 
@@ -44,14 +44,24 @@ void HUD::update(Uint32 ticks) const {
     }
 }
 
-void HUD::addTextComponent(const Vector2f& pos, const std::string& text, bool c) 
+void HUD::addTextComponent(const std::string& name, const Vector2f& pos, const std::string& text, bool c) 
 {
-    addComponent(new HUDText("text", pos,true, text, c));
+    addComponent(new HUDText(name, pos,true, text, c));
 }
 
 void HUD::addFPS(const Vector2f& pos)
 {
     addComponent(new HUDFPS("fps", pos, true));
+}
+
+void HUD::setComponentText(const std::string& name, const std::string& text) const {
+    for(std::list<HUDComponent*>::const_iterator it=components.begin();it!=components.end();++it)
+    {
+        if(strcmp((*it)->getName().c_str(),name.c_str())==0)
+        {
+            ((HUDText*)(*it))->setText(text);
+        }
+    }
 }
 
 void HUD::addComponent(HUDComponent *c) {
