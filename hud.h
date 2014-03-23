@@ -9,6 +9,8 @@ public:
     HUD(const std::list<HUDComponent*> &l, bool b) : components(l), visible(b) {};
     HUD(const std::list<HUDComponent*> &l) : components(l),visible(true) {};
 
+
+    void toggleFade() { fade = !fade; }
     void toggle() {visible=!visible;};
     void draw() const;
     void update(Uint32) const;
@@ -21,5 +23,6 @@ private:
 
     std::list<HUDComponent*> components;
     bool visible;
+    bool fade;
 };
 #endif

@@ -27,6 +27,14 @@ HUDClock::HUDClock(const HUDClock& rhs) :
     countDown(rhs.countDown)
 { }
 
+HUDClock& HUDClock::operator=(const HUDClock& rhs) 
+{
+    HUDComponent::operator=(rhs);
+    startTime = rhs.startTime;
+    countDown = rhs.countDown;
+    return *this;
+}
+
 void HUDClock::draw() const {
     if(isVisible()) {
         std::stringstream strm;
