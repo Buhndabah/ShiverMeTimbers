@@ -41,8 +41,10 @@ void GridElement::update(Uint32 ticks) {
   bool atEdge = false;
 
   //Check right X border
-std::cout << "HURRBADURRBA " << gridPosition[0] + incr[0] << std::endl << std::endl;
+//std::cout << "HURRBADURRBA " << gridPosition[0] + incr[0] << std::endl;
+//std::cout << "\t" << gridPosition[1] + incr[1] << std::endl << std::endl;
   if((gridPosition[0] + incr[0] > dummy.getW() * dummy.getTileWidth())){
+std::cout<< "problem" << std::endl << std::endl;
     oldGridPos = gridPosition;
     gridPosition[0] = dummy.getW() * dummy.getTileWidth();
     dist = gridPosition[0] - oldGridPos[0];
