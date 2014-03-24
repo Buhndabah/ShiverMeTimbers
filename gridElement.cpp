@@ -37,63 +37,62 @@ void GridElement::update(Uint32 ticks) {
   bool atEdge = false;
   float fticks = static_cast<float>(ticks);
 
-  //Check right X border
+  //Check max X border
   if((gridPosition[0] + incr[0] > dummy.getW() * dummy.getTileWidth())){
-std::cout<< "problem" << std::endl << std::endl;
     oldGridPos = gridPosition;
     gridPosition[0] = dummy.getW() * dummy.getTileWidth();
     dist = gridPosition[0] - oldGridPos[0];
 
-    if(moveDir[0]) //if moving up
-      gridPosition[1] = gridPosition[1] - dist;
-    if(moveDir[7]) //if moving right
+    if(moveDir[3]) //if moving down
       gridPosition[1] = gridPosition[1] + dist;
+    if(moveDir[6]) //if moving left
+      gridPosition[1] = gridPosition[1] - dist;
 
     dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
     fticks = 1000 * dist / static_cast<float>(moveSpeed);
     atEdge = true;
   }
-  //Check left X border
+  //Check min X border
   else if(gridPosition[0] + incr[0] < 0){
     oldGridPos = gridPosition;
-    gridPosition[0] = 0;
+    gridPosition[0] = 0.;
     dist = 0. - oldGridPos[0];
 
-    if(moveDir[3]) //if moving down
-      gridPosition[1] = gridPosition[1] - dist;
-    if(moveDir[6]) //if moving left
+    if(moveDir[0]) //if moving up
       gridPosition[1] = gridPosition[1] + dist;
+    if(moveDir[7]) //if moving right
+      gridPosition[1] = gridPosition[1] - dist;
 
     dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
     fticks = 1000 * dist / static_cast<float>(moveSpeed);
     atEdge = true;
  
   }
-  //Check bottom Y border
+  //Check max Y border
   else if(gridPosition[1] + incr[1] > dummy.getH() * dummy.getTileWidth()){
     oldGridPos = gridPosition;
     gridPosition[1] = dummy.getH() * dummy.getTileWidth();
     dist = gridPosition[1] - oldGridPos[1];
 
     if(moveDir[3]) //if moving down
-      gridPosition[0] = gridPosition[0] - dist; 
-    if(moveDir[7]) //if moving right
       gridPosition[0] = gridPosition[0] + dist; 
+    if(moveDir[7]) //if moving right
+      gridPosition[0] = gridPosition[0] - dist; 
 
     dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
     fticks = 1000 * dist/ static_cast<float>(moveSpeed);
     atEdge = true;
   }
-  //Check top Y border
+  //Check min Y border
   else if(gridPosition[1] + incr[1] < 0){
     oldGridPos = gridPosition;
-    gridPosition[1] = 0;
+    gridPosition[1] = 0.;
     dist = 0. - oldGridPos[1];
 
     if(moveDir[0]) //if moving up
-      gridPosition[0] = gridPosition[0] - dist; 
-    if(moveDir[6]) //if moving left
       gridPosition[0] = gridPosition[0] + dist; 
+    if(moveDir[6]) //if moving left
+      gridPosition[0] = gridPosition[0] - dist; 
 
     dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
     fticks = 1000 * dist / static_cast<float>(moveSpeed);
@@ -119,18 +118,18 @@ void GridElement::moveUp() {
   clearMoveDir();
   moveDir[0] = true;
   getSprite().velocityX(0.);
-  getSprite().velocityY(-moveSpeed/sqrt(2));
+  getSprite().velocityY(-moveSpeed * (cos(26.565*3.141592653589/180) / cos(45*3.141592653589/180) * 0.5));
 
-  gridVelocityX(moveSpeed * cos(45*3.141592653589/180));
-  gridVelocityY(-gridVelocityX());
+  gridVelocityX(-moveSpeed * cos(45*3.141592653589/180));
+  gridVelocityY(gridVelocityX());
 }
 
 void GridElement::moveUpLeft() {
   clearMoveDir();
   moveDir[1] = true;
 
-  getSprite().velocityX(-moveSpeed * cos(30*3.141592653589/180));
-  getSprite().velocityY(-moveSpeed * sin(30*3.141592653589/180));
+  getSprite().velocityX(-moveSpeed * cos(26.565*3.141592653589/180));
+  getSprite().velocityY(-moveSpeed * sin(26.565*3.141592653589/180));
 
   gridVelocityX(0.);
   gridVelocityY(-moveSpeed);
@@ -140,10 +139,10 @@ void GridElement::moveUpRight() {
   clearMoveDir();
   moveDir[2] = true;
 
-  getSprite().velocityX(moveSpeed * cos(30*3.141592653589/180));
-  getSprite().velocityY(-moveSpeed * sin(30*3.141592653589/180));
+  getSprite().velocityX(moveSpeed * cos(26.565*3.141592653589/180));
+  getSprite().velocityY(-moveSpeed * sin(26.565*3.141592653589/180));
 
-  gridVelocityX(moveSpeed);
+  gridVelocityX(-moveSpeed);
   gridVelocityY(0.);
 }
 
@@ -152,20 +151,21 @@ void GridElement::moveDown() {
   moveDir[3] = true;
 
   getSprite().velocityX(0.);
-  getSprite().velocityY(moveSpeed/sqrt(2));
+  //getSprite().velocityY(moveSpeed/sqrt(2));
+  getSprite().velocityY(moveSpeed * (cos(26.565*3.141592653589/180) / cos(45*3.141592653589/180) * 0.5));
 
-  gridVelocityX(-moveSpeed * cos(45*3.141592653589/180));
-  gridVelocityY(-gridVelocityX());
+  gridVelocityX(moveSpeed * cos(45*3.141592653589/180));
+  gridVelocityY(gridVelocityX());
 }
 
 void GridElement::moveDownLeft() {
   clearMoveDir();
   moveDir[4] = true;
 
-  getSprite().velocityX(-moveSpeed * cos(30*3.141592653589/180));
-  getSprite().velocityY(moveSpeed * sin(30*3.141592653589/180));
+  getSprite().velocityX(-moveSpeed * cos(26.565*3.141592653589/180));
+  getSprite().velocityY(moveSpeed * sin(26.565*3.141592653589/180));
 
-  gridVelocityX(-moveSpeed);
+  gridVelocityX(moveSpeed);
   gridVelocityY(0.);
 }
 
@@ -173,8 +173,8 @@ void GridElement::moveDownRight() {
   clearMoveDir();
   moveDir[5] = true;
 
-  getSprite().velocityX(moveSpeed * cos(30*3.141592653589/180));
-  getSprite().velocityY(moveSpeed * sin(30*3.141592653589/180));
+  getSprite().velocityX(moveSpeed * cos(26.565*3.141592653589/180));
+  getSprite().velocityY(moveSpeed * sin(26.565*3.141592653589/180));
 
   gridVelocityX(0.);
   gridVelocityY(moveSpeed);
@@ -184,22 +184,22 @@ void GridElement::moveLeft() {
   clearMoveDir();
   moveDir[6] = true;
 
-  getSprite().velocityX(-moveSpeed / (sqrt(2)/sqrt(3)));
+  getSprite().velocityX(-moveSpeed *(cos(26.565*3.141592653589/180) / cos(45*3.141592653589/180)));
   getSprite().velocityY(0.);
 
-  gridVelocityX(-moveSpeed * cos(45*3.141592653589/180));
-  gridVelocityY(gridVelocityX());
+  gridVelocityX(moveSpeed * cos(45*3.141592653589/180));
+  gridVelocityY(-gridVelocityX());
 }
 
 void GridElement::moveRight() {
   clearMoveDir();
   moveDir[7] = true;
 
-  getSprite().velocityX(moveSpeed / (sqrt(2)/sqrt(3)));
+  getSprite().velocityX(moveSpeed *(cos(26.565*3.141592653589/180) / cos(45*3.141592653589/180)));
   getSprite().velocityY(0.);
 
-  gridVelocityX(moveSpeed * cos(45*3.141592653589/180));
-  gridVelocityY(gridVelocityX());
+  gridVelocityX(-moveSpeed * cos(45*3.141592653589/180));
+  gridVelocityY(-gridVelocityX());
 }
 
 void GridElement::stop() {
