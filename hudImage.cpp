@@ -16,7 +16,7 @@ HUDImage& HUDImage::operator=(const HUDImage& rhs)
 {
     HUDComponent::operator=(rhs);
     delete sprite;
-    sprite = new Sprite(*rhs.sprite);
+    sprite = new Sprite((Sprite&)*rhs.sprite);
     return *this;
 }
 

@@ -168,11 +168,22 @@ std::cout << "grid: " << player->getGridPosition() << std::endl << std::endl;
         makeVideo = true;
       }
 
+      if(keystate[SDLK_F1] && !keyCatch) {
+          keyCatch=true;
+          hud.toggleHelp();
+      }
+
       if (keystate[SDLK_p] && !keyCatch) {
-        hud.onPause();
         keyCatch = true;
-        if ( clock.isPaused() ) clock.unpause();
-        else clock.pause();
+        if ( clock.isPaused() ) 
+        {
+            hud.onPause(0);
+            clock.unpause();
+        }
+        else { 
+            hud.onPause(1);
+            clock.pause();
+        }
       }
 
       //change tracking sprite

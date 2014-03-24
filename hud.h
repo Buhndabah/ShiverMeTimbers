@@ -7,6 +7,8 @@ class HUD {
 public:
     static HUD& getInstance();
 
+    ~HUD(); 
+
     void toggleFade() { fade = !fade; }
     void toggle() {visible=!visible;};
     void draw() const;
@@ -14,8 +16,9 @@ public:
     void addComponent(HUDComponent*);
     void addTextComponent(const std::string&,const Vector2f&,const std::string&, bool);
     void addFPS(const Vector2f&);
-    void onPause() const;
+    void onPause(unsigned int) const;
     void setComponentText(const std::string&, const std::string&) const;
+    void toggleHelp() const;
 private:
     HUD(); 
     HUD(const HUD&);
@@ -24,5 +27,10 @@ private:
     std::list<HUDComponent*> components;
     bool visible;
     bool fade;
+
+    enum {
+        UNPAUSE,
+        PAUSE
+    };
 };
 #endif

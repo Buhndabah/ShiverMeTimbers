@@ -47,6 +47,17 @@
   <backTransparency>false</backTransparency>
 </back>
 
+<controlPopUp>
+    <controlPopUpFile>images/controlPopUp.png</controlPopUpFile>
+    <controlPopUpSrcX>0</controlPopUpSrcX>
+    <controlPopUpSrcY>0</ControlPopUpSrcY>
+    <controlPopUpWidth>200</controlPopUpWidth>
+    <controlPopUpHeight>666</controlPopUpHeight>
+    <controlPopUpLoc controlPopUpX="0" controlPopUpY="0"/>
+    <controlPopUpSpeed controlPopUpSpeedX="0" controlPopUpSpeedY="0"/>
+    <controlPopUpTransparency>true</controlPopUpTransparency>
+</controlPopUp>
+
 <pauseScreen>
     <pauseScreenFile>images/pauseScreen.png</pauseScreenFile>
     <pauseScreenSrcX>0</pauseScreenSrcX>
@@ -168,6 +179,16 @@
   <tile8Speed tile8SpeedX="0" tile8SpeedY="0"/>
   <tile8Transparency>false</tile8Transparency>
 </tile8>
+<hut>
+  <hutFile>images/hut.png</hutFile>
+  <hutLoc hutX="30" hutY="10"/>
+  <hutWidth>70</hutWidth>
+  <hutHeight>70</hutHeight>
+  <hutSrcX>0</hutSrcX>
+  <hutSrcY>0</hutSrcY>
+  <hutSpeed hutSpeedX="0" hutSpeedY="0"/>
+  <hutTransparency>false</hutTransparency>
+</hut>
 <tile9>
   <tile9File>images/test_tile9.png</tile9File>
   <tile9Loc tile9X="30" tile9Y="10"/>

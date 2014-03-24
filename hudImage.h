@@ -15,6 +15,6 @@ public:
     virtual void update(Uint32);
 
 private:
-    Sprite* sprite;
+    Drawable* sprite;
 };
 #endif

@@ -40,19 +40,21 @@ void HUDClock::draw() const {
         std::stringstream strm;
         std::string time;
 
-        if(countDown) {
+        if(countDown && ( (startTime-(clock.getTicks()/1000)) >0)) {
             strm << std::setfill('0') << std::setw(2) << (startTime - (clock.getTicks()/1000))/60 << ":"
                  << std::setfill('0') << std::setw(2) << (startTime - (clock.getTicks()/1000))%60 
                  << std::endl;
+            strm >> time;
+            io.printMessageAt(time, getPosition()[0],getPosition()[1]);
         }
-        else {
+        else if(!countDown){
             strm << std::setfill('0') << std::setw(2) << clock.getTicks()/1000/60 << ":" 
                 << std::setfill('0') << std::setw(2) << clock.getTicks()/1000%60 
                 << std::endl;
+            strm >> time;
+            io.printMessageAt(time, getPosition()[0],getPosition()[1]);
         }
 
-        strm >> time;
-        io.printMessageAt(time, getPosition()[0],getPosition()[1]);
     }
 }
 

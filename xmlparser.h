@@ -10,12 +10,6 @@
 
 class XMLParser {
 public:
-    XMLParser() :
-        doc(),
-        file(),
-        buf()
-    { }
-
     XMLParser(const std::string& fn) :
         doc(),
         file(fn.c_str(),std::ifstream::in),
@@ -38,6 +32,8 @@ public:
     void displayData() const;
 
 private:
+    XMLParser& operator=(const XMLParser&);
+    XMLParser(const XMLParser&);
     rapidxml::xml_document<> doc;
     std::ifstream file;
     std::vector<char> buf;  // doc retains references to the input vector, so this needs to be a member

@@ -1,10 +1,5 @@
 #include "tile.h"
 
-Tile::Tile(const std::string& s) :
-    sprite(new Sprite(s)),
-    collidable(false)
-{ }
-
 Tile::Tile(const std::string& s, const Vector2f& v) :
     sprite(new Sprite(s,v, Vector2f(0,0))),
     collidable(false)
@@ -12,11 +7,6 @@ Tile::Tile(const std::string& s, const Vector2f& v) :
 
 Tile::Tile(const std::string& s, const Vector2f&v, const bool b) :
     sprite(new Sprite(s,v, Vector2f(0,0))),
-    collidable(b)
-{ }
-
-Tile::Tile(const std::string& s, bool b) :
-    sprite(new Sprite(s)),
     collidable(b)
 { }
 
