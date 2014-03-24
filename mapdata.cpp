@@ -87,8 +87,13 @@ void Mapdata::createLayers()
             }
             unsigned int worldWidth = Gamedata::getInstance().getXmlInt("worldWidth");
             unsigned int worldHeight = Gamedata::getInstance().getXmlInt("worldHeight");
-            unsigned int tileLocX =(worldWidth/2)-((i/mapWidth)*tileWidth)+(i*tileWidth/2)-(mapWidth*tileWidth/2);
-            unsigned int tileLocY =(worldHeight/2) -(i*tileHeight/2)+((i / mapHeight)*tileHeight*2);
+            unsigned int offsetX = worldWidth/2 - tileWidth/2;
+            unsigned int offsetY = worldHeight/2 - mapHeight*tileHeight/2;
+            // by term: (middle of world) + (offset by row) + offset from middle
+            unsigned int tileLocX=  ((i/mapWidth)*tileWidth/2)-((i%mapWidth)*tileWidth/2)+offsetX;
+            unsigned int tileLocY= ((i/mapHeight)*tileHeight/2)+((i%mapHeight)*tileHeight/2)+offsetY;
+            //unsigned int tileLocX =(worldWidth/2)-((i/mapWidth)*tileWidth)+(i*tileWidth/2)-(mapWidth*tileWidth/2);
+            //unsigned int tileLocY =(worldHeight/2) -(i*tileHeight/2)+((i / mapHeight)*tileHeight*2);
             newLayer.push_back(Tile(tiles[id],Vector2f(tileLocX,tileLocY),collision));
             i++;
         }
