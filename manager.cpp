@@ -150,10 +150,10 @@ std::cout << "grid: " << player->getGridPosition() << std::endl << std::endl;
     if (event.type ==  SDL_QUIT) { done = true; break; }
     if(event.type == SDL_KEYUP) {
       //when a key is lifted, check to see if it was a movement button
-      if(!keystate[SDLK_w]) w = false;
-      if(!keystate[SDLK_a]) a = false;
-      if(!keystate[SDLK_s]) s = false;
-      if(!keystate[SDLK_d]) d = false;
+      if(!keystate[SDLK_w]&&!keystate[SDLK_UP]) w = false;
+      if(!keystate[SDLK_a]&&!keystate[SDLK_LEFT]) a = false;
+      if(!keystate[SDLK_s]&&!keystate[SDLK_DOWN]) s = false;
+      if(!keystate[SDLK_d]&&!keystate[SDLK_RIGHT]) d = false;
 
       keyCatch = false;
     }
@@ -204,19 +204,19 @@ std::cout << "grid: " << player->getGridPosition() << std::endl << std::endl;
       }
 
       //check for player movement input
-      if (keystate[SDLK_w]){
+      if (keystate[SDLK_w]||keystate[SDLK_UP]){
         keyCatch = true;
         w = true;
       }
-      if (keystate[SDLK_a]){
+      if (keystate[SDLK_a]||keystate[SDLK_LEFT]){
         keyCatch = true;
         a = true;
       }
-      if (keystate[SDLK_s]){
+      if (keystate[SDLK_s]||keystate[SDLK_DOWN]){
         keyCatch = true;
         s = true;
       }
-      if (keystate[SDLK_d]){
+      if (keystate[SDLK_d]||keystate[SDLK_RIGHT]){
         keyCatch = true;
         d = true;
       }

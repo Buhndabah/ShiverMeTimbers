@@ -19,9 +19,15 @@ HUD::HUD() :
 { 
     components.push_back(new HUDClock("clock", Vector2f(10,30),true, 60));
     components.push_back(new HUDText("testText", Vector2f(375,600),true,"TEST TEXT CYKA CYKA BLYAT",false));
-    addComponent(new HUDImage("pause screen", Vector2f(0,0), false, "pauseScreen"));
+
+    // pause stuff
+    addComponent(new HUDContainer("pause", Vector2f(0,0), false));
     components.back()->setVisibleWhenPaused(true);
     components.back()->setVisibleNotPause(false);
+    ((HUDContainer*)components.back())->addComponent(new HUDImage("pause screen",Vector2f(0,0), true, "pauseScreen"));
+    ((HUDContainer*)components.back())->addComponent(new HUDText("pause text", Vector2f(0,10),true,"Paused", true));
+
+    // help dialogue stuff
     addComponent(new HUDContainer("help", Vector2f(0,0), false));
     ((HUDContainer*)components.back())->addComponent(new HUDImage("background", Vector2f(0,0),true,"controlPopUp"));
     components.back()->setVisibleNotPause(false);
