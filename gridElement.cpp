@@ -30,19 +30,14 @@ void GridElement::update(Uint32 ticks) {
 //  if (getSprite().getVelocity() != Vector2f(0,0))
   //  getSprite().advanceFrame(ticks);
 
-//  getSprite().velocityX(gridVelocityX() - gridVelocityY());
-//  getSprite().velocityY((gridVelocityX() + gridVelocityY()) / 2);
-
-
   Vector2f incr = gridVelocity * static_cast<float>(ticks) * 0.001;
   Vector2f oldGridPos;// = gridPosition;
   Vector2f newGridPos;// = gridPosition;
   float dist;
   bool atEdge = false;
+  float fticks = static_cast<float>(ticks);
 
   //Check right X border
-//std::cout << "HURRBADURRBA " << gridPosition[0] + incr[0] << std::endl;
-//std::cout << "\t" << gridPosition[1] + incr[1] << std::endl << std::endl;
   if((gridPosition[0] + incr[0] > dummy.getW() * dummy.getTileWidth())){
 std::cout<< "problem" << std::endl << std::endl;
     oldGridPos = gridPosition;
@@ -55,14 +50,14 @@ std::cout<< "problem" << std::endl << std::endl;
       gridPosition[1] = gridPosition[1] + dist;
 
     dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
-    ticks = dist / static_cast<float>(moveSpeed);
+    fticks = 1000 * dist / static_cast<float>(moveSpeed);
     atEdge = true;
   }
   //Check left X border
   else if(gridPosition[0] + incr[0] < 0){
     oldGridPos = gridPosition;
     gridPosition[0] = 0;
-    dist = -oldGridPos[0];
+    dist = 0. - oldGridPos[0];
 
     if(moveDir[3]) //if moving down
       gridPosition[1] = gridPosition[1] - dist;
@@ -70,7 +65,7 @@ std::cout<< "problem" << std::endl << std::endl;
       gridPosition[1] = gridPosition[1] + dist;
 
     dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
-    ticks = dist / static_cast<float>(moveSpeed);
+    fticks = 1000 * dist / static_cast<float>(moveSpeed);
     atEdge = true;
  
   }
@@ -86,14 +81,14 @@ std::cout<< "problem" << std::endl << std::endl;
       gridPosition[0] = gridPosition[0] + dist; 
 
     dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
-    ticks = dist/ static_cast<float>(moveSpeed);
+    fticks = 1000 * dist/ static_cast<float>(moveSpeed);
     atEdge = true;
   }
   //Check top Y border
   else if(gridPosition[1] + incr[1] < 0){
     oldGridPos = gridPosition;
     gridPosition[1] = 0;
-    dist = -oldGridPos[1];
+    dist = 0. - oldGridPos[1];
 
     if(moveDir[0]) //if moving up
       gridPosition[0] = gridPosition[0] - dist; 
@@ -101,20 +96,18 @@ std::cout<< "problem" << std::endl << std::endl;
       gridPosition[0] = gridPosition[0] + dist; 
 
     dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
-    ticks = dist/ static_cast<float>(moveSpeed);
+    fticks = 1000 * dist / static_cast<float>(moveSpeed);
     atEdge = true;
  
   }
   else
     gridPosition += incr;
 
-  incr = getSprite().getVelocity() * static_cast<float>(ticks) * 0.001;
+  incr = getSprite().getVelocity() * fticks * 0.001;
   getSprite().setPosition(getSprite().getPosition() + incr);
 
   if(atEdge)
     stop();
-//std::cout << "velocity: " << getSprite().getVelocity() << std::endl;
-//std::cout << "\t" << getSprite().getPosition() << std::endl << std::endl;
 }
 
 void GridElement::clearMoveDir() {
