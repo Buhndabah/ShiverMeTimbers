@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <sstream>
 #include <iostream>
+#include <math.h>
 #include "vector2f.h"
 #include "gamedata.h"
 #include "mapdata.h"
@@ -101,6 +102,31 @@ void Mapdata::createLayers()
 // for now returns coordinate of bottom tile on bottom layer
 Vector2f Mapdata::getOrigin() const {
     return ( (*(*mapLayers.begin()).begin()).getCoord() + Vector2f(0,tileHeight/2) );
+}
+
+// grid coordinates come in as sqrt(tileWidth^2 + tileHeight^2), 0,0 top, 355,355 bottom
+const Tile& Mapdata::findTileAt(const Vector2f& coord) const {
+    unsigned int indexX = coord[0]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2));
+    unsigned int indexY = coord[1]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2));
+    unsigned int i =0;
+    for(std::list<Tile>::const_iterator it = (*mapLayers.begin()).begin(); it != (*mapLayers.end()).end(); ++it)
+    {
+        if(i!= (indexX + (indexY*mapHeight)))
+        {
+            ++i;
+        }
+        else
+        {
+            std::cerr << "tile found was # " << i << std::endl;
+            return (*it);
+        }
+    }
+    std::stringstream strm;
+    strm << "Request for tile@" << coord[0] << ", " << coord[1] << "failed.\n"
+         << "Translated index is " << (indexX +(indexY*mapHeight)) << std::endl;
+    std::string errMess;
+    strm >> errMess;
+    throw errMess;
 }
 
 void Mapdata::draw() const {

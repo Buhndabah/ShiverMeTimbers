@@ -21,6 +21,7 @@ public:
     int getTileHeight() const { return tileHeight;}
 
     Vector2f getOrigin() const;
+    const Tile& findTileAt(const Vector2f&) const;
 private:
     XMLParser parser;
     Mapdata(const std::string& fn = "xmlSpec/testMap.xml");
