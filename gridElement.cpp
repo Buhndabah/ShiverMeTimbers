@@ -8,6 +8,8 @@ GridElement::GridElement(const std::string& name) :
   gridSprite(name),
   gridPosition(0,0),
   gridVelocity(0,0),
+  maxHP(100),
+  curHP(100),
   dummy(DummyGrid::getInstance()),
   moveDir()
 {
@@ -21,9 +23,19 @@ GridElement::GridElement(const GridElement& g) :
   gridSprite(g.gridSprite),
   gridPosition(g.gridPosition),
   gridVelocity(g.gridVelocity),
+  maxHP(g.maxHP),
+  curHP(g.curHP),
   dummy(DummyGrid::getInstance()),
   moveDir(g.moveDir)
 {}
+
+void GridElement::onDamage(int damage) {
+    curHP-=damage;
+    if(curHP < 0)
+    {
+        curHP=0;
+    }
+}
 
 void GridElement::update(Uint32 ticks) {
 

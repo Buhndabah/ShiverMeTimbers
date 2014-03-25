@@ -2,6 +2,7 @@
 #define HUD_H
 #include <list>
 #include "hudComponent.h"
+#include "gridElement.h"
 
 class HUD {
 public:
@@ -9,6 +10,7 @@ public:
 
     ~HUD(); 
 
+    void setPlayer(GridElement* pl);
     void toggleFade() { fade = !fade; }
     void toggle() {visible=!visible;};
     void draw() const;
@@ -27,6 +29,7 @@ private:
     std::list<HUDComponent*> components;
     bool visible;
     bool fade;
+    GridElement *player;
 
     enum {
         UNPAUSE,

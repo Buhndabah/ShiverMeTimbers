@@ -6,6 +6,7 @@
 #include "hudText.h"
 #include "hudFPS.h"
 #include "hudImage.h"
+#include "hudHealthBar.h"
 
 HUD& HUD::getInstance() {
     static HUD instance;
@@ -15,7 +16,8 @@ HUD& HUD::getInstance() {
 HUD::HUD() :
     components(),
     visible(true),
-    fade(false)
+    fade(false),
+    player(NULL)
 { 
     components.push_back(new HUDClock("clock", Vector2f(10,30),true, 600));
     components.push_back(new HUDText("testText", Vector2f(375,600),true,"TEST TEXT CYKA CYKA BLYAT",false));
@@ -40,6 +42,11 @@ HUD::~HUD()
     {
         delete (*it);
     }
+}
+
+void HUD::setPlayer(GridElement* pl) {
+    player = pl;
+    addComponent(new HUDHealthBar("health",Vector2f(10,500),true,player,"healthBar"));
 }
 
 void HUD::draw() const {

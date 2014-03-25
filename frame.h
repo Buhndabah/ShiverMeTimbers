@@ -33,6 +33,9 @@ public:
   Uint16 getWidth()  const { return width; }
   Uint16 getHeight() const { return height; }
 
+  // draws a clipped portion of the surface
+  void partialDraw(Sint16 x, Sint16 y, double dx, double dy) const;
+
 private:
   SDL_Surface * screen;
   Uint16 width;

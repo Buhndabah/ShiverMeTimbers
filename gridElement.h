@@ -37,7 +37,10 @@ public:
   const Vector2f& getGridVelocity() const   { return gridVelocity; }
   void setGridVelocity(const Vector2f& vel) { gridVelocity = vel; }
 
+  int getCurrentHP() const { return curHP; }
+  int getMaxHP() const { return maxHP; }
 
+  void onDamage(int damage);
 
   void update(Uint32 ticks);
   void moveUp();
@@ -58,6 +61,8 @@ private:
   MultiSprite gridSprite;
   Vector2f gridPosition;
   Vector2f gridVelocity;
+  int maxHP;
+  int curHP;
   const DummyGrid& dummy; //the grid the gridElement is attached to
   std::vector<bool> moveDir; //boolean vector telling the gridElement which direction it is moving in
 };

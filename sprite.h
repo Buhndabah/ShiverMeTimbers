@@ -15,8 +15,11 @@ public:
 
   virtual const Frame* getFrame() const { return frame; }
   virtual void draw() const;
+  virtual void partialDraw(double dx, double dy) const;
 
   virtual void update(Uint32 ticks);
+
+  Vector2f getSize() const { return Vector2f(frameWidth, frameHeight); }
 
 private:
   const Frame * frame;

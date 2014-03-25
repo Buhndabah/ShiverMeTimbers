@@ -27,6 +27,17 @@ void HUDImage::draw() const {
     }
 }
 
-void HUDImage:: update(Uint32 ticks) {
+void HUDImage::partialDraw(float dx, float dy) const {
+    if(isVisible())
+    {
+        sprite->partialDraw(dx, dy);
+    }
+}
+
+void HUDImage::update(Uint32 ticks) {
     sprite->update(ticks);
+}
+
+Vector2f HUDImage::getSize() const{ 
+    return sprite->getSize(); 
 }

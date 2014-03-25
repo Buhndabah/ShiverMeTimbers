@@ -48,6 +48,12 @@ void MultiSprite::draw() const {
   frames[currentFrame]->draw(x, y);
 }
 
+void MultiSprite::partialDraw(double dx, double dy) const {
+    Uint32 x = static_cast<Uint32>(X());
+    Uint32 y = static_cast<Uint32>(X());
+    frames[currentFrame]->partialDraw(x,y,dx,dy);
+}
+
 void MultiSprite::update(Uint32 ticks) { 
   advanceFrame(ticks);
 

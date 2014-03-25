@@ -48,6 +48,7 @@ Manager::Manager() :
   snowballs.reserve(numSnowballs+4);
 
   player = new GridElement("coolyeti");
+  hud.setPlayer(player);
 //  snowballs.push_back(new MultiSprite("spinsnowball"));
   //snowballs.push_back(new MultiSprite("coolyeti"));
 //  snowballs.push_back(player);
@@ -186,6 +187,11 @@ std::cout << "grid: " << player->getGridPosition() << std::endl << std::endl;
         }
       }
 
+      // XXX damage testing
+      if(keystate[SDLK_r] && !keyCatch) {
+          keyCatch= true;
+          player->onDamage(10);
+      }
       //change tracking sprite
       if (keystate[SDLK_t] && !keyCatch) {
 	keyCatch = true;
@@ -220,6 +226,7 @@ std::cout << "grid: " << player->getGridPosition() << std::endl << std::endl;
         keyCatch = true;
         d = true;
       }
+
     }
 
     draw();

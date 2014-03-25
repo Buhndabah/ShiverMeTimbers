@@ -47,6 +47,18 @@
   <backTransparency>false</backTransparency>
 </back>
 
+<healthBar>
+  <healthBarFile>images/healthBar.png</healthBarFile>
+  <healthBarFactor>1</healthBarFactor>
+  <healthBarSrcX>0</healthBarSrcX>
+  <healthBarSrcY>0</healthBarSrcY>
+  <healthBarWidth>50</healthBarWidth>
+  <healthBarHeight>10</healthBarHeight>
+  <healthBarLoc healthBarX="10" healthBarY="500"/>
+  <healthBarSpeed backSpeedX="0" healthBarSpeedY="0"/>
+  <healthBarTransparency>true</healthBarTransparency>
+</back>
+
 <controlPopUp>
     <controlPopUpFile>images/controlPopUp.png</controlPopUpFile>
     <controlPopUpSrcX>0</controlPopUpSrcX>
