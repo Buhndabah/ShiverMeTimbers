@@ -34,6 +34,7 @@ HUD::HUD() :
     ((HUDContainer*)components.back())->addComponent(new HUDImage("background", Vector2f(0,0),true,"controlPopUp"));
     components.back()->setVisibleNotPause(false);
     ((HUDContainer*)components.back())->addComponent(new HUDText("help text",Vector2f(10,400),true, "WASD to move",false));
+
 }
 
 HUD::~HUD() 
@@ -47,6 +48,8 @@ HUD::~HUD()
 void HUD::setPlayer(GridElement* pl) {
     player = pl;
     addComponent(new HUDHealthBar("health",Vector2f(10,500),true,player,"healthBar"));
+    addComponent(new HUDText("bangin'", Vector2f(70,500),true, "Just look at this bangin' health bar",false));
+    addComponent(new HUDText("more bangin'", Vector2f(70,515),true,"Press r to bang it like you know you wanna",false));
 }
 
 void HUD::draw() const {
