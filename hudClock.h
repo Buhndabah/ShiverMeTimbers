@@ -14,10 +14,15 @@ public:
     virtual ~HUDClock() {}
     virtual void draw() const;
     virtual void update(Uint32);
+    void pause() { stop = true; }
+    void play() { stop = false; }
 private:
     const IOManager& io;
     const Clock& clock;
+    Uint32 totalTime;
+    std::string time;
     int startTime;  // in seconds
     bool countDown; // true if clock counts down
+    bool stop;
 };
 #endif

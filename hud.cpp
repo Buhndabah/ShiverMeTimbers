@@ -17,7 +17,7 @@ HUD::HUD() :
     visible(true),
     fade(false)
 { 
-    components.push_back(new HUDClock("clock", Vector2f(10,30),true, 60));
+    components.push_back(new HUDClock("clock", Vector2f(10,30),true, 600));
     components.push_back(new HUDText("testText", Vector2f(375,600),true,"TEST TEXT CYKA CYKA BLYAT",false));
 
     // pause stuff
