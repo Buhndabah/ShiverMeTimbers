@@ -15,7 +15,7 @@ public:
     virtual void draw() const;
     virtual void update(Uint32& ticks) const;
     const Vector2f& getCoord() const { return sprite->getPosition(); } 
-
+    bool isCollidable() const { return collidable; }
 private:
     Sprite *sprite;
     bool collidable;
