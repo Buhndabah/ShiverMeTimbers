@@ -10,6 +10,7 @@ public:
     void displayData() const;
 
     ~Mapdata() {}
+
     //void load();
     void draw() const;
     void update(Uint32& ticks);

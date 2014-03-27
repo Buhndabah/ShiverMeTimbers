@@ -25,7 +25,7 @@ public:
   virtual const Frame* getFrame() const = 0;
 
   virtual void draw() const = 0;
-  virtual void partialDraw(double dx, double dy) const = 0;
+  virtual void scaledDraw(double dx, double dy) const = 0;
   virtual void update(Uint32 ticks) = 0;
 
   virtual Vector2f getSize() const=0;

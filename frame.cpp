@@ -48,7 +48,7 @@ void Frame::draw(Sint16 x, Sint16 y, double angle) const {
   SDL_FreeSurface( tmp );
 }
 
-void Frame::partialDraw(Sint16 x, Sint16 y, double dx, double dy) const {
+void Frame::scaledDraw(Sint16 x, Sint16 y, double dx, double dy) const {
     x -= Viewport::getInstance().X();
     y -= Viewport::getInstance().Y();
     SDL_Rect src = { 0, 0, dx*width, dy*height };

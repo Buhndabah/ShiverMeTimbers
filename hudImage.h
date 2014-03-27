@@ -12,7 +12,7 @@ public:
     virtual ~HUDImage() { delete sprite; }
 
     virtual void draw() const;
-    void partialDraw(float dx, float dy) const;
+    void scaledDraw(float dx, float dy) const;
     virtual void update(Uint32);
 
     Vector2f getSize() const;

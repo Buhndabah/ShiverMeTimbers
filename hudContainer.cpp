@@ -26,9 +26,10 @@ HUDContainer& HUDContainer::operator=(const HUDContainer& rhs)
 }
 
 HUDContainer::~HUDContainer() {
-    for(std::list<HUDComponent*>::iterator it=components.begin(); it !=components.end(); ++it)
+    while(!components.empty())
     {
-        delete (*it);
+        delete components.front();
+        components.pop_front();
     }
 }
 

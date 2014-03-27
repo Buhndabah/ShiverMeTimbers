@@ -12,7 +12,7 @@ public:
 
   MultiSprite& operator=(const MultiSprite&);
   virtual void draw() const;
-  virtual void partialDraw(double dx, double dy) const;
+  virtual void scaledDraw(double dx, double dy) const;
   virtual void update(Uint32 ticks);
 
   virtual Vector2f getSize() const { return Vector2f(frameWidth,frameHeight); }

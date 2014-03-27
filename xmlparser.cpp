@@ -4,6 +4,7 @@
 #include "rapidxml_print.h"
 
 // walk entire tree for request tag and return associated value
+// XXX TODO This should probably just be a recursive call, to support further nesting, right now very specific to original game.xml
 const char* XMLParser::find_value(const std::string& tag) const
 {
     char* ret_value=NULL;
@@ -91,6 +92,7 @@ std::list<const rapidxml::xml_node<>* > XMLParser::findNodes(const std::string& 
     return ret_list;
 }
 
+// Return map of attributes for node
 std::map<std::string,std::string> XMLParser::parseNode(const rapidxml::xml_node<>* node) const
 {
     std::map<std::string,std::string> map;
@@ -101,12 +103,14 @@ std::map<std::string,std::string> XMLParser::parseNode(const rapidxml::xml_node<
     return map;
 }
 
+// Return list of attribute maps for all nodes matching tag
 std::list<std::map<std::string,std::string> > XMLParser::parseNodesWithTag(const std::string& tag) const
 {
     std::list<std::map<std::string, std::string> > ret_list = parseNodesWithTag(tag,doc.first_node());
     return ret_list;
 }
 
+// Return list of attribute maps for all nodes matching tag starting from "node"
 std::list<std::map<std::string, std::string> > XMLParser::parseNodesWithTag(const std::string& tag, const rapidxml::xml_node<>* node) const
 {
     std::list<std::map<std::string,std::string> > ret_list;
@@ -117,9 +121,9 @@ std::list<std::map<std::string, std::string> > XMLParser::parseNodesWithTag(cons
     }
     return ret_list;
 }
-// wwalk through each child, check name, if match return map, then check their children
-
 #endif
+
+// Spit out doc
 void XMLParser::displayData() const {
     std::cout << doc << std::endl;
 }

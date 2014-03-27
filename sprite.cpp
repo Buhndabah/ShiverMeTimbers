@@ -64,10 +64,10 @@ void Sprite::draw() const {
   frame->draw(x, y); 
 }
 
-void Sprite::partialDraw(double dx, double dy) const {
+void Sprite::scaledDraw(double dx, double dy) const {
     Uint32 x = static_cast<Uint32>(X());
     Uint32 y = static_cast<Uint32>(Y());
-    frame->partialDraw(x,y,dx,dy);
+    frame->scaledDraw(x,y,dx,dy);
 }
 
 int Sprite::getDistance(const Sprite *obj) const { 

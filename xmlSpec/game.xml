@@ -10,8 +10,8 @@
 
 
 <view>
-  <viewWidth>400</viewWidth>
-  <viewHeight>200</viewHeight>
+  <viewWidth>650</viewWidth>
+  <viewHeight>400</viewHeight>
 </view>
 
 <world>

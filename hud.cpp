@@ -24,9 +24,10 @@ HUD::HUD(const std::string& fn) :
 
 HUD::~HUD() 
 {
-    for(std::list<HUDComponent*>::iterator it=components.begin(); it != components.end(); ++it)
+    while(!components.empty())
     {
-        delete (*it);
+        delete components.front();
+        components.pop_front();
     }
 }
 

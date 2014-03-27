@@ -27,10 +27,10 @@ void HUDImage::draw() const {
     }
 }
 
-void HUDImage::partialDraw(float dx, float dy) const {
+void HUDImage::scaledDraw(float dx, float dy) const {
     if(isVisible())
     {
-        sprite->partialDraw(dx, dy);
+        sprite->scaledDraw(dx, dy);
     }
 }
 

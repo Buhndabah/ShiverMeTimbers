@@ -15,7 +15,7 @@ public:
 
   virtual const Frame* getFrame() const { return frame; }
   virtual void draw() const;
-  virtual void partialDraw(double dx, double dy) const;
+  virtual void scaledDraw(double dx, double dy) const;
 
   virtual void update(Uint32 ticks);
 
