@@ -9,7 +9,7 @@ public:
     Tile(const std::string&, const Vector2f&);
     Tile(const std::string&, const Vector2f&, const bool);
     Tile(const Tile& t);
-    ~Tile() {} 
+    ~Tile(){ delete sprite; } ;  
     Tile& operator=(const Tile&);
 
     void draw() const;

@@ -143,6 +143,13 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
                                     Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
                                     componentParams["visible"].compare("true") ? 0 : 1));
         }
+        else if(componentParams["type"].compare("image")==0)
+        {
+            addComponent(new HUDImage(componentParams["name"],
+                                      Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
+                                      componentParams["visible"].compare("true") ? 0 : 1,
+                                      componentParams["file"]));
+        }
         else if(componentParams["type"].compare("container")==0)
         {
             addComponent(new HUDContainer(componentParams["name"], 
@@ -190,6 +197,13 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
                                           Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
                                           componentParams["visible"].compare("true") ? 0 : 1));
         }
+        else if(componentParams["type"].compare("image")==0)
+        {
+            cont->addComponent(new HUDImage(componentParams["name"],
+                                      Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
+                                      componentParams["visible"].compare("true") ? 0 : 1,
+                                      componentParams["file"]));
+        }
         else if(componentParams["type"].compare("container")==0)
         {
             cont-> addComponent(new HUDContainer(componentParams["name"], 
@@ -200,14 +214,14 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
         // Check optional parameters
         if(componentParams.find("visibleNotPaused") != componentParams.end())
         {
-            components.back()->setVisibleNotPaused(componentParams["visibleNotPaused"].compare("true") ? 0 : 1);
+            cont->back()->setVisibleNotPaused(componentParams["visibleNotPaused"].compare("true") ? 0 : 1);
         }
         if(componentParams.find("visibleWhenPaused") != componentParams.end())
         {
-            components.back()->setVisibleWhenPaused(componentParams["visibleWhenPaused"].compare("true") ? 0 : 1);
+            cont->back()->setVisibleWhenPaused(componentParams["visibleWhenPaused"].compare("true") ? 0 : 1);
         }
 
-        return components.back();
+        return cont->back();
 }
 
 /* Read in components from xml file */
@@ -225,16 +239,16 @@ void HUD::parseComponents(const std::string& fn) {
     }
 
     // walk through container entries
-    for(std::list<const rapidxml::xml_node<>*>::const_iterator it = containerList.begin(); it!= containerList.end(); ++it)
+    for(std::list<const rapidxml::xml_node<>*>::const_iterator contIt = containerList.begin(); contIt!= containerList.end(); ++contIt)
     {
-        containerParams=parser.parseNode(*it);
+        containerParams=parser.parseNode(*contIt);
         newContainer = static_cast<HUDContainer*>(createComponent(containerParams));
-        componentList = parser.parseNodesWithTag("item", *it);
+        componentList = parser.parseNodesWithTag("item", *contIt);
 
         // Walk through components listed for each container
-        for(std::list<std::map<std::string, std::string> >::const_iterator contIt = componentList.begin(); contIt != componentList.end(); ++contIt)
+        for(std::list<std::map<std::string, std::string> >::const_iterator contComp = componentList.begin(); contComp != componentList.end(); ++contComp)
          {
-             createComponent(*contIt, newContainer);
+             createComponent(*contComp, newContainer);
          }
     }
 } 

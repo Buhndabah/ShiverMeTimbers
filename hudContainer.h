@@ -14,6 +14,7 @@ public:
     virtual void draw() const;
     virtual void update(Uint32);
 
+    HUDComponent* back() const { return components.back(); }
     void addComponent(HUDComponent*);
     void removeComponent(const std::string&);
 private:

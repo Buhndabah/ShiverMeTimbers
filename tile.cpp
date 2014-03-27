@@ -11,11 +11,14 @@ Tile::Tile(const std::string& s, const Vector2f&v, const bool b) :
 { }
 
 Tile::Tile(const Tile& t) :
-    sprite(t.sprite),
+    sprite(new Sprite(*(t.sprite))),
     collidable(t.collidable)
 { }
 
 Tile& Tile::operator=(const Tile& rhs) {
+    if(this == &rhs) return *this;
+    
+    delete sprite;
     sprite = new Sprite(*(rhs.sprite));
     collidable = rhs.collidable;
     return *this;

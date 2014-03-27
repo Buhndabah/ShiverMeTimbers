@@ -111,10 +111,10 @@ void Mapdata::createLayers()
 
 
             newLayer.push_back(Tile(tiles[id],Vector2f(tileLocX,tileLocY),collision));
-
             i++;
         }
         mapLayers.push_back(newLayer);
+            std::cerr<<"what" << std::endl;
         newLayer.clear();
     }
 }
