@@ -39,10 +39,6 @@ Manager::Manager() :
     throw std::string("Unable to initialize SDL: ");
   }
 
-  hud.addTextComponent("title", Vector2f(0,10),TITLE,true);
-  hud.addTextComponent("credits", Vector2f(750,10), "Stephen Wells and John Butchko", false);
-  hud.addFPS(Vector2f(10,10));
-
   atexit(SDL_Quit);
   int numSnowballs = Gamedata::getInstance().getXmlInt("numSnowballs");
   snowballs.reserve(numSnowballs+4);

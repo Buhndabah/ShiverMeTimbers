@@ -2,7 +2,6 @@
 #include "gamedata.h"
 #include "dummyComponent.h"
 #include "hudClock.h"
-#include "hudContainer.h"
 #include "hudText.h"
 #include "hudFPS.h"
 #include "hudImage.h"
@@ -13,28 +12,14 @@ HUD& HUD::getInstance() {
     return instance;
 }
 
-HUD::HUD() :
+HUD::HUD(const std::string& fn) :
+    parser(fn),
     components(),
     visible(true),
     fade(false),
     player(NULL)
 { 
-    components.push_back(new HUDClock("clock", Vector2f(10,30),true, 600));
-    components.push_back(new HUDText("testText", Vector2f(375,600),true,"TEST TEXT CYKA CYKA BLYAT",false));
-
-    // pause stuff
-    addComponent(new HUDContainer("pause", Vector2f(0,0), false));
-    components.back()->setVisibleWhenPaused(true);
-    components.back()->setVisibleNotPause(false);
-    ((HUDContainer*)components.back())->addComponent(new HUDImage("pause screen",Vector2f(0,0), true, "pauseScreen"));
-    ((HUDContainer*)components.back())->addComponent(new HUDText("pause text", Vector2f(0,10),true,"Paused", true));
-
-    // help dialogue stuff
-    addComponent(new HUDContainer("help", Vector2f(0,0), false));
-    ((HUDContainer*)components.back())->addComponent(new HUDImage("background", Vector2f(0,0),true,"controlPopUp"));
-    components.back()->setVisibleNotPause(false);
-    ((HUDContainer*)components.back())->addComponent(new HUDText("help text",Vector2f(10,400),true, "WASD to move",false));
-
+    parseComponents(fn);
 }
 
 HUD::~HUD() 
@@ -45,22 +30,13 @@ HUD::~HUD()
     }
 }
 
+// set reference to player and add a health bar
 void HUD::setPlayer(GridElement* pl) {
     player = pl;
     addComponent(new HUDHealthBar("health",Vector2f(10,500),true,player,"healthBar"));
-    addComponent(new HUDText("bangin'", Vector2f(70,500),true, "Just look at this bangin' health bar",false));
-    addComponent(new HUDText("more bangin'", Vector2f(70,515),true,"Press r to bang it like you know you wanna",false));
 }
 
-void HUD::draw() const {
-    if(visible) {
-        for(std::list<HUDComponent*>::const_iterator it = components.begin();it!=components.end();++it)
-        {
-            (*it)->draw();
-        }
-    }
-}
-
+// toggle each component's visibility based on game state
 void HUD::onPause(unsigned int state) const {
     for(std::list<HUDComponent*>::const_iterator it=components.begin();it!=components.end();++it)
     {
@@ -81,7 +57,7 @@ void HUD::onPause(unsigned int state) const {
             {
                 (*it)->setVisible(false);
             }
-            else if((*it)->isVisibleNotPause())
+            else if((*it)->isVisibleNotPaused())
             {
                 (*it)->setVisible(true);
             }
@@ -89,6 +65,17 @@ void HUD::onPause(unsigned int state) const {
     }
 }
 
+// draw each component
+void HUD::draw() const {
+    if(visible) {
+        for(std::list<HUDComponent*>::const_iterator it = components.begin();it!=components.end();++it)
+        {
+            (*it)->draw();
+        }
+    }
+}
+
+// Update each component
 void HUD::update(Uint32 ticks) const {
     for(std::list<HUDComponent*>::const_iterator it=components.begin();it!=components.end();++it)
     {
@@ -96,26 +83,18 @@ void HUD::update(Uint32 ticks) const {
     }
 }
 
-void HUD::addTextComponent(const std::string& name, const Vector2f& pos, const std::string& text, bool c) 
-{
-    addComponent(new HUDText(name, pos,true, text, c));
-}
-
-void HUD::addFPS(const Vector2f& pos)
-{
-    addComponent(new HUDFPS("fps", pos, true));
-}
-
+// Sets text on components (only supports HUDText right now)
 void HUD::setComponentText(const std::string& name, const std::string& text) const {
     for(std::list<HUDComponent*>::const_iterator it=components.begin();it!=components.end();++it)
     {
         if(strcmp((*it)->getName().c_str(),name.c_str())==0)
         {
-            ((HUDText*)(*it))->setText(text);
+            static_cast<HUDText*>(*it)->setText(text);
         }
     }
 }
 
+// Turns the help dialogue on/off
 void HUD::toggleHelp() const {
     for(std::list<HUDComponent*>::const_iterator it = components.begin(); it!= components.end(); ++it)
     {
@@ -126,6 +105,135 @@ void HUD::toggleHelp() const {
     }
 }
 
+// Push new component onto list
 void HUD::addComponent(HUDComponent *c) {
     components.push_back(c);
 }
+
+// Publically visible constructor for a text box
+void HUD::addTextComponent(const std::string& name, const Vector2f& pos, const std::string& text, bool visible) {
+    addComponent(new HUDText(name, pos, true, text, visible));
+} 
+
+
+/* Create a component and add it to HUD's component list. Returns a pointer to that component. */
+HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentParams)
+{
+
+        // Check type
+        if(componentParams["type"].compare("clock")==0)
+        {
+            addComponent(new HUDClock(componentParams["name"],
+                                      Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
+                                      componentParams["visible"].compare("true") ? 0 : 1,
+                                      atoi(componentParams["start"].c_str())));
+        }
+        else if(componentParams["type"].compare("text")==0)
+        {
+            addComponent(new HUDText(componentParams["name"],
+                                     Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
+                                     componentParams["visible"].compare("true") ? 0 : 1, 
+                                     componentParams["text"],
+                                     componentParams["centered"].compare("true") ? 0 : 1));
+        }
+        else if(componentParams["type"].compare("fps")==0)
+        {
+            addComponent(new HUDFPS(componentParams["name"],
+                                    Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
+                                    componentParams["visible"].compare("true") ? 0 : 1));
+        }
+        else if(componentParams["type"].compare("container")==0)
+        {
+            addComponent(new HUDContainer(componentParams["name"], 
+                                          Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())), 
+                                          componentParams["visible"].compare("true") ? 0 : 1));
+        }
+
+        // Check optional parameters
+        if(componentParams.find("visibleNotPaused") != componentParams.end())
+        {
+            components.back()->setVisibleNotPaused(componentParams["visibleNotPaused"].compare("true") ? 0 : 1);
+        }
+        if(componentParams.find("visibleWhenPaused") != componentParams.end())
+        {
+            components.back()->setVisibleWhenPaused(componentParams["visibleWhenPaused"].compare("true") ? 0 : 1);
+        }
+
+
+        return components.back();
+}
+
+/* Create a component, and add it to HUDContainer's component list. Returns a pointer to that component. */
+HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentParams, HUDContainer* cont)
+{
+
+        // Check type
+        if(componentParams["type"].compare("clock")==0)
+        {
+            cont->addComponent(new HUDClock(componentParams["name"],
+                                            Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
+                                            componentParams["visible"].compare("true") ? 0 : 1,
+                                            atoi(componentParams["start"].c_str())));
+        }
+        else if(componentParams["type"].compare("text")==0)
+        {
+            cont->addComponent(new HUDText(componentParams["name"],
+                                           Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
+                                           componentParams["visible"].compare("true") ? 0 : 1, 
+                                           componentParams["text"],
+                                           componentParams["centered"].compare("true") ? 0 : 1));
+        }
+        else if(componentParams["type"].compare("fps")==0)
+        {
+            cont->addComponent(new HUDFPS(componentParams["name"],
+                                          Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
+                                          componentParams["visible"].compare("true") ? 0 : 1));
+        }
+        else if(componentParams["type"].compare("container")==0)
+        {
+            cont-> addComponent(new HUDContainer(componentParams["name"], 
+                                                 Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())), 
+                                                 componentParams["visible"].compare("true") ? 0 : 1));
+        }
+
+        // Check optional parameters
+        if(componentParams.find("visibleNotPaused") != componentParams.end())
+        {
+            components.back()->setVisibleNotPaused(componentParams["visibleNotPaused"].compare("true") ? 0 : 1);
+        }
+        if(componentParams.find("visibleWhenPaused") != componentParams.end())
+        {
+            components.back()->setVisibleWhenPaused(componentParams["visibleWhenPaused"].compare("true") ? 0 : 1);
+        }
+
+        return components.back();
+}
+
+/* Read in components from xml file */
+void HUD::parseComponents(const std::string& fn) {
+
+    std::list<std::map<std::string, std::string> > componentList = parser.parseNodesWithTag("component");   // components are immediately ready to parse in...
+
+    std::list<const rapidxml::xml_node<>* > containerList=parser.findNodes("container");    // ...containers take a bit more work though
+    std::map<std::string,std::string> containerParams;
+    HUDContainer* newContainer = NULL;
+
+    for(std::list<std::map<std::string, std::string> >::const_iterator it=componentList.begin(); it!=componentList.end(); ++it)
+    {
+        createComponent(*it);
+    }
+
+    // walk through container entries
+    for(std::list<const rapidxml::xml_node<>*>::const_iterator it = containerList.begin(); it!= containerList.end(); ++it)
+    {
+        containerParams=parser.parseNode(*it);
+        newContainer = static_cast<HUDContainer*>(createComponent(containerParams));
+        componentList = parser.parseNodesWithTag("item", *it);
+
+        // Walk through components listed for each container
+        for(std::list<std::map<std::string, std::string> >::const_iterator contIt = componentList.begin(); contIt != componentList.end(); ++contIt)
+         {
+             createComponent(*contIt, newContainer);
+         }
+    }
+} 

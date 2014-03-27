@@ -9,6 +9,7 @@ public:
     static Mapdata& getInstance();
     void displayData() const;
 
+    ~Mapdata() {}
     //void load();
     void draw() const;
     void update(Uint32& ticks);
@@ -27,7 +28,6 @@ private:
     Mapdata(const std::string& fn = "xmlSpec/testMap.xml");
     Mapdata(const Mapdata&);
     Mapdata& operator=(const Mapdata&);
-    ~Mapdata() {}
 
     void createTiles();
     void createLayers();

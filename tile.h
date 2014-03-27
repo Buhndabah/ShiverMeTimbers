@@ -12,8 +12,8 @@ public:
     ~Tile() {} 
     Tile& operator=(const Tile&);
 
-    virtual void draw() const;
-    virtual void update(Uint32& ticks) const;
+    void draw() const;
+    void update(Uint32& ticks) const;
     const Vector2f& getCoord() const { return sprite->getPosition(); } 
     bool isCollidable() const { return collidable; }
 private:

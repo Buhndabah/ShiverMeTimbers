@@ -30,8 +30,8 @@ public:
     virtual void setVisible(bool v) { visible =v; }
     bool isVisibleWhenPaused() const { return visibleWhenPaused; }
     void setVisibleWhenPaused(bool v) { visibleWhenPaused = v; }
-    bool isVisibleNotPause() const { return visibleNotPause; }
-    void setVisibleNotPause(bool v) { visibleNotPause = v; }
+    bool isVisibleNotPaused() const { return visibleNotPause; }
+    void setVisibleNotPaused(bool v) { visibleNotPause = v; }
 
     const Vector2f& getPosition() const { return position; }
     const std::string& getName() const { return name; }

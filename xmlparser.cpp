@@ -103,15 +103,20 @@ std::map<std::string,std::string> XMLParser::parseNode(const rapidxml::xml_node<
 
 std::list<std::map<std::string,std::string> > XMLParser::parseNodesWithTag(const std::string& tag) const
 {
+    std::list<std::map<std::string, std::string> > ret_list = parseNodesWithTag(tag,doc.first_node());
+    return ret_list;
+}
+
+std::list<std::map<std::string, std::string> > XMLParser::parseNodesWithTag(const std::string& tag, const rapidxml::xml_node<>* node) const
+{
     std::list<std::map<std::string,std::string> > ret_list;
-    std::list<const rapidxml::xml_node<>* > nodes = findNodes(tag);
+    std::list<const rapidxml::xml_node<>* > nodes = findNodes(tag,node);
     for(std::list<const rapidxml::xml_node<>* >::const_iterator iterator= nodes.begin();iterator!=nodes.end(); ++iterator)
     {
         ret_list.push_back(parseNode(*iterator));
     }
     return ret_list;
 }
-
 // wwalk through each child, check name, if match return map, then check their children
 
 #endif

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<hud>
+    <component type="text" name="title" x="0" y="10" visible="true" text = "Project #2" centered="true"/>
+    <component type="fps" name="fps clock" x="10" y="10" visible="true"/>
+    <component type="text" name="credits" x="750" y="10" visible="true" text="Stephen Wells and John Butchko" centered="false"/>
+    <component type="clock" name= "clock" x="10" y="30" visible="true" start="600"/>
+    <component type="text"  name="testText" x="375" y="600" visible="true" text="TEST TEXT CYKA CYKA BLYAT" centered="false"/>
+    <container name="pause" x="0" y="0" visible="false" visibleWhenPaused="true" visibleNotPaused="false">
+        <item type="image" name="pause screen" x="0" y="0" visible="true" file="pauseScreen"/>
+        <item type="text" name="pause text" x="0" y="10" visible="true" text="Paused" centered="true"/>
+    </container>
+    <container name="help" x="0" y="0" visible="false" visibleNotPaused="false">
+        <item type="image" name = "background" x="0" y="0" visible="true" file="controlPopUp"/>
+        <item type="text" name= "help text" x="10" y="400" visible="true" text="WASD to move" visible="false"/>
+    </container>
+</hud>

@@ -29,6 +29,7 @@ public:
     std::list<const rapidxml::xml_node<>*> findNodes(const std::string& tag, const rapidxml::xml_node<>* n) const;
     std::map<std::string,std::string> parseNode(const rapidxml::xml_node<>* node) const;
     std::list<std::map<std::string, std::string> > parseNodesWithTag(const std::string& tag) const;
+    std::list<std::map<std::string, std::string> > parseNodesWithTag(const std::string& tag, const rapidxml::xml_node<>* node) const;
     void displayData() const;
 
 private:

@@ -10,8 +10,8 @@
 
 
 <view>
-  <viewWidth>1000</viewWidth>
-  <viewHeight>666</viewHeight>
+  <viewWidth>400</viewWidth>
+  <viewHeight>200</viewHeight>
 </view>
 
 <world>
@@ -30,8 +30,8 @@
 <maxStringSize>50</maxStringSize>
 
 <grid>
-  <tilesX>5</tilesX>
-  <tilesY>5</tilesY>
+  <tilesX>10</tilesX>
+  <tilesY>10</tilesY>
   <tilesWidth>71.5</tilesWidth> 
 </grid>
 
