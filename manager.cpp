@@ -12,6 +12,7 @@ Manager::~Manager() {
   for(unsigned int i = 0; i < snowballs.size(); i++){
      delete snowballs[i]; 
   }
+  delete player;
 }
 
 Manager::Manager() :
