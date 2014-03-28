@@ -45,7 +45,6 @@ void GridElement::update(Uint32 ticks) {
 
 //  if (getSprite().getVelocity() != Vector2f(0,0))
   //  getSprite().advanceFrame(ticks);
-
   Vector2f incr = gridVelocity * static_cast<float>(ticks) * 0.001;
   Vector2f oldGridPos;// = gridPosition;
   Vector2f newGridPos;// = gridPosition;
