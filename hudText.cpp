@@ -67,7 +67,7 @@ void HUDText::draw() const
 }
 
 void HUDText::update(Uint32 ticks) {
-    // nothing
+    (void)ticks;
 }
 
 void HUDText::setText(const std::string &t)

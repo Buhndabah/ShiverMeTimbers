@@ -33,7 +33,7 @@ private:
     HUD(const HUD&);
     HUD& operator=(const HUD&);
 
-    void parseComponents(const std::string& fn);
+    void parseComponents();
 
     XMLParser parser;
     std::list<HUDComponent*> components;

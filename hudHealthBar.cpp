@@ -36,6 +36,7 @@ void HUDHealthBar::draw() const {
 }
 
 void HUDHealthBar::update(Uint32 ticks) {
+    (void)ticks;
     bar->setPosition(player->getPosition()+offset);
     healthRatio = (static_cast<double>(player->getCurrentHP())/static_cast<double>(player->getMaxHP()));
     std::cerr << "healthRatio is " << player->getCurrentHP()/player->getMaxHP() << std::endl;

@@ -19,7 +19,7 @@ HUD::HUD(const std::string& fn) :
     fade(false),
     player(NULL)
 { 
-    parseComponents(fn);
+    parseComponents();
 }
 
 HUD::~HUD() 
@@ -254,7 +254,7 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
 }
 
 /* Read in components from xml file */
-void HUD::parseComponents(const std::string& fn) {
+void HUD::parseComponents() {
 
     std::list<std::map<std::string, std::string> > componentList = parser.parseNodesWithTag("component");   // components are immediately ready to parse in...
 

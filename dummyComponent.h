@@ -11,6 +11,6 @@ public:
     virtual ~DummyComponent() {}
 
     virtual void draw() const {}
-    virtual void update(Uint32 ticks) {}
+    virtual void update(Uint32 ticks) {(void)ticks;}
 };
 #endif

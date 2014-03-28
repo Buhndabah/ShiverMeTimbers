@@ -28,5 +28,5 @@ void HUDFPS::draw() const
 
 void HUDFPS::update(Uint32 ticks) 
 {
-    // nothing
+    (void)ticks;
 }
