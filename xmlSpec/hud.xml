@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <hud>
-    <component type="text" name="title" x="0" y="10" visible="true" text = "Project #3" centered="true"/>
     <component type="text" name="credits" x="750" y="10" visible="true" text="Stephen Wells and John Butchko" centered="false"/>
     <component type="clock" name= "clock" x="10" y="10" visible="true" start="600"/>
     <container type = "container" name="pause" x="0" y="0" visible="false" visibleWhenPaused="true" visibleNotPaused="false">
