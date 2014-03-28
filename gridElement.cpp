@@ -39,83 +39,24 @@ void GridElement::onDamage(int damage) {
     {
         curHP=maxHP;
     }
+
 }
 
 void GridElement::update(Uint32 ticks) {
 
-//  if (getSprite().getVelocity() != Vector2f(0,0))
-  //  getSprite().advanceFrame(ticks);
+  if (getSprite().getVelocity() != Vector2f(0,0))
+    getSprite().update(ticks);
+
   Vector2f incr = gridVelocity * static_cast<float>(ticks) * 0.001;
-  Vector2f oldGridPos;// = gridPosition;
-  Vector2f newGridPos;// = gridPosition;
-  float dist;
-  bool atEdge = false;
   float fticks = static_cast<float>(ticks);
 
-  //Check max X border
-  if((gridPosition[0] + incr[0] > map.getW() * map.getTileWidth())){
-    oldGridPos = gridPosition;
-    gridPosition[0] = map.getW() * map.getTileWidth();
-    dist = gridPosition[0] - oldGridPos[0];
+  int moveDirIndx = 0;
+  for(int i=0; i<8; ++i)
+    if(moveDir[i]) moveDirIndx = i;
 
-    if(moveDir[3]) //if moving down
-      gridPosition[1] = gridPosition[1] + dist;
-    if(moveDir[6]) //if moving left
-      gridPosition[1] = gridPosition[1] - dist;
-
-    dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
-    fticks = 1000 * dist / static_cast<float>(moveSpeed);
-    atEdge = true;
-  }
-  //Check min X border
-  else if(gridPosition[0] + incr[0] < 0){
-    oldGridPos = gridPosition;
-    gridPosition[0] = 0.;
-    dist = 0. - oldGridPos[0];
-
-    if(moveDir[0]) //if moving up
-      gridPosition[1] = gridPosition[1] + dist;
-    if(moveDir[7]) //if moving right
-      gridPosition[1] = gridPosition[1] - dist;
-
-    dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
-    fticks = 1000 * dist / static_cast<float>(moveSpeed);
-    atEdge = true;
- 
-  }
-  //Check max Y border
-  else if(gridPosition[1] + incr[1] > map.getH() * map.getTileWidth()){
-    oldGridPos = gridPosition;
-    gridPosition[1] = map.getH() * map.getTileWidth();
-    dist = gridPosition[1] - oldGridPos[1];
-
-    if(moveDir[3]) //if moving down
-      gridPosition[0] = gridPosition[0] + dist; 
-    if(moveDir[7]) //if moving right
-      gridPosition[0] = gridPosition[0] - dist; 
-
-    dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
-    fticks = 1000 * dist/ static_cast<float>(moveSpeed);
-    atEdge = true;
-  }
-  //Check min Y border
-  else if(gridPosition[1] + incr[1] < 0){
-    oldGridPos = gridPosition;
-    gridPosition[1] = 0.;
-    dist = 0. - oldGridPos[1];
-
-    if(moveDir[0]) //if moving up
-      gridPosition[0] = gridPosition[0] + dist; 
-    if(moveDir[6]) //if moving left
-      gridPosition[0] = gridPosition[0] - dist; 
-
-    dist = sqrt( pow(gridPosition[0] - oldGridPos[0],2) + pow(gridPosition[1] - oldGridPos[1],2));
-    fticks = 1000 * dist / static_cast<float>(moveSpeed);
-    atEdge = true;
- 
-  }
-  else
-    gridPosition += incr;
+  bool atEdge = false;
+  //gridPosition = map.validateMovement(gridPosition, gridPosition + incr, moveDirIndx, fticks, moveSpeed, atEdge);
+  gridPosition = map.validateMovement(*this, gridPosition + incr, fticks, atEdge);
 
   incr = getSprite().getVelocity() * fticks * 0.001;
   getSprite().setPosition(getSprite().getPosition() + incr);

@@ -6,6 +6,8 @@
 #include "multisprite.h"
 #include "mapdata.h"
 
+class Mapdata;
+
 class GridElement {
 public:
   GridElement(const std::string&);
@@ -39,8 +41,12 @@ public:
 
   const Vector2f& getPosition() const { return gridSprite.getPosition(); }
 
+  float getMoveSpeed() const {return moveSpeed;}
+ 
   int getCurrentHP() const { return curHP; }
   int getMaxHP() const { return maxHP; }
+
+  std::vector<bool> getMoveDir() const { return moveDir;}
 
   void onDamage(int damage);
 

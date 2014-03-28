@@ -153,6 +153,77 @@ const Tile& Mapdata::findTileAt(const Vector2f& coord) const {
     throw errMess;
 }
 
+/* Checks if a hypothetical position is within the grid
+   If valid, return hypothetical position
+   If invalid, return position at the edge of the grid
+   The time measure, fticks, is passed by reference to allow it to be adjusted if the movement is cut short
+   The boolean, atEdge, is passed by reference to let the caller know if the movement was cut short
+*/
+Vector2f Mapdata::validateMovement(GridElement& g, Vector2f hypoPos, float& fticks, bool& atEdge) const{
+
+    float dist = 0.;
+    //Check max X border
+    if(hypoPos[0] > mapWidth * getTileWidth()){
+      hypoPos[0] = mapWidth * getTileWidth();
+      dist = hypoPos[0] - g.getGridPosition()[0];
+
+      if(g.getMoveDir()[3]) //if moving down on the screen
+        hypoPos[1] = g.getGridPosition()[1] + dist;
+      if(g.getMoveDir()[6]) //if moving left on the screen
+        hypoPos[1] = g.getGridPosition()[1] - dist;
+
+      dist = sqrt( pow(hypoPos[0] - g.getGridPosition()[0],2) + pow(hypoPos[1] - g.getGridPosition()[1],2));
+      fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
+      atEdge = true;
+    }
+    //Check min X border
+    else if(hypoPos[0] < 0){
+      hypoPos[0] = 0;
+      dist = -g.getGridPosition()[0];
+
+      if(g.getMoveDir()[0]) //if moving up on the screen
+        hypoPos[1] = g.getGridPosition()[1] + dist;
+      if(g.getMoveDir()[7]) //if moving right on the screen
+        hypoPos[1] = g.getGridPosition()[1] - dist;
+
+      dist = sqrt( pow(hypoPos[0] - g.getGridPosition()[0],2) + pow(hypoPos[1] - g.getGridPosition()[1],2));
+      fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
+      atEdge = true;
+    }
+ 
+    //Check max Y border
+    else if(hypoPos[1] > mapHeight * getTileHeight()){
+      hypoPos[1] = mapHeight * getTileHeight();
+      dist = hypoPos[1] - g.getGridPosition()[1];
+
+      if(g.getMoveDir()[3]) //if moving down on the screen
+        hypoPos[0] = g.getGridPosition()[0] + dist;
+      if(g.getMoveDir()[7]) //if moving right on the screen
+        hypoPos[0] = g.getGridPosition()[0] - dist;
+
+      dist = sqrt( pow(hypoPos[0] - g.getGridPosition()[0],2) + pow(hypoPos[1] - g.getGridPosition()[1],2));
+      fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
+      atEdge = true;
+    }
+ 
+    //Check min Y border
+    else if(hypoPos[1] < 0){
+      hypoPos[1] = 0;
+      dist = -g.getGridPosition()[1];
+
+      if(g.getMoveDir()[0]) //if moving down on the screen
+        hypoPos[0] = g.getGridPosition()[0] + dist;
+      if(g.getMoveDir()[6]) //if moving right on the screen
+        hypoPos[0] = g.getGridPosition()[0] - dist;
+
+      dist = sqrt( pow(hypoPos[0] - g.getGridPosition()[0],2) + pow(hypoPos[1] - g.getGridPosition()[1],2));
+      fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
+      atEdge = true;
+    }
+
+    return hypoPos;
+}
+
 // For each tile in each layer, draw
 void Mapdata::draw() const {
     for(std::list<std::list<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
