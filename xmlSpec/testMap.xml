@@ -10,56 +10,57 @@
         <tile id="7" name="tile7"/>
         <tile id="8" name="tile8"/>
         <tile id="9" name="tile9"/>
+        <tile id="10" name="snow"/>
     </tileset>
     <layer name="ground">
-        <element id="1" collision ="true"/>
-        <element id="2"/>
-        <element id="3"/>
-        <element id="4"/>
-        <element id="5"/>
-        <element id="6"/>
-        <element id="7"/>
-        <element id="8"/>
-        <element id="9"/>
-        <element id="1" collision ="true"/>
-        <element id="2"/>
-        <element id="3"/>
-        <element id="4"/>
-        <element id="5"/>
-        <element id="6"/>
-        <element id="7"/>
-        <element id="8"/>
-        <element id="9"/>
-        <element id="1" collision ="true"/>
-        <element id="2"/>
-        <element id="3"/>
-        <element id="4"/>
-        <element id="5"/>
-        <element id="6"/>
-        <element id="7"/>
-        <element id="1" collision ="true"/>
-        <element id="1" collision ="true"/>
-        <element id="1" collision ="true"/>
-        <element id="2"/>
-        <element id="3"/>
-        <element id="4"/>
-        <element id="5"/>
-        <element id="6"/>
-        <element id="7"/>
-        <element id="8"/>
-        <element id="9"/>
-        <element id="1" collision ="true"/>
-        <element id="2"/>
-        <element id="3"/>
-        <element id="4"/>
-        <element id="5"/>
-        <element id="6"/>
-        <element id="7"/>
-        <element id="8"/>
-        <element id="9"/>
-        <element id="1" collision ="true"/>
-        <element id="2"/>
-        <element id="3"/>
-        <element id="4"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
     </layer>
 </map>

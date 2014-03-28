@@ -67,13 +67,34 @@
     <controlPopUpFile>images/controlPopUp.png</controlPopUpFile>
     <controlPopUpSrcX>0</controlPopUpSrcX>
     <controlPopUpSrcY>0</ControlPopUpSrcY>
-    <controlPopUpWidth>200</controlPopUpWidth>
-    <controlPopUpHeight>666</controlPopUpHeight>
+    <controlPopUpWidth>1000</controlPopUpWidth>
+    <controlPopUpHeight>222</controlPopUpHeight>
     <controlPopUpLoc controlPopUpX="0" controlPopUpY="0"/>
     <controlPopUpSpeed controlPopUpSpeedX="0" controlPopUpSpeedY="0"/>
     <controlPopUpTransparency>true</controlPopUpTransparency>
 </controlPopUp>
 
+<controls>
+    <controlsFile>images/controls.png</controlsFile>
+    <controlsSrcX>0</controlsSrcX>
+    <controlsSrcY>0</controlsSrcY>
+    <controlsWidth>227</controlsWidth>
+    <controlsHeight>225</controlsHeight>
+    <controlsLoc controlsX="0" controlsY="0"/>
+    <controlsSpeed controlsSpeedX="0" controlsSpeedY="0"/>
+    <controlsTransparency>true</controlsTransparency>
+</controls>
+
+<controls2>
+    <controls2File>images/controls2.png</controls2File>
+    <controls2SrcX>0</controls2SrcX>
+    <controls2SrcY>0</controls2SrcY>
+    <controls2Width>227</controls2Width>
+    <controls2Height>225</controls2Height>
+    <controls2Loc controls2X="0" controls2Y="0"/>
+    <controls2Speed controls2SpeedX="0" controls2SpeedY="0"/>
+    <controls2Transparency>true</controls2Transparency>
+</controls2>
 <pauseScreen>
     <pauseScreenFile>images/pauseScreen.png</pauseScreenFile>
     <pauseScreenSrcX>0</pauseScreenSrcX>
@@ -125,11 +146,22 @@
   <tile1Transparency>false</tile1Transparency>
 </tile1>
 
+<snow>
+  <snowFile>images/snow_tile.png</snowFile>
+  <snowLoc snowX="30" snowY="10"/>
+  <snowWidth>128</snowWidth>
+  <snowHeight>64</snowHeight>
+  <snowSrcX>0</snowSrcX>
+  <snowSrcY>0</snow1SrcY>
+  <snowSpeed snowSpeedX="0" snowSpeedY="0"/>
+  <snowTransparency>false</snowTransparency>
+</snow>
+
 <tile2>
   <tile2File>images/test_tile2.png</tile2File>
   <tile2Loc tile2X="30" tile2Y="10"/>
   <tile2Width>128</tile2Width>
-  <tile2Height>64</tile2Height>
+  <tile2Height>80</tile2Height>
   <tile2SrcX>0</tile2SrcX>
   <tile2SrcY>0</tile2SrcY>
   <tile2Speed tile2SpeedX="0" tile2SpeedY="0"/>

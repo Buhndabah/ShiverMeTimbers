@@ -1,6 +1,7 @@
 #ifndef MAP__H
 #define MAP__H
 #include <string>
+#include <cmath>
 #include "xmlparser.h"
 #include "tile.h"
 
@@ -19,7 +20,7 @@ public:
 
     int getW() const { return mapWidth;}
     int getH() const { return mapHeight;}
-    int getTileWidth() const { return tileWidth;}
+    int getTileWidth() const { return  sqrt(pow(tileWidth/2.0,2) + pow(tileHeight/2.0,2)) ;}
     int getTileHeight() const { return tileHeight;}
 
     Vector2f getOrigin() const;

@@ -9,7 +9,9 @@
     </container>
     <container type = "container" name="help" x="0" y="0" visible="false" visibleNotPaused="false">
         <item type="fps" name="fps clock" x="10" y="10" visible="true"/>
-        <item type="image" name = "background" x="0" y="0" visible="true" file="controlPopUp"/>
-        <item type="text" name= "help text" x="10" y="400" visible="true" text="WASD to move" visible="false"/>
+        <item type="image" name = "background" x="0" y="444" visible="true" file="controlPopUp"/>
+        <item type="image" name= "controls" x= "10" y="500" visible="true" file="controls" flicker="true" flickerTime="5"/>
+       <item type="image" name= "controls" x= "10" y="500" visible="false" file="controls2" flicker="true" flickerTime="5"/>
+        <item type="text" name= "help text" x="10" y="470" visible="true" text="Use WASD or the Arrow Keys to move" visible="false"/>
     </container>
 </hud>

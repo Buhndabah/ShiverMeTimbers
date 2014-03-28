@@ -167,6 +167,15 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
         {
             components.back()->setVisibleWhenPaused(componentParams["visibleWhenPaused"].compare("true") ? 0 : 1);
         }
+        if(componentParams.find("flicker") != componentParams.end())
+            {
+                components.back()->setFlicker(componentParams["flicker"].compare("true") ? 0 : 1);
+            }
+        if(componentParams.find("flickerTime") != componentParams.end())
+        {
+            std::cerr << " loaded flicker time " << atoi(componentParams["flickerTime"].c_str()) << std::endl;
+            components.back()->setFlicker(atoi(componentParams["flickerTime"].c_str()));
+        }
 
 
         return components.back();
@@ -233,7 +242,14 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
         {
             cont->back()->setVisibleWhenPaused(componentParams["visibleWhenPaused"].compare("true") ? 0 : 1);
         }
-
+        if(componentParams.find("flicker") != componentParams.end())
+            {
+                cont->back()->setFlicker(componentParams["flicker"].compare("true") ? 0 : 1);
+            }
+        if(componentParams.find("flickerTime") != componentParams.end())
+        {
+            cont->back()->setTimeToFlicker(atoi(componentParams["flickerTime"].c_str()));
+        }
         return cont->back();
 }
 
