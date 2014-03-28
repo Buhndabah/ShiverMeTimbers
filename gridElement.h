@@ -4,7 +4,7 @@
 #include <vector>
 #include "vector2f.h"
 #include "multisprite.h"
-#include "dummyGrid.h"
+#include "mapdata.h"
 
 class GridElement {
 public:
@@ -37,6 +37,8 @@ public:
   const Vector2f& getGridVelocity() const   { return gridVelocity; }
   void setGridVelocity(const Vector2f& vel) { gridVelocity = vel; }
 
+  const Vector2f& getPosition() const { return gridSprite.getPosition(); }
+
   int getCurrentHP() const { return curHP; }
   int getMaxHP() const { return maxHP; }
 
@@ -63,7 +65,7 @@ private:
   Vector2f gridVelocity;
   int maxHP;
   int curHP;
-  const DummyGrid& dummy; //the grid the gridElement is attached to
+  const Mapdata& map; //the grid the gridElement is attached to
   std::vector<bool> moveDir; //boolean vector telling the gridElement which direction it is moving in
 };
 

@@ -34,6 +34,7 @@ public:
     void setVisibleNotPaused(bool v) { visibleNotPause = v; }
 
     const Vector2f& getPosition() const { return position; }
+    virtual void setPosition(const Vector2f& newPos) { position = newPos; }
     const std::string& getName() const { return name; }
 private:
     std::string name;

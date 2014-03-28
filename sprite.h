@@ -20,7 +20,8 @@ public:
   virtual void update(Uint32 ticks);
 
   Vector2f getSize() const { return Vector2f(frameWidth, frameHeight); }
-
+  const int getH() const { return frameHeight; }
+  const int getW() const { return frameWidth; }
 private:
   const Frame * frame;
   int frameWidth;

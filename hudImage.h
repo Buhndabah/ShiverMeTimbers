@@ -15,6 +15,11 @@ public:
     void scaledDraw(float dx, float dy) const;
     virtual void update(Uint32);
 
+    virtual void setPosition(const Vector2f& newPos) { 
+        HUDComponent::setPosition(newPos);
+        sprite->setPosition(newPos);
+    }
+
     Vector2f getSize() const;
 
 private:

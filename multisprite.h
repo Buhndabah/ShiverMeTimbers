@@ -17,6 +17,9 @@ public:
 
   virtual Vector2f getSize() const { return Vector2f(frameWidth,frameHeight); }
 
+  const int getH() const { return frameHeight; }
+  const int getW() const { return frameWidth; }
+
   virtual const Frame* getFrame() const { 
     return frames[currentFrame]; 
   }

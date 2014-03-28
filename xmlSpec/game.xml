@@ -1,6 +1,6 @@
 <?xml version = "1.0"?>
 <GameData>
-<screenTitle>Project #2</screenTitle>
+<screenTitle>Project #3</screenTitle>
 <username>sewells</username>
 <frameMax>400</frameMax>
 <frameCap>60</frameCap>
@@ -10,8 +10,8 @@
 
 
 <view>
-  <viewWidth>650</viewWidth>
-  <viewHeight>400</viewHeight>
+  <viewWidth>1000</viewWidth>
+  <viewHeight>666</viewHeight>
 </view>
 
 <world>
@@ -40,7 +40,7 @@
 </grid>
 
 <back>
-  <backFile>images/testgrid2.png</backFile>
+  <backFile>images/icecave.png</backFile>
   <backFactor>1</backFactor>
   <backSrcX>0</backSrcX>
   <backSrcY>0</backSrcY>
@@ -56,8 +56,8 @@
   <healthBarFactor>1</healthBarFactor>
   <healthBarSrcX>0</healthBarSrcX>
   <healthBarSrcY>0</healthBarSrcY>
-  <healthBarWidth>50</healthBarWidth>
-  <healthBarHeight>10</healthBarHeight>
+  <healthBarWidth>113</healthBarWidth>
+  <healthBarHeight>15</healthBarHeight>
   <healthBarLoc healthBarX="10" healthBarY="500"/>
   <healthBarSpeed backSpeedX="0" healthBarSpeedY="0"/>
   <healthBarTransparency>true</healthBarTransparency>

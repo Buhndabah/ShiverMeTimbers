@@ -120,7 +120,8 @@ void Mapdata::createLayers()
 
 // Returns coordinate of beginning of tile list on bottom layer
 Vector2f Mapdata::getOrigin() const {
-    return ( (*(*mapLayers.begin()).begin()).getCoord() + Vector2f(0,tileHeight/2) );
+    std::cerr<< ((*(*mapLayers.begin()).begin()).getCoord()) << std::endl;
+    return ( (*(*mapLayers.begin()).begin()).getCoord()); //- Vector2f(0,tileHeight/2) );
 }
 
 /* Returns reference to a tile, given grid coordinates

@@ -34,7 +34,8 @@ HUD::~HUD()
 // set reference to player and add a health bar
 void HUD::setPlayer(GridElement* pl) {
     player = pl;
-    addComponent(new HUDHealthBar("health",Vector2f(10,500),true,player,"healthBar"));
+    // offset is completely arbitrary right now
+    addComponent(new HUDHealthBar("health",Vector2f(0,-10),true,player,"healthBar"));
 }
 
 // toggle each component's visibility based on game state

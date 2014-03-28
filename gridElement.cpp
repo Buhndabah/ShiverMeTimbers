@@ -10,9 +10,13 @@ GridElement::GridElement(const std::string& name) :
   gridVelocity(0,0),
   maxHP(100),
   curHP(100),
-  dummy(DummyGrid::getInstance()),
+  map(Mapdata::getInstance()),
   moveDir()
 {
+    std::cerr<< "Map size: " << map.getW() << " " << map.getH() << std::endl;
+    std::cerr<< "Tile size: " << map.getTileWidth() << " " << map.getTileHeight() << std::endl;
+  // numbers below obtained through science
+  gridSprite.setPosition(map.getOrigin()-Vector2f(0,gridSprite.getH())+Vector2f(-5,40));
   moveDir.reserve(8);
   for(int i=0; i<8; ++i)
     moveDir.push_back(false);
@@ -25,7 +29,7 @@ GridElement::GridElement(const GridElement& g) :
   gridVelocity(g.gridVelocity),
   maxHP(g.maxHP),
   curHP(g.curHP),
-  dummy(DummyGrid::getInstance()),
+  map(Mapdata::getInstance()),
   moveDir(g.moveDir)
 {}
 
@@ -50,9 +54,9 @@ void GridElement::update(Uint32 ticks) {
   float fticks = static_cast<float>(ticks);
 
   //Check max X border
-  if((gridPosition[0] + incr[0] > dummy.getW() * dummy.getTileWidth())){
+  if((gridPosition[0] + incr[0] > map.getW() * map.getTileWidth())){
     oldGridPos = gridPosition;
-    gridPosition[0] = dummy.getW() * dummy.getTileWidth();
+    gridPosition[0] = map.getW() * map.getTileWidth();
     dist = gridPosition[0] - oldGridPos[0];
 
     if(moveDir[3]) //if moving down
@@ -81,9 +85,9 @@ void GridElement::update(Uint32 ticks) {
  
   }
   //Check max Y border
-  else if(gridPosition[1] + incr[1] > dummy.getH() * dummy.getTileWidth()){
+  else if(gridPosition[1] + incr[1] > map.getH() * map.getTileWidth()){
     oldGridPos = gridPosition;
-    gridPosition[1] = dummy.getH() * dummy.getTileWidth();
+    gridPosition[1] = map.getH() * map.getTileWidth();
     dist = gridPosition[1] - oldGridPos[1];
 
     if(moveDir[3]) //if moving down

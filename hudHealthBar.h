@@ -19,5 +19,6 @@ private:
     GridElement* player;
     HUDImage* bar;
     float healthRatio;
+    Vector2f offset;
 };
 #endif
