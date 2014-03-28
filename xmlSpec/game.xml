@@ -19,6 +19,9 @@
   <worldHeight>666</worldHeight>
 </world>
 
+<defaultFont>dyslexic</defaultFont>
+<defaultColor>black</defaultColor>
+
 <font name="font">
   <fontFile>font/dyslexic-bold.otf</fontFile>
   <fontSize>14</fontSize>

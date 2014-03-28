@@ -9,14 +9,17 @@ IOManager& IOManager::getInstance() {
 }
 
 IOManager::IOManager( ) :
+  parser("xmlSpec/font.xml"),
   gdata( Gamedata::getInstance() ),
   viewWidth( gdata.getXmlInt("viewWidth") ),
   viewHeight( gdata.getXmlInt("viewHeight") ),
+  DEFAULT_FONT(gdata.getXmlStr("defaultFont") ),
+  DEFAULT_COLOR(gdata.getXmlStr("defaultColor") ),
   MAX_STRING_SIZE( gdata.getXmlInt("maxStringSize") ),
     // The 3rd and 4th parameters are just as important as the first 2!
     screen(SDL_SetVideoMode(viewWidth, viewHeight, 32, SDL_DOUBLEBUF)),
-    font( NULL ), 
-    color(),
+    fonts(), 
+    colors(),
     title( gdata.getXmlStr("screenTitle") ),
     inputString()  
 {
@@ -26,20 +29,45 @@ IOManager::IOManager( ) :
   if ( TTF_Init() == -1 ) {
     throw string("TTF_Init failed: ") + TTF_GetError();
   }
-  font = TTF_OpenFont(
-         gdata.getXmlStr("fontFile").c_str(), 
-         gdata.getXmlInt("fontSize")
-         );
-  if ( !font ) {
-    throw string("TTF_OpenFont failed: ") + TTF_GetError();
-  }
-  color.r = gdata.getXmlInt("fontRed");
-  color.g = gdata.getXmlInt("fontGreen");
-  color.b = gdata.getXmlInt("fontBlue");
-  color.unused = gdata.getXmlInt("fontUnused");
+  parseFonts();
+  parseColors();
   SDL_EnableUNICODE( SDL_ENABLE );
   SDL_WM_SetCaption(title.c_str(), NULL);
   atexit(TTF_Quit);
+}
+
+void IOManager::parseFonts() {
+    std::list<std::map<std::string,std::string> > fontList = parser.parseNodesWithTag("font");
+    std::map<std::string,std::string> font;
+
+    for(std::list<std::map<std::string,std::string> >::const_iterator it = fontList.begin(); it!= fontList.end(); ++it)
+    {
+        font = (*it);
+        fonts.insert(std::pair<std::string, TTF_Font*>(font["name"],TTF_OpenFont(
+            font["file"].c_str(),
+            atoi(font["size"].c_str()))));
+        if(fonts["name"])
+        {
+            throw string("TTF_OpenFont failed: ") + TTF_GetError();
+        }
+    }
+}
+
+void IOManager::parseColors() {
+    std::list<std::map<std::string, std::string> > colorList = parser.parseNodesWithTag("color");
+    SDL_Color newColor;
+    std::map<std::string, std::string> colorParams;
+
+    for(std::list<std::map<std::string,std::string> >:: const_iterator it= colorList.begin(); it!= colorList.end(); ++it)
+    {
+        colorParams=(*it);
+        newColor.r=atoi(colorParams["r"].c_str());
+        newColor.g=atoi(colorParams["g"].c_str());
+        newColor.b=atoi(colorParams["b"].c_str());
+        newColor.unused=atoi(colorParams["unused"].c_str());
+
+        colors.insert(std::pair<std::string, SDL_Color>(colorParams["name"], newColor));
+    }
 }
 
 SDL_Surface* IOManager::loadAndSet(const string& filename, bool setcolorkey) const {
@@ -62,9 +90,10 @@ SDL_Surface* IOManager::loadAndSet(const string& filename, bool setcolorkey) con
   return image;
 }
 
-void IOManager::printMessageAt(const string& msg, Uint32 x, Uint32 y) const {
+void IOManager::printMessageAt(const string& msg, Uint32 x, Uint32 y)  const{
+
    SDL_Rect dest = {x,y,0,0};
-   SDL_Surface * stext = TTF_RenderText_Blended(font, msg.c_str(), color);
+   SDL_Surface * stext = TTF_RenderText_Blended(fonts.find(DEFAULT_FONT)->second, msg.c_str(), colors.find(DEFAULT_COLOR)->second);
    if (stext) {
      SDL_BlitSurface( stext, NULL, screen, &dest );
      SDL_FreeSurface(stext);
@@ -75,8 +104,8 @@ void IOManager::printMessageAt(const string& msg, Uint32 x, Uint32 y) const {
    }
 }
 
-void IOManager::printMessageCenteredAt( const string& msg, Uint32 y) const {
-   SDL_Surface *stext = TTF_RenderText_Blended(font, msg.c_str(), color);
+void IOManager::printMessageCenteredAt( const string& msg, Uint32 y) const{
+   SDL_Surface *stext = TTF_RenderText_Blended(fonts.find(DEFAULT_FONT)->second, msg.c_str(), colors.find(DEFAULT_COLOR)->second);
    if (stext) {
      Uint32 x = ( viewWidth - stext->w ) / 2;
      SDL_Rect dest = {x,y,0,0};

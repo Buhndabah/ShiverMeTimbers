@@ -47,7 +47,7 @@ HUDClock& HUDClock::operator=(const HUDClock& rhs)
     return *this;
 }
 
-void HUDClock::draw() const {
+void HUDClock::draw() const{
     if(isVisible()) 
     {
         io.printMessageAt(time, getPosition()[0],getPosition()[1]);

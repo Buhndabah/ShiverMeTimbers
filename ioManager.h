@@ -5,13 +5,24 @@
 #include <SDL_image.h>
 #include <string>
 #include <sstream>
+#include <map>
 #include "gamedata.h"
+#include "xmlparser.h"
 
 class IOManager {
 public:
   static IOManager& getInstance();
   SDL_Surface * getScreen() const { return screen; }
-  ~IOManager() { TTF_CloseFont(font); }
+  ~IOManager() 
+  { 
+      for(std::map<std::string, TTF_Font*>::const_iterator it=fonts.begin(); it!= fonts.end(); ++it)
+      {
+        TTF_CloseFont((*it).second); 
+      }
+  }
+
+  void parseFonts();
+  void parseColors();
 
   SDL_Surface* loadAndSet(const std::string& filename, 
                           bool setcolorkey) const;
@@ -31,13 +42,16 @@ private:
   IOManager();
   IOManager(const IOManager&);
   IOManager& operator=(const IOManager&);
+  XMLParser parser;
   const Gamedata& gdata;
   int viewWidth;
   int viewHeight;
+  const std::string DEFAULT_FONT;
+  const std::string DEFAULT_COLOR;
   const unsigned MAX_STRING_SIZE;
   SDL_Surface * screen;
-  TTF_Font *font;
-  SDL_Color color;
+  std::map<const std::string, TTF_Font *> fonts;
+  std::map<const std::string, SDL_Color> colors;
   std::string title;
   std::string inputString;
 };
@@ -51,7 +65,7 @@ void IOManager::printMessageValueAt(const std::string& msg, T value,
    message = strm.str();
    SDL_Rect dest = {x,y,0,0};
    SDL_Surface *stext = 
-       TTF_RenderText_Blended(font, message.c_str(), color);
+       TTF_RenderText_Blended(fonts.find(DEFAULT_FONT)->second, message.c_str(), colors.find(DEFAULT_COLOR)->second);
    if (stext) {
      SDL_BlitSurface( stext, NULL, screen, &dest );
      SDL_FreeSurface(stext);
