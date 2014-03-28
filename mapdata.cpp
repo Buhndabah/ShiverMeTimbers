@@ -114,7 +114,6 @@ void Mapdata::createLayers()
             i++;
         }
         mapLayers.push_back(newLayer);
-            std::cerr<<"what" << std::endl;
         newLayer.clear();
     }
 }

@@ -39,7 +39,6 @@ IOManager::IOManager( ) :
 void IOManager::parseFonts() {
     std::list<std::map<std::string,std::string> > fontList = parser.parseNodesWithTag("font");
     std::map<std::string,std::string> font;
-
     for(std::list<std::map<std::string,std::string> >::const_iterator it = fontList.begin(); it!= fontList.end(); ++it)
     {
         font = (*it);
@@ -57,8 +56,7 @@ void IOManager::parseColors() {
     std::list<std::map<std::string, std::string> > colorList = parser.parseNodesWithTag("color");
     SDL_Color newColor;
     std::map<std::string, std::string> colorParams;
-
-    for(std::list<std::map<std::string,std::string> >:: const_iterator it= colorList.begin(); it!= colorList.end(); ++it)
+    for(std::list<std::map<std::string,std::string> >::const_iterator it= colorList.begin(); it!= colorList.end(); ++it)
     {
         colorParams=(*it);
         newColor.r=atoi(colorParams["r"].c_str());
