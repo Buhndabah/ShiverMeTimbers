@@ -32,7 +32,9 @@ HUDHealthBar& HUDHealthBar::operator=(const HUDHealthBar& rhs)
 }
 
 void HUDHealthBar::draw() const {
-    bar->scaledDraw(healthRatio,1.0);
+    if(healthRatio != 1) {
+        bar->scaledDraw(healthRatio,1.0);
+    }
 }
 
 void HUDHealthBar::update(Uint32 ticks) {

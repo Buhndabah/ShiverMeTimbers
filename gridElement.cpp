@@ -37,7 +37,7 @@ void GridElement::onDamage(int damage) {
     curHP-=damage;
     if(curHP < 0)
     {
-        curHP=0;
+        curHP=maxHP;
     }
 }
 
