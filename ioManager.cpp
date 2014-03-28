@@ -45,7 +45,7 @@ void IOManager::parseFonts() {
         fonts.insert(std::pair<std::string, TTF_Font*>(font["name"],TTF_OpenFont(
             font["file"].c_str(),
             atoi(font["size"].c_str()))));
-        if(fonts["name"])
+        if(fonts.find(font["name"])==fonts.end())
         {
             throw string("TTF_OpenFont failed: ") + TTF_GetError();
         }
@@ -90,6 +90,15 @@ SDL_Surface* IOManager::loadAndSet(const string& filename, bool setcolorkey) con
 
 void IOManager::printMessageAt(const string& msg, Uint32 x, Uint32 y, const std::string& font, const std::string& color)  const{
 
+   if(fonts.find(font)==fonts.end())
+   {
+       throw std::string("Unknown font ")+font+std::string("requested");
+   }
+   if(colors.find(color)==colors.end())
+   {
+       throw std::string("Unknown color ")+color+std::string("requested");
+   }
+
    SDL_Rect dest = {x,y,0,0};
    SDL_Surface * stext = TTF_RenderText_Blended(fonts.find(font)->second, msg.c_str(), colors.find(color)->second);
    if (stext) {
@@ -103,6 +112,14 @@ void IOManager::printMessageAt(const string& msg, Uint32 x, Uint32 y, const std:
 }
 
 void IOManager::printMessageCenteredAt( const string& msg, Uint32 y,const std::string& font, const std::string& color) const{
+    if(fonts.find(font)==fonts.end())
+    {
+        throw std::string("Unknown font ")+font+std::string("requested");
+    }
+    if(colors.find(color)==colors.end())
+    {
+        throw std::string("Unknown color ")+color+std::string("requested");
+    }
    SDL_Surface *stext = TTF_RenderText_Blended(fonts.find(font)->second, msg.c_str(), colors.find(color)->second);
    if (stext) {
      Uint32 x = ( viewWidth - stext->w ) / 2;

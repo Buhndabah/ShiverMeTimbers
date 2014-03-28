@@ -76,6 +76,16 @@ void IOManager::printMessageValueAt(const std::string& msg, T value,
 template <typename T>
 void IOManager::printMessageValueAt(const std::string& msg, T value, 
      Uint32 x, Uint32 y, const std::string& font, const std::string& color) const {
+
+   if(fonts.find(font)==fonts.end())
+   {
+       throw std::string("Unknown font ")+font+std::string("requested");
+   }
+   if(colors.find(color)==colors.end())
+   {
+       throw std::string("Unknown color ")+font+std::string("requested");
+   }
+
    std::stringstream strm;
    std::string message = msg;
    strm << message << value << "\0";

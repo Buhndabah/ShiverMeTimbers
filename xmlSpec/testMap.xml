@@ -1,5 +1,5 @@
 <?xml version = "1.0"?>
-<map width="10" height="10" tilewidth="128" tileheight="64">
+<map width="7" height="7" tilewidth="128" tileheight="64">
     <tileset>
         <tile id="1" name="tile1"/>
         <tile id ="2" name="tile2"/>
@@ -61,56 +61,5 @@
         <element id="2"/>
         <element id="3"/>
         <element id="4"/>
-        <element id="5"/>
-        <element id="6"/>
-        <element id="7"/>
-        <element id="2"/>
-        <element id="3"/>
-        <element id="4"/>
-        <element id="5"/>
-        <element id="6"/>
-        <element id="7"/>
-        <element id="8"/>
-        <element id="9"/>
-        <element id="1" collision ="true"/>
-        <element id="2"/>
-        <element id="3"/>
-        <element id="4"/>
-        <element id="5"/>
-        <element id="6"/>
-        <element id="7"/>
-        <element id="8"/>
-        <element id="9"/>
-        <element id="1" collision ="true"/>
-        <element id="2"/>
-        <element id="3"/>
-        <element id="4"/>
-        <element id="5"/>
-        <element id="6"/>
-        <element id="7"/>
-        <element id="2"/>
-        <element id="3"/>
-        <element id="4"/>
-        <element id="5"/>
-        <element id="6"/>
-        <element id="7"/>
-        <element id="8"/>
-        <element id="9"/>
-        <element id="1" collision ="true"/>
-        <element id="2"/>
-        <element id="3"/>
-        <element id="4"/>
-        <element id="5"/>
-        <element id="6"/>
-        <element id="7"/>
-        <element id="8"/>
-        <element id="9"/>
-        <element id="1" collision ="true"/>
-        <element id="2"/>
-        <element id="3"/>
-        <element id="4"/>
-        <element id="5"/>
-        <element id="6"/>
-        <element id="7"/>
     </layer>
 </map>

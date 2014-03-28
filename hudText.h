@@ -9,6 +9,9 @@ public:
     HUDText(const std::string& n, const Vector2f& p, bool v);
     // name, position, visible, text, centered(true/false)
     HUDText(const std::string& n, const Vector2f& p, bool b, const std::string s, bool c);
+
+    HUDText(const std::string& n, const Vector2f& p, bool b, const std::string s, bool c,const std::string& font, const std::string& color);
+
     HUDText(const HUDText& rhs);
     HUDText& operator=(const HUDText&);
     virtual ~HUDText() {}
@@ -20,5 +23,7 @@ private:
     IOManager& io;
     std::string text;
     bool centered;
+    std::string fontName;
+    std::string fontColor;
 };
 #endif
