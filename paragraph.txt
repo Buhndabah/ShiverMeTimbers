@@ -1,0 +1,17 @@
+Stephen Wells & John Butchko present:
+
+ Shiver Me Timbers
+
+
+
+Our game will let the player control a pirate penguin that explores a isometric map in search for treasure.
+The player will move around the map and try to find and dig up booty with a shovel.
+Once all the booty is collected, or once the time limit runs out, the game ends and the player is assigned a score.
+
+However, this isn't going to be a relaxing Easter Sunday egg-hunt.
+Other pirate crews will be after the map's booty, and will dig it up for themselves as well as attack our player.
+
+Furthermore, some booty will have special requirements for the player to obtain them.
+Certain chests will require the player to find a key on the map, for instance.
+
+Neutral hazards will delay the booty quest of player and enemy alike, such as rock walls, pitfalls, and snowstorms.
