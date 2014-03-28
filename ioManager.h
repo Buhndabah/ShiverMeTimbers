@@ -27,12 +27,23 @@ public:
   SDL_Surface* loadAndSet(const std::string& filename, 
                           bool setcolorkey) const;
 
-  void printMessageAt(const std::string& msg, Uint32 x, Uint32 y) const;
-  void printMessageCenteredAt(const std::string& msg, Uint32 y) const;
+  void printMessageAt(const std::string& msg, Uint32 x, Uint32 y, const std::string& font, const std::string& color) const;
+  void printMessageAt(const std::string& msg, Uint32 x, Uint32 y) const
+  {
+      printMessageAt(msg, x, y, DEFAULT_FONT, DEFAULT_COLOR);
+  }
+  void printMessageCenteredAt(const std::string& msg, Uint32 y,const std::string& font, const std::string& color) const;
+  void printMessageCenteredAt(const std::string& msg, Uint32 y) const
+  {
+      printMessageCenteredAt(msg,y,DEFAULT_FONT, DEFAULT_COLOR);
+  }
   void printStringAfterMessage(const std::string&, 
                                Uint32 x, Uint32 y) const;
   template <typename T>
   void printMessageValueAt(const std::string& msg, T value, 
+         Uint32 x, Uint32 y, const std::string& font, const std::string& color) const;
+  template <typename T>
+  void printMessageValueAt(const std::string&msg, T value,
          Uint32 x, Uint32 y) const;
          
   void buildString(SDL_Event);
@@ -57,15 +68,21 @@ private:
 };
 
 template <typename T>
+void IOManager::printMessageValueAt(const std::string& msg, T value,
+    Uint32 x, Uint32 y) const {
+        printMessageValueAt(msg, value, x, y, DEFAULT_FONT, DEFAULT_COLOR);
+    }
+
+template <typename T>
 void IOManager::printMessageValueAt(const std::string& msg, T value, 
-     Uint32 x, Uint32 y) const {
+     Uint32 x, Uint32 y, const std::string& font, const std::string& color) const {
    std::stringstream strm;
    std::string message = msg;
    strm << message << value << "\0";
    message = strm.str();
    SDL_Rect dest = {x,y,0,0};
    SDL_Surface *stext = 
-       TTF_RenderText_Blended(fonts.find(DEFAULT_FONT)->second, message.c_str(), colors.find(DEFAULT_COLOR)->second);
+       TTF_RenderText_Blended(fonts.find(font)->second, message.c_str(), colors.find(DEFAULT_COLOR)->second);
    if (stext) {
      SDL_BlitSurface( stext, NULL, screen, &dest );
      SDL_FreeSurface(stext);

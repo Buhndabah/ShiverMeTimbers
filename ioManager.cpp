@@ -88,10 +88,10 @@ SDL_Surface* IOManager::loadAndSet(const string& filename, bool setcolorkey) con
   return image;
 }
 
-void IOManager::printMessageAt(const string& msg, Uint32 x, Uint32 y)  const{
+void IOManager::printMessageAt(const string& msg, Uint32 x, Uint32 y, const std::string& font, const std::string& color)  const{
 
    SDL_Rect dest = {x,y,0,0};
-   SDL_Surface * stext = TTF_RenderText_Blended(fonts.find(DEFAULT_FONT)->second, msg.c_str(), colors.find(DEFAULT_COLOR)->second);
+   SDL_Surface * stext = TTF_RenderText_Blended(fonts.find(font)->second, msg.c_str(), colors.find(color)->second);
    if (stext) {
      SDL_BlitSurface( stext, NULL, screen, &dest );
      SDL_FreeSurface(stext);
@@ -102,8 +102,8 @@ void IOManager::printMessageAt(const string& msg, Uint32 x, Uint32 y)  const{
    }
 }
 
-void IOManager::printMessageCenteredAt( const string& msg, Uint32 y) const{
-   SDL_Surface *stext = TTF_RenderText_Blended(fonts.find(DEFAULT_FONT)->second, msg.c_str(), colors.find(DEFAULT_COLOR)->second);
+void IOManager::printMessageCenteredAt( const string& msg, Uint32 y,const std::string& font, const std::string& color) const{
+   SDL_Surface *stext = TTF_RenderText_Blended(fonts.find(font)->second, msg.c_str(), colors.find(color)->second);
    if (stext) {
      Uint32 x = ( viewWidth - stext->w ) / 2;
      SDL_Rect dest = {x,y,0,0};

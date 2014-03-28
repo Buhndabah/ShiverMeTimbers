@@ -21,6 +21,7 @@
 
 <defaultFont>dyslexic</defaultFont>
 <defaultColor>black</defaultColor>
+<defaultFontSize>14</defaultFontSize>
 
 <font name="font">
   <fontFile>font/dyslexic-bold.otf</fontFile>
