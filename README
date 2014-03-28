@@ -1,27 +1,18 @@
-Name: Stephen Wells
+Names: Stephen Wells & John Butchko
 Clemson Email Address: sewells
+			jbutchk
 
-Project no: 2
-Project due date: March 6th, 2014
-Project description: Update the project 1 framework with the 5 new classes of the tracker framework.
+Project no: 3
+Project due date: March 28th, 2014
+Project description: Introduce a player to the game along with a HUD, and give an illusion of depth.
 
-The Specs that I implemented are:
-	1) A viewport into a larger world is provided. The user can track the different objects in the animation by pressing the 't' key.
-	2) Three kinds of Sprites are incorporated into the animation (Sprite, MultiSprite, RotateSprite). These are stored in a polymorphic container of Drawable*.
-	3) There are mutliple special sprites.
-	4) The frameFactory is responsible for handling the animation.
-	5) The clock class uses a queue to compute the average fps.
-	6) You can adjust virtually all constants and parameters to the animation from the XML file.
-		The new parameters you can change in this project are:
-			the initial angle of rotation for a RotateSprite
-			the change in angle after each update for a RotateSprite
-	7) The README is filled in
-	8) There are no warnings in the user code.
-	9) There are no memory leaks in the user code.
+The Specs that we implemented are:
+	1) A modular HUD
+		With HUDComponents such as a health bar tied to the player, the average fps message, and a game timer.
+	2) A player (of class type gridElement) that is controlled via WASD and the arrow keys
+	3) An illusion of depth is created due to our isometric grid.
+		Any and all gridElements move along the axes of the grid with their speed scaled in such a way that makes the motion seem to extend into the background.
+	4) A newly implemented XML parser based on rapidXML
 
-The Specs that I was unable to implement are:
+The Specs that we were unable to implement are:
 
-Extras:
- 	RotateSprite - a sprite that uses rotozoom to rotate itself based on angles specified in the xml file
-	You can toggle the rotation by pressing the 'r' key
-		the rotation now correctly does not occur when the game is paused
