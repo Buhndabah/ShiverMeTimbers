@@ -65,7 +65,7 @@ void MapManager::createTiles() {
 void MapManager::createLayers() 
 {
     std::list<const rapidxml::xml_node<>* > layers = parser.findNodes("layer");
-    std::list<Tile> newLayer;
+    std::vector<Tile> newLayer;
     std::string id;
     std::stringstream strm;
     unsigned int i=0;
@@ -134,7 +134,7 @@ const Tile& MapManager::findTileAt(const Vector2f& coord) const {
     unsigned int indexY = coord[1]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2));
     unsigned int i =0;
 
-    for(std::list<Tile>::const_iterator it = (*mapLayers.begin()).begin(); it != (*mapLayers.end()).end(); ++it)
+    for(std::vector<Tile>::const_iterator it = (*mapLayers.begin()).begin(); it != (*mapLayers.end()).end(); ++it)
     {
         if(i!= (indexX + (indexY*mapHeight)))
         {
@@ -226,20 +226,37 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
 
 // For each tile in each layer, draw
 void MapManager::draw() const {
-    for(std::list<std::list<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
-    {   
-        for(std::list<Tile>::const_iterator layer_it = (*it).begin(); layer_it != (*it).end(); ++layer_it)
-        {
-            (*layer_it).draw();
-        }
+    int max=0;
+    for(std::list<std::vector<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
+    {  
+        for(int i=0; i<mapWidth+mapHeight-1; ++i)
+         {
+             if(i<mapWidth)
+             {
+                max = i+1;
+             }
+             else if(i==mapWidth)
+             {
+                 max= mapWidth-1;
+             }
+             else if(i>mapWidth)
+             {
+                max = mapWidth - i%mapWidth-1;
+             }
+             for(int j=0;j<max; ++j)
+             {
+                (*it)[i+((i>=mapWidth)* ((i+1)%mapWidth)*(mapWidth-1))+(j*(mapWidth-1))].draw();
+             }
+         }
+
     }
 }
 
 // For each tile in each layer, update
 void MapManager::update(Uint32& ticks) {
-    for(std::list<std::list<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
+    for(std::list<std::vector<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
     {   
-        for(std::list<Tile>::const_iterator layer_it = (*it).begin(); layer_it != (*it).end(); ++layer_it)
+        for(std::vector<Tile>::const_iterator layer_it = (*it).begin(); layer_it != (*it).end(); ++layer_it)
         {
             (*layer_it).update(ticks);
         }

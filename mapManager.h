@@ -40,12 +40,12 @@ private:
     void createLayers();
 
     std::map<std::string, std::string> tiles;
-    std::list<std::list<Tile> > mapLayers;
+    std::list<std::vector<Tile> > mapLayers;
 
     // in display coord
     unsigned int tileWidth;
     unsigned int tileHeight;
-    unsigned int mapWidth;
-    unsigned int mapHeight;
+    int mapWidth;
+    int mapHeight;
 };
 #endif
