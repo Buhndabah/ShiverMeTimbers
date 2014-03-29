@@ -280,6 +280,20 @@ void MapManager::update(Uint32& ticks) {
             (*layer_it).update(ticks);
         }
     }
+
+    if(gridElements.empty()) return;
+
+    for(std::vector<std::list<GridElement*> >::const_iterator it=gridElements.begin(); it!=gridElements.end(); ++it)
+       {
+           if(!(*it).empty())
+           {
+               for(std::list<GridElement*>::const_iterator geIt =(*it).begin(); geIt!=(*it).end(); ++geIt)
+               {
+                   (*geIt)->update(ticks);
+               }
+           }
+       }
+    
 }
 
 // Spit out what the parser is storing
