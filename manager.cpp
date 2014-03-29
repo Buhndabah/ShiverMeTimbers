@@ -63,7 +63,7 @@ Manager::Manager() :
 void Manager::draw() const {
   world.draw();
   map.draw();
-  player->getSprite().draw();
+  player->draw();
   std::vector<Drawable*>::const_iterator it = snowballs.begin();
   while(it != snowballs.end()){
 	(*it)->draw();

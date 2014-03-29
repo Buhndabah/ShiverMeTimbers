@@ -42,6 +42,10 @@ void GridElement::onDamage(int damage) {
 
 }
 
+void GridElement::draw() const {
+    gridSprite.draw();
+}
+
 void GridElement::update(Uint32 ticks) {
 
   if (getSprite().getVelocity() != Vector2f(0,0))

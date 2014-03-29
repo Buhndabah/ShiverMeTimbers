@@ -15,6 +15,7 @@ MapManager::MapManager(const std::string& fn) :
     parser(fn),
     tiles(),
     mapLayers(),
+    gridElements(),
     tileWidth(),
     tileHeight(),
     mapWidth(),
@@ -227,6 +228,7 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
 // For each tile in each layer, draw
 void MapManager::draw() const {
     int max=0;
+    int index;
     for(std::list<std::vector<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
     {  
         for(int i=0; i<mapWidth+mapHeight-1; ++i)
@@ -245,10 +247,27 @@ void MapManager::draw() const {
              }
              for(int j=0;j<max; ++j)
              {
-                (*it)[i+((i>=mapWidth)* ((i+1)%mapWidth)*(mapWidth-1))+(j*(mapWidth-1))].draw();
+                 if(i < mapWidth)
+                 {
+                    index = i + (j*(mapWidth-1));
+                 }
+                 else
+                 {
+                    index = i+ ((i+1)%mapWidth)*(mapWidth-1) +(j*(mapWidth-1));
+                 }
+
+                (*it)[index].draw();
+                drawGridElements(index);
              }
          }
+    }
+}
 
+void MapManager::drawGridElements(int index) const {
+    if(gridElements.empty()) return;
+    for(std::list<GridElement* >::const_iterator it = gridElements[index].begin(); it!=gridElements[index].end(); ++it)
+    {
+        (*it)->draw();
     }
 }
 

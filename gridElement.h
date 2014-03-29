@@ -50,6 +50,7 @@ public:
 
   void onDamage(int damage);
 
+  void draw() const;
   void update(Uint32 ticks);
   void moveUp();
   void moveUpLeft();
