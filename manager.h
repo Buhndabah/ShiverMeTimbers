@@ -6,7 +6,7 @@
 #include "world.h"
 #include "viewport.h"
 #include "gridElement.h"
-#include "mapdata.h"
+#include "mapManager.h"
 #include "hud.h"
 
 class Manager {
@@ -28,7 +28,7 @@ private:
   unsigned int currentSprite;
 
   GridElement *player;
-  Mapdata& map;
+  MapManager& map;
   HUD& hud;
 
   bool makeVideo;

@@ -4,9 +4,9 @@
 #include <vector>
 #include "vector2f.h"
 #include "multisprite.h"
-#include "mapdata.h"
+#include "mapManager.h"
 
-class Mapdata;
+class MapManager;
 
 class GridElement {
 public:
@@ -71,7 +71,7 @@ private:
   Vector2f gridVelocity;
   int maxHP;
   int curHP;
-  const Mapdata& map; //the grid the gridElement is attached to
+  const MapManager& map; //the grid the gridElement is attached to
   std::vector<bool> moveDir; //boolean vector telling the gridElement which direction it is moving in
 };
 

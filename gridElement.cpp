@@ -10,7 +10,7 @@ GridElement::GridElement(const std::string& name) :
   gridVelocity(0,0),
   maxHP(100),
   curHP(100),
-  map(Mapdata::getInstance()),
+  map(MapManager::getInstance()),
   moveDir()
 {
     std::cerr<< "Map size: " << map.getW() << " " << map.getH() << std::endl;
@@ -29,7 +29,7 @@ GridElement::GridElement(const GridElement& g) :
   gridVelocity(g.gridVelocity),
   maxHP(g.maxHP),
   curHP(g.curHP),
-  map(Mapdata::getInstance()),
+  map(MapManager::getInstance()),
   moveDir(g.moveDir)
 {}
 

@@ -8,12 +8,12 @@
 
 class GridElement;
 
-class Mapdata {
+class MapManager {
 public:
-    static Mapdata& getInstance();
+    static MapManager& getInstance();
     void displayData() const;
 
-    ~Mapdata() {}
+    ~MapManager() {}
 
     //void load();
     void draw() const;
@@ -32,9 +32,9 @@ public:
     Vector2f validateMovement(GridElement&, Vector2f, float&, bool&) const;
 private:
     XMLParser parser;
-    Mapdata(const std::string& fn = "xmlSpec/testMap.xml");
-    Mapdata(const Mapdata&);
-    Mapdata& operator=(const Mapdata&);
+    MapManager(const std::string& fn = "xmlSpec/testMap.xml");
+    MapManager(const MapManager&);
+    MapManager& operator=(const MapManager&);
 
     void createTiles();
     void createLayers();

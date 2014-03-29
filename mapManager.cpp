@@ -4,14 +4,14 @@
 #include <math.h>
 #include "vector2f.h"
 #include "gamedata.h"
-#include "mapdata.h"
+#include "mapManager.h"
 
-Mapdata& Mapdata::getInstance() {
-    static Mapdata instance;
+MapManager& MapManager::getInstance() {
+    static MapManager instance;
     return instance;
 }
 
-Mapdata::Mapdata(const std::string& fn) :
+MapManager::MapManager(const std::string& fn) :
     parser(fn),
     tiles(),
     mapLayers(),
@@ -42,7 +42,7 @@ Mapdata::Mapdata(const std::string& fn) :
     createLayers();
 }
 
-void Mapdata::debug() const{
+void MapManager::debug() const{
     std::cerr << "Tile width is " << tileWidth << std::endl;
     std::cerr << "Tile height is " << tileHeight << std::endl;
     std::cerr << "Map width is " << mapWidth << std::endl;
@@ -50,7 +50,7 @@ void Mapdata::debug() const{
 }
 
 // Parse tile definitions (not the actual objects though)
-void Mapdata::createTiles() {
+void MapManager::createTiles() {
     std::list<std::map<std::string, std::string> > tileList = parser.parseNodesWithTag("tile");
 
     // for each map in list
@@ -62,7 +62,7 @@ void Mapdata::createTiles() {
 }
 
 // The meat of it, create the tile objects
-void Mapdata::createLayers() 
+void MapManager::createLayers() 
 {
     std::list<const rapidxml::xml_node<>* > layers = parser.findNodes("layer");
     std::list<Tile> newLayer;
@@ -119,14 +119,14 @@ void Mapdata::createLayers()
 }
 
 // Returns coordinate of beginning of tile list on bottom layer
-Vector2f Mapdata::getOrigin() const {
+Vector2f MapManager::getOrigin() const {
     std::cerr<< ((*(*mapLayers.begin()).begin()).getCoord()) << std::endl;
     return ( (*(*mapLayers.begin()).begin()).getCoord()); //- Vector2f(0,tileHeight/2) );
 }
 
 /* Returns reference to a tile, given grid coordinates
    grid coordinates come in as sqrt(tileWidth^2 + tileHeight^2), 0,0 top, 355,355 bottom */
-const Tile& Mapdata::findTileAt(const Vector2f& coord) const {
+const Tile& MapManager::findTileAt(const Vector2f& coord) const {
 
     std::string errMess;
     std::stringstream strm;
@@ -159,7 +159,7 @@ const Tile& Mapdata::findTileAt(const Vector2f& coord) const {
    The time measure, fticks, is passed by reference to allow it to be adjusted if the movement is cut short
    The boolean, atEdge, is passed by reference to let the caller know if the movement was cut short
 */
-Vector2f Mapdata::validateMovement(GridElement& g, Vector2f hypoPos, float& fticks, bool& atEdge) const{
+Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& fticks, bool& atEdge) const{
 
     float dist = 0.;
     //Check max X border
@@ -225,7 +225,7 @@ Vector2f Mapdata::validateMovement(GridElement& g, Vector2f hypoPos, float& ftic
 }
 
 // For each tile in each layer, draw
-void Mapdata::draw() const {
+void MapManager::draw() const {
     for(std::list<std::list<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
     {   
         for(std::list<Tile>::const_iterator layer_it = (*it).begin(); layer_it != (*it).end(); ++layer_it)
@@ -236,7 +236,7 @@ void Mapdata::draw() const {
 }
 
 // For each tile in each layer, update
-void Mapdata::update(Uint32& ticks) {
+void MapManager::update(Uint32& ticks) {
     for(std::list<std::list<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
     {   
         for(std::list<Tile>::const_iterator layer_it = (*it).begin(); layer_it != (*it).end(); ++layer_it)
@@ -247,7 +247,7 @@ void Mapdata::update(Uint32& ticks) {
 }
 
 // Spit out what the parser is storing
-void Mapdata::displayData() const {
+void MapManager::displayData() const {
     parser.displayData();
 }
 

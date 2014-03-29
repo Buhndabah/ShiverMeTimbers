@@ -27,7 +27,7 @@ Manager::Manager() :
   currentSprite(0),
 
   player(NULL),
-  map(Mapdata::getInstance()),
+  map(MapManager::getInstance()),
   hud(HUD::getInstance()),
 
   makeVideo( false ),
