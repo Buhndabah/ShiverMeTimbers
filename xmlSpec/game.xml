@@ -16,7 +16,7 @@
 
 <world>
   <worldWidth>1000</worldWidth>
-  <worldHeight>666</worldHeight>
+  <worldHeight>1000</worldHeight>
 </world>
 
 <defaultFont>dyslexic</defaultFont>
