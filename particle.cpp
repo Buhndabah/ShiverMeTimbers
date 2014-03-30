@@ -1,3 +1,4 @@
+#include <cmath>
 #include "ioManager.h"
 #include "viewport.h"
 #include "particle.h"
@@ -20,7 +21,7 @@ ParticleSystem::ParticleSystem(const Vector2f& p, const Vector2f& d, int h) :
     viewWidth(Gamedata::getInstance().getXmlInt("viewWidth")),
     viewHeight(Gamedata::getInstance().getXmlInt("viewHeight")),
     maxHeight(h),
-    maxLifeTime(10),
+    maxLifeTime(30),
     maxCount(3),
     particles()
 { }
@@ -124,14 +125,17 @@ void ParticleSystem::spawnParticles() {
                          pos[0] + startX,
                          pos[1]  + startY,
                          rand() % maxHeight + 2*maxHeight/3,
-                         100,
-                         100,
-                         100,
+                         190,
+                         190,
+                         190,
                          rand() % 10 + 1,
                          1,
                          Vector2f(0,50)
                 );
         p->startPos=Vector2f(startX,startY);
+        p->r+=p->startPos[1];
+        p->g+=p->startPos[1];
+        p->b+=p->startPos[1];
         particles.push_back(p);
     }
 }

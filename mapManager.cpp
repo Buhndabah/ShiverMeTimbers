@@ -82,14 +82,18 @@ void MapManager::createLayers()
     std::vector<Tile> newLayer;
     std::string id;
     std::stringstream strm;
-    unsigned int i=0;
+    unsigned int tileIndex=0;
     std::string collision;
     unsigned int layerIndex=0;
+    std::vector<Tile*> topOfStack(mapWidth*mapHeight);
+    unsigned int worldWidth = Gamedata::getInstance().getXmlInt("worldWidth");
+    unsigned int worldHeight = Gamedata::getInstance().getXmlInt("worldHeight");
+
 
     // Walk through layer tags (height levels)
     for(std::list<const rapidxml::xml_node<>* >::const_iterator iterator = layers.begin(); iterator!= layers.end();++iterator)
     {
-        i =0;
+        tileIndex =0;
 
         // walk through tile ids in layer
         for(rapidxml::xml_node<>* node= (*iterator)->first_node();node; node=node->next_sibling())
@@ -115,30 +119,43 @@ void MapManager::createLayers()
             }
 
             // Calculate draw coordinates for new tile
-            unsigned int worldWidth = Gamedata::getInstance().getXmlInt("worldWidth");
-            unsigned int worldHeight = Gamedata::getInstance().getXmlInt("worldHeight");
             unsigned int offsetX = worldWidth/2 - tileWidth/2;
             unsigned int offsetY = worldHeight/2 - mapHeight*tileHeight/2;
             unsigned int offsetZ = layerIndex*tileRise;
-            unsigned int tileLocX=  ((i/mapWidth)*tileWidth/2)-((i%mapWidth)*tileWidth/2)+offsetX;
-            unsigned int tileLocY= ((i/mapHeight)*tileHeight/2)+((i%mapHeight)*tileHeight/2)+offsetY-offsetZ;
+            unsigned int tileLocX=  ((tileIndex/mapWidth)*tileWidth/2)-((tileIndex%mapWidth)*tileWidth/2)+offsetX;
+            unsigned int tileLocY= ((tileIndex/mapHeight)*tileHeight/2)+((tileIndex%mapHeight)*tileHeight/2)+offsetY-offsetZ;
 
-            newLayer.push_back(Tile(tiles[id],Vector2f(tileLocX,tileLocY),collision.compare("true") ? true : false));
-            if(weather.compare("snow")==0)
-            {
-                newLayer.back().setParticleSystem(new ParticleSystem(Vector2f(tileLocX,tileLocY),Vector2f(tileWidth,tileHeight),worldHeight-tileLocY));
-            }
-            i++;
+            newLayer.push_back(Tile(id,tiles[id],Vector2f(tileLocX,tileLocY),collision.compare("true") ? true : false));
+            tileIndex++;
         }
         mapLayers.push_back(newLayer);
-        ++layerIndex;
         newLayer.clear();
+        std::vector<Tile>::iterator it=mapLayers.back().begin();
+        for(int j=0; it+j!=mapLayers.back().end(); ++j)
+        {
+            if(layerIndex==0)
+            {
+                topOfStack[j] = &(*(it+j));
+            }
+            else if((*(it+j)).getId().compare("0")!=0)
+            {
+                topOfStack[j] = &(*(it+j));
+            }
+        }
+        ++layerIndex;
+    }
+    for(std::vector<Tile*>::const_iterator weatherIt=topOfStack.begin(); weatherIt!=topOfStack.end();++weatherIt)
+    {
+        if(weather.compare("snow")==0)
+        {
+            (*weatherIt)->setParticleSystem(new ParticleSystem((*weatherIt)->getCoord(),Vector2f(tileWidth,tileHeight),worldHeight-(*weatherIt)->getCoord()[1]));
+            
+        }
     }
 }
 
 // Returns coordinate of beginning of tile list on bottom layer
 Vector2f MapManager::getOrigin() const {
-    std::cerr<< ((*(*mapLayers.begin()).begin()).getCoord()) << std::endl;
     return ( (*(*mapLayers.begin()).begin()).getCoord()); //- Vector2f(0,tileHeight/2) );
 }
 
@@ -160,7 +177,6 @@ const Tile& MapManager::findTileAt(const Vector2f& coord) const {
         }
         else
         {
-            std::cerr << "tile found was # " << i << std::endl;
             return (*it);
         }
     }

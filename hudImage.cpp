@@ -45,7 +45,6 @@ void HUDImage::update(Uint32 ticks) {
         }
         else if( (getElapsedTicks()/1000) % timeToFlicker()==0.0) 
         {
-            std::cerr << getElapsedTicks()/1000.0 << std::endl;
             setVisible(!isVisible());
             resetTicks();
         }
