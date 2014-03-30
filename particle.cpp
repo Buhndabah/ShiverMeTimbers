@@ -75,8 +75,21 @@ ParticleSystem::~ParticleSystem() {
 void ParticleSystem::draw() const {
     SDL_Rect rect;
     Uint32 color;
+    int borderSize;
     for(std::list<Particle*>::const_iterator it=particles.begin(); it!= particles.end(); ++it)
     {
+        borderSize = 2;
+        //borderSize = (*it)->size/4 > 0 ? (*it)->size/3 : 1;
+
+        rect.x = (*it)->x-Viewport::getInstance().X()- borderSize;
+        rect.y = (*it)->y-(*it)->z-Viewport::getInstance().Y()-borderSize;
+        rect.w = (int)(*it)->size+ (borderSize*2);
+        rect.h = (int)(*it)->size+ (borderSize*2);
+
+        color = SDL_MapRGB(IOManager::getInstance().getScreen()->format, 0,0,0);
+        SDL_FillRect(IOManager::getInstance().getScreen(), &rect, color);
+
+
         rect.x = (*it)->x-Viewport::getInstance().X();
         rect.y = (*it)->y-(*it)->z-Viewport::getInstance().Y();
         rect.w = (int)(*it)->size;
@@ -125,17 +138,17 @@ void ParticleSystem::spawnParticles() {
                          pos[0] + startX,
                          pos[1]  + startY,
                          rand() % maxHeight + 2*maxHeight/3,
-                         190,
-                         190,
-                         190,
-                         rand() % 10 + 1,
+                         220,
+                         220,
+                         220,
+                         rand() % 4 + 3,
                          1,
                          Vector2f(0,50)
                 );
         p->startPos=Vector2f(startX,startY);
-        p->r+=p->startPos[1];
-        p->g+=p->startPos[1];
-        p->b+=p->startPos[1];
+        p->r= p->startPos[1]+p->r > 255 ?  255 : p-> startPos[1] + p->r; 
+        p->g= p->startPos[1]+p->g > 255 ?  255 : p-> startPos[1] + p->g; 
+        p->b= p->startPos[1]+p->b > 255 ?  255 : p-> startPos[1] + p->b; 
         particles.push_back(p);
     }
 }
