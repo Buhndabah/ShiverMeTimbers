@@ -1,6 +1,7 @@
 <?xml version = "1.0"?>
-<map width="6" height="6" tilewidth="128" tileheight="64">
+<map width="6" height="6" tilewidth="128" tileheight="64" tileRise="49">
     <tileset>
+        <tile id="0" name="empty"/>
         <tile id="1" name="tile1"/>
         <tile id ="2" name="tile2"/>
         <tile id ="3" name="tile3"/>
@@ -48,6 +49,82 @@
         <element id="10" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+    </layer>
+    <layer name="ground++">
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+    </layer>
+    <layer name="ground++">
+        <element id="10" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
+        <element id="0" collision ="true"/>
         <element id="10" collision ="true"/>
     </layer>
 </map>

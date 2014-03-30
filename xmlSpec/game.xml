@@ -157,6 +157,17 @@
   <snowTransparency>false</snowTransparency>
 </snow>
 
+<empty>
+  <emptyFile>images/empty.png</emptyFile>
+  <emptyLoc emptyX="30" emptyY="10"/>
+  <emptyWidth>128</emptyWidth>
+  <emptyHeight>80</emptyHeight>
+  <emptySrcX>0</emptySrcX>
+  <emptySrcY>0</emptySrcY>
+  <emptySpeed emptySpeedX="0" emptySpeedY="0"/>
+  <emptyTransparency>false</emptyTransparency>
+</empty>
+
 <tile2>
   <tile2File>images/test_tile2.png</tile2File>
   <tile2Loc tile2X="30" tile2Y="10"/>

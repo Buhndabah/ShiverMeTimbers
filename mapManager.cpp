@@ -32,6 +32,9 @@ MapManager::MapManager(const std::string& fn) :
     strm<<rootData[std::string("tileheight")];
     strm >> tileHeight;
     strm.clear();
+    strm<<rootData[std::string("tileRise")];
+    strm >> tileRise;
+    strm.clear();
     strm << rootData[std::string("width")];
     strm >> mapWidth;
     strm.clear();
@@ -70,23 +73,25 @@ void MapManager::createLayers()
     std::string id;
     std::stringstream strm;
     unsigned int i=0;
-    bool collision=false;
-
+    std::string collision;
+    unsigned int layerIndex=0;
 
     // Walk through layer tags (height levels)
     for(std::list<const rapidxml::xml_node<>* >::const_iterator iterator = layers.begin(); iterator!= layers.end();++iterator)
     {
+        std::cerr << "hey" <<std::endl;
         i =0;
 
         // walk through tile ids in layer
         for(rapidxml::xml_node<>* node= (*iterator)->first_node();node; node=node->next_sibling())
-        {
-            collision=false;
-            
+        {  
+            collision="false"; 
+            std::cerr << "mah" << std::endl; 
             // walk through their attributes
             for(rapidxml::xml_attribute<>* attr = node->first_attribute();attr; attr=attr->next_attribute())
             {   
                 strm << attr->value();
+                std::cerr << "attr value is " << attr->value() << std::endl;
                 if(strcmp(attr->name(),"id")==0)
                 {
                     strm >>id;
@@ -99,22 +104,25 @@ void MapManager::createLayers()
                 {
                     throw std::string("Bad attribute for tile \"")+attr->name()+std::string("\"");
                 }
-                strm.flush();
+                std::cerr << "id loaded as " << id << std::endl;
+                std::cerr << "collision loaded as " << collision << std::endl;
+                strm.clear();
             }
 
             // Calculate draw coordinates for new tile
             unsigned int worldWidth = Gamedata::getInstance().getXmlInt("worldWidth");
             unsigned int worldHeight = Gamedata::getInstance().getXmlInt("worldHeight");
             unsigned int offsetX = worldWidth/2 - tileWidth/2;
-            unsigned int offsetY = worldHeight/2 - mapHeight*tileHeight/2;
+            unsigned int offsetY = worldHeight/2 - mapHeight*tileHeight/2 - (layerIndex)*tileRise;
             unsigned int tileLocX=  ((i/mapWidth)*tileWidth/2)-((i%mapWidth)*tileWidth/2)+offsetX;
             unsigned int tileLocY= ((i/mapHeight)*tileHeight/2)+((i%mapHeight)*tileHeight/2)+offsetY;
 
-
-            newLayer.push_back(Tile(tiles[id],Vector2f(tileLocX,tileLocY),collision));
+                std::cerr << "loaded id " << id << std::endl;
+            newLayer.push_back(Tile(tiles[id],Vector2f(tileLocX,tileLocY),collision.compare("true") ? true : false));
             i++;
         }
         mapLayers.push_back(newLayer);
+        ++layerIndex;
         newLayer.clear();
     }
 }

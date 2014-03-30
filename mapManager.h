@@ -26,6 +26,7 @@ public:
     int getH() const { return mapHeight;}
     int getTileWidth() const { return  sqrt(pow(tileWidth/2.0,2) + pow(tileHeight/2.0,2)) ;}
     int getTileHeight() const { return  sqrt(pow(tileWidth/2.0,2) + pow(tileHeight/2.0,2)) ;}
+    int getTileRise() const { return tileRise; }
 
     Vector2f getOrigin() const;
     const Tile& findTileAt(const Vector2f&) const;
@@ -46,6 +47,7 @@ private:
     // in display coord
     unsigned int tileWidth;
     unsigned int tileHeight;
+    unsigned int tileRise;
     int mapWidth;
     int mapHeight;
 };
