@@ -1,8 +1,6 @@
 #include "ioManager.h"
-#include "gamedata.h"
+#include "viewport.h"
 #include "particle.h"
-
-#define M_PI 3.1415926535897932384
 
 ParticleSystem::ParticleSystem() :
     pos(Vector2f(0,0)),
@@ -78,8 +76,8 @@ void ParticleSystem::draw() const {
     Uint32 color;
     for(std::list<Particle*>::const_iterator it=particles.begin(); it!= particles.end(); ++it)
     {
-        rect.x = (*it)->x;
-        rect.y = (*it)->y-(*it)->z;
+        rect.x = (*it)->x-Viewport::getInstance().X();
+        rect.y = (*it)->y-(*it)->z-Viewport::getInstance().Y();
         rect.w = (int)(*it)->size;
         rect.h = (int)(*it)->size;
 
