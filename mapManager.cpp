@@ -18,13 +18,13 @@ MapManager::MapManager(const std::string& fn) :
     gridElements(),
     tileWidth(),
     tileHeight(),
+    tileRise(),
     mapWidth(),
     mapHeight()
 {
 
     std::stringstream strm; 
     std::map<std::string, std::string> rootData = parser.parseNode(parser.findNodes("map").front());
-
 
     strm<<rootData[std::string("tilewidth")];
     strm >> tileWidth;
@@ -41,6 +41,12 @@ MapManager::MapManager(const std::string& fn) :
     strm<<rootData[std::string("height")];
     strm >> mapHeight;
     strm.clear();
+
+    for(int i=0; i < tileHeight*tileWidth; i++)
+    {   
+        std::list<GridElement*> newList;
+        gridElements.push_back(newList);
+    }
 
     createTiles();
     createLayers();
@@ -289,7 +295,6 @@ void MapManager::update(Uint32& ticks) {
         }
     }
 
-    if(gridElements.empty()) return;
 
     for(std::vector<std::list<GridElement*> >::const_iterator it=gridElements.begin(); it!=gridElements.end(); ++it)
        {
