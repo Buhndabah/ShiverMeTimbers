@@ -150,7 +150,7 @@
   <snowFile>images/snow_tile.png</snowFile>
   <snowLoc snowX="30" snowY="10"/>
   <snowWidth>128</snowWidth>
-  <snowHeight>64</snowHeight>
+  <snowHeight>110</snowHeight>
   <snowSrcX>0</snowSrcX>
   <snowSrcY>0</snow1SrcY>
   <snowSpeed snowSpeedX="0" snowSpeedY="0"/>
