@@ -50,5 +50,7 @@ private:
     unsigned int tileRise;
     int mapWidth;
     int mapHeight;
+
+    std::string weather;
 };
 #endif

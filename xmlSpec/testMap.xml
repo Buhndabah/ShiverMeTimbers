@@ -1,5 +1,5 @@
 <?xml version = "1.0"?>
-<map width="6" height="6" tilewidth="128" tileheight="64" tileRise="49">
+<map width="6" height="6" tilewidth="128" tileheight="64" tileRise="49" weather="snow">
     <tileset>
         <tile id="0" name="empty"/>
         <tile id="1" name="tile1"/>

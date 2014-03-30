@@ -20,7 +20,8 @@ MapManager::MapManager(const std::string& fn) :
     tileHeight(),
     tileRise(),
     mapWidth(),
-    mapHeight()
+    mapHeight(),
+    weather()
 {
 
     std::stringstream strm; 
@@ -40,6 +41,9 @@ MapManager::MapManager(const std::string& fn) :
     strm.clear();
     strm<<rootData[std::string("height")];
     strm >> mapHeight;
+    strm.clear();
+    strm<<rootData[std::string("weather")];
+    strm >> weather;
     strm.clear();
 
     for(int i=0; i < tileHeight*tileWidth; i++)
@@ -85,19 +89,16 @@ void MapManager::createLayers()
     // Walk through layer tags (height levels)
     for(std::list<const rapidxml::xml_node<>* >::const_iterator iterator = layers.begin(); iterator!= layers.end();++iterator)
     {
-        std::cerr << "hey" <<std::endl;
         i =0;
 
         // walk through tile ids in layer
         for(rapidxml::xml_node<>* node= (*iterator)->first_node();node; node=node->next_sibling())
         {  
             collision="false"; 
-            std::cerr << "mah" << std::endl; 
             // walk through their attributes
             for(rapidxml::xml_attribute<>* attr = node->first_attribute();attr; attr=attr->next_attribute())
             {   
                 strm << attr->value();
-                std::cerr << "attr value is " << attr->value() << std::endl;
                 if(strcmp(attr->name(),"id")==0)
                 {
                     strm >>id;
@@ -110,8 +111,6 @@ void MapManager::createLayers()
                 {
                     throw std::string("Bad attribute for tile \"")+attr->name()+std::string("\"");
                 }
-                std::cerr << "id loaded as " << id << std::endl;
-                std::cerr << "collision loaded as " << collision << std::endl;
                 strm.clear();
             }
 
@@ -119,12 +118,16 @@ void MapManager::createLayers()
             unsigned int worldWidth = Gamedata::getInstance().getXmlInt("worldWidth");
             unsigned int worldHeight = Gamedata::getInstance().getXmlInt("worldHeight");
             unsigned int offsetX = worldWidth/2 - tileWidth/2;
-            unsigned int offsetY = worldHeight/2 - mapHeight*tileHeight/2 - (layerIndex)*tileRise;
+            unsigned int offsetY = worldHeight/2 - mapHeight*tileHeight/2;
+            unsigned int offsetZ = layerIndex*tileRise;
             unsigned int tileLocX=  ((i/mapWidth)*tileWidth/2)-((i%mapWidth)*tileWidth/2)+offsetX;
-            unsigned int tileLocY= ((i/mapHeight)*tileHeight/2)+((i%mapHeight)*tileHeight/2)+offsetY;
+            unsigned int tileLocY= ((i/mapHeight)*tileHeight/2)+((i%mapHeight)*tileHeight/2)+offsetY-offsetZ;
 
-                std::cerr << "loaded id " << id << std::endl;
             newLayer.push_back(Tile(tiles[id],Vector2f(tileLocX,tileLocY),collision.compare("true") ? true : false));
+            if(weather.compare("snow")==0)
+            {
+                newLayer.back().setParticleSystem(new ParticleSystem(Vector2f(tileLocX,tileLocY),Vector2f(tileWidth,tileHeight),worldHeight-tileLocY));
+            }
             i++;
         }
         mapLayers.push_back(newLayer);
