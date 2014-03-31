@@ -13,7 +13,7 @@ public:
     static MapManager& getInstance();
     void displayData() const;
 
-    ~MapManager() {}
+    ~MapManager();
 
     //void load();
     void draw() const;
@@ -24,14 +24,19 @@ public:
 
     int getW() const { return mapWidth;}
     int getH() const { return mapHeight;}
-    int getTileWidth() const { return  sqrt(pow(tileWidth/2.0,2) + pow(tileHeight/2.0,2)) ;}
-    int getTileHeight() const { return  sqrt(pow(tileWidth/2.0,2) + pow(tileHeight/2.0,2)) ;}
+    int getTileWidth() const { return tileWidth; }
+    int getTileHeight() const {return tileHeight; }
     int getTileRise() const { return tileRise; }
-
+    int getGridTileWidth() const { return  sqrt(pow(tileWidth/2.0,2) + pow(tileHeight/2.0,2)) ;}
+    int getGridTileHeight() const { return  sqrt(pow(tileWidth/2.0,2) + pow(tileHeight/2.0,2)) ;}
     Vector2f getOrigin() const;
+
     const Tile& findTileAt(const Vector2f&) const;
     //Vector2f validateMovement(Vector2f, Vector2f, int, float&, float, bool&) const;
     Vector2f validateMovement(GridElement&, Vector2f, float&, bool&) const;
+    //void addGridElement(const gridElement&);
+    void addGridElement(GridElement*);
+
 private:
     XMLParser parser;
     MapManager(const std::string& fn = "xmlSpec/testMap.xml");
@@ -40,6 +45,9 @@ private:
 
     void createTiles();
     void createLayers();
+
+    int getIndexAt(const Vector2f&) const;
+
 
     std::map<std::string, std::string> tiles;
     std::list<std::vector<Tile> > mapLayers;

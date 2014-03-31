@@ -137,7 +137,7 @@ void ParticleSystem::spawnParticles() {
         p = new Particle(rand() % maxLifeTime + 5,
                          pos[0] + startX,
                          pos[1]  + startY,
-                         rand() % maxHeight + 2*maxHeight/3,
+                         rand() % maxHeight + maxHeight/4,
                          220,
                          220,
                          220,

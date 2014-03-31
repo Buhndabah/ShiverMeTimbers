@@ -12,7 +12,6 @@ Manager::~Manager() {
   for(unsigned int i = 0; i < snowballs.size(); i++){
      delete snowballs[i]; 
   }
-  delete player;
 }
 
 Manager::Manager() :
@@ -45,6 +44,7 @@ Manager::Manager() :
   snowballs.reserve(numSnowballs+4);
 
   player = new GridElement("coolyeti");
+  map.addGridElement(player);
   hud.setPlayer(player);
 //  snowballs.push_back(new MultiSprite("spinsnowball"));
   //snowballs.push_back(new MultiSprite("coolyeti"));
@@ -63,7 +63,7 @@ Manager::Manager() :
 void Manager::draw() const {
   world.draw();
   map.draw();
-  player->draw();
+  //player->draw();
   std::vector<Drawable*>::const_iterator it = snowballs.begin();
   while(it != snowballs.end()){
 	(*it)->draw();
@@ -80,7 +80,7 @@ void Manager::draw() const {
 void Manager::update() {
   ++clock;
   Uint32 ticks = clock.getElapsedTicks();
-  player->update(ticks);
+  //player->update(ticks);
   std::vector<Drawable*>::iterator it = snowballs.begin();
   while(it != snowballs.end()){
 	(*it)->update(ticks);
@@ -113,8 +113,8 @@ void Manager::play() {
 
   while ( not done ) {
 
-std::cout << "display: " << player->getSprite().getPosition() << std::endl;
-std::cout << "grid: " << player->getGridPosition() << std::endl << std::endl;
+//std::cout << "display: " << player->getSprite().getPosition() << std::endl;
+//std::cout << "grid: " << player->getGridPosition() << std::endl << std::endl;
 
     //adjust the player's velocity according to the key(s) being held down
     if(w){

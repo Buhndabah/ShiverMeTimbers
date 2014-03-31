@@ -57,7 +57,7 @@ void MultiSprite::scaledDraw(double dx, double dy) const {
 void MultiSprite::update(Uint32 ticks) { 
   advanceFrame(ticks);
 
-  Vector2f incr = getVelocity() * static_cast<float>(ticks) * 0.001;
+  /*Vector2f incr = getVelocity() * static_cast<float>(ticks) * 0.001;
   setPosition(getPosition() + incr);
 
   if ( Y() < 0) {
@@ -72,6 +72,6 @@ void MultiSprite::update(Uint32 ticks) {
   }
   if ( X() > worldWidth-frameWidth) {
     velocityX( -abs( velocityX() ) );
-  }  
+  } */ 
 
 }

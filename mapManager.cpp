@@ -56,6 +56,18 @@ MapManager::MapManager(const std::string& fn) :
     createLayers();
 }
 
+MapManager::~MapManager() {
+    std::list<GridElement*>::iterator geIt;
+    for(std::vector<std::list<GridElement*> >::iterator it =gridElements.begin(); it!=gridElements.end();++it)
+    {
+        while(!(*it).empty())
+        {
+            delete (*it).front();
+            (*it).pop_front();
+        }
+    }
+}
+
 void MapManager::debug() const{
     std::cerr << "Tile width is " << tileWidth << std::endl;
     std::cerr << "Tile height is " << tileHeight << std::endl;
@@ -148,7 +160,7 @@ void MapManager::createLayers()
     {
         if(weather.compare("snow")==0)
         {
-            (*weatherIt)->setParticleSystem(new ParticleSystem((*weatherIt)->getCoord(),Vector2f(tileWidth,tileHeight),worldHeight-(*weatherIt)->getCoord()[1]));
+            (*weatherIt)->setParticleSystem(new ParticleSystem((*weatherIt)->getCoord(),Vector2f(tileWidth,tileHeight),(*weatherIt)->getCoord()[1]));
             
         }
     }
@@ -197,8 +209,9 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
 
     float dist = 0.;
     //Check max X border
-    if(hypoPos[0] > mapWidth * getTileWidth()){
-      hypoPos[0] = mapWidth * getTileWidth();
+    if(hypoPos[0] > mapWidth * getGridTileWidth()){
+        std::cerr<< "i'm illegal on maxX!" << std::endl;
+      hypoPos[0] = mapWidth * getGridTileWidth();
       dist = hypoPos[0] - g.getGridPosition()[0];
 
       if(g.getMoveDir()[3]) //if moving down on the screen
@@ -212,8 +225,9 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
     }
     //Check min X border
     else if(hypoPos[0] < 0){
+        std::cerr<< "i'm illegal on minX!" << std::endl;
       hypoPos[0] = 0;
-      dist = -g.getGridPosition()[0];
+      dist = 0.-g.getGridPosition()[0];
 
       if(g.getMoveDir()[0]) //if moving up on the screen
         hypoPos[1] = g.getGridPosition()[1] + dist;
@@ -226,8 +240,9 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
     }
  
     //Check max Y border
-    else if(hypoPos[1] > mapHeight * getTileHeight()){
-      hypoPos[1] = mapHeight * getTileHeight();
+    else if(hypoPos[1] > mapHeight * getGridTileHeight()){
+        std::cerr<< "i'm illegal on maxY!" << std::endl;
+      hypoPos[1] = mapHeight * getGridTileHeight();
       dist = hypoPos[1] - g.getGridPosition()[1];
 
       if(g.getMoveDir()[3]) //if moving down on the screen
@@ -242,8 +257,9 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
  
     //Check min Y border
     else if(hypoPos[1] < 0){
+        std::cerr<< "i'm illegal on minY!" << std::endl;
       hypoPos[1] = 0;
-      dist = -g.getGridPosition()[1];
+      dist = 0.-g.getGridPosition()[1];
 
       if(g.getMoveDir()[0]) //if moving down on the screen
         hypoPos[0] = g.getGridPosition()[0] + dist;
@@ -262,10 +278,10 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
 void MapManager::draw() const {
     int max=0;
     int index;
-    for(std::list<std::vector<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
-    {  
         for(int i=0; i<mapWidth+mapHeight-1; ++i)
          {
+            for(std::list<std::vector<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
+            {  
              if(i<mapWidth)
              {
                 max = i+1;
@@ -297,7 +313,7 @@ void MapManager::draw() const {
 }
 
 void MapManager::drawGridElements(int index) const {
-    if(gridElements.empty()) return;
+    if(gridElements[index].empty()) return;
     for(std::list<GridElement* >::const_iterator it = gridElements[index].begin(); it!=gridElements[index].end(); ++it)
     {
         (*it)->draw();
@@ -306,6 +322,13 @@ void MapManager::drawGridElements(int index) const {
 
 // For each tile in each layer, update
 void MapManager::update(Uint32& ticks) {
+    GridElement* element;
+    std::vector<std::list<GridElement *> > vec;
+    for(int i=0; i < tileHeight*tileWidth; i++)
+    {   
+        std::list<GridElement*> newList;
+        vec.push_back(newList);
+    }
     for(std::list<std::vector<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
     {   
         for(std::vector<Tile>::const_iterator layer_it = (*it).begin(); layer_it != (*it).end(); ++layer_it)
@@ -315,18 +338,33 @@ void MapManager::update(Uint32& ticks) {
     }
 
 
-    for(std::vector<std::list<GridElement*> >::const_iterator it=gridElements.begin(); it!=gridElements.end(); ++it)
+    for(std::vector<std::list<GridElement*> >::iterator it=gridElements.begin(); it!=gridElements.end(); ++it)
        {
            if(!(*it).empty())
            {
-               for(std::list<GridElement*>::const_iterator geIt =(*it).begin(); geIt!=(*it).end(); ++geIt)
+               while(!(*it).empty())
                {
-                   (*geIt)->update(ticks);
+                   element = (*it).front();
+                   (*it).pop_front();
+                   element->update(ticks);
+
+                   vec[getIndexAt(element->getGridPosition())].push_back(element);
                }
            }
        }
-    
+       gridElements = std::vector<std::list<GridElement*> >(vec);
 }
+
+int MapManager::getIndexAt(const Vector2f& coord) const {
+    unsigned int indexX = coord[0]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2));
+    unsigned int indexY = coord[1]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2));
+    return indexX+(indexY*mapHeight);
+}
+    
+void MapManager::addGridElement(GridElement* gridE) {
+    gridElements[getIndexAt(gridE->getGridPosition())].push_back(gridE);
+}
+
 
 // Spit out what the parser is storing
 void MapManager::displayData() const {

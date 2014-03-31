@@ -14,7 +14,7 @@ GridElement::GridElement(const std::string& name) :
   moveDir()
 {
     std::cerr<< "Map size: " << map.getW() << " " << map.getH() << std::endl;
-    std::cerr<< "Tile size: " << map.getTileWidth() << " " << map.getTileHeight() << std::endl;
+    std::cerr<< "Tile size: " << map.getGridTileWidth() << " " << map.getGridTileHeight() << std::endl;
   // numbers below obtained through science
   gridSprite.setPosition(map.getOrigin()-Vector2f(0,gridSprite.getH())+Vector2f(-5,40));
   moveDir.reserve(8);
