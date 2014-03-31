@@ -132,11 +132,23 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
         }
         else if(componentParams["type"].compare("text")==0)
         {
-            addComponent(new HUDText(componentParams["name"],
-                                     Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
-                                     componentParams["visible"].compare("true") ? 0 : 1, 
-                                     componentParams["text"],
-                                     componentParams["centered"].compare("true") ? 0 : 1));
+            if(componentParams.find("font")!=componentParams.end() && componentParams.find("color")!=componentParams.end())
+            {
+                //std::cerr<< componentParams["font"] << " " << componentParams["color"] << std::endl;
+                addComponent(new HUDText(componentParams["name"],
+                                         Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
+                                         componentParams["visible"].compare("true") ? 0 : 1, 
+                                         componentParams["text"],
+                                         componentParams["centered"].compare("true") ? 0 : 1, componentParams["font"],componentParams["color"]));
+            }
+            else
+            {
+                addComponent(new HUDText(componentParams["name"],
+                                         Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
+                                         componentParams["visible"].compare("true") ? 0 : 1, 
+                                         componentParams["text"],
+                                         componentParams["centered"].compare("true") ? 0 : 1));
+            }
         }
         else if(componentParams["type"].compare("fps")==0)
         {
