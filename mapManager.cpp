@@ -131,11 +131,11 @@ void MapManager::createLayers()
             }
 
             // Calculate draw coordinates for new tile
-            unsigned int offsetX = worldWidth/2 - tileWidth/2;
-            unsigned int offsetY = worldHeight/2 - mapHeight*tileHeight/2;
-            unsigned int offsetZ = layerIndex*tileRise;
-            unsigned int tileLocX=  ((tileIndex/mapWidth)*tileWidth/2)-((tileIndex%mapWidth)*tileWidth/2)+offsetX;
-            unsigned int tileLocY= ((tileIndex/mapHeight)*tileHeight/2)+((tileIndex%mapHeight)*tileHeight/2)+offsetY-offsetZ;
+            int offsetX = worldWidth/2 - tileWidth/2;
+            int offsetY = worldHeight/2 - mapHeight*tileHeight/2;
+            int offsetZ = layerIndex*tileRise;
+            int tileLocX=  ((tileIndex/mapWidth)*tileWidth/2)-((tileIndex%mapWidth)*tileWidth/2)+offsetX;
+            int tileLocY= ((tileIndex/mapHeight)*tileHeight/2)+((tileIndex%mapHeight)*tileHeight/2)+offsetY-offsetZ;
 
             newLayer.push_back(Tile(id,tiles[id],Vector2f(tileLocX,tileLocY),collision.compare("true") ? true : false));
             tileIndex++;
@@ -300,7 +300,6 @@ void MapManager::draw() const {
                  {
                     index = i+ ((i+1)%mapWidth)*(mapWidth-1) +(j*(mapWidth-1));
                  }
-
                 (*it)[index].draw();
                 drawGridElements(index);
              }
