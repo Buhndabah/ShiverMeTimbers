@@ -113,8 +113,8 @@ void Manager::play() {
 
   while ( not done ) {
 
-//std::cout << "display: " << player->getSprite().getPosition() << std::endl;
-//std::cout << "grid: " << player->getGridPosition() << std::endl << std::endl;
+std::cout << "display: " << player->getSprite().getPosition() << std::endl;
+std::cout << "grid: " << player->getGridPosition() << std::endl << std::endl;
 
     //adjust the player's velocity according to the key(s) being held down
     if(w){

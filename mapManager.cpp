@@ -210,7 +210,6 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
     float dist = 0.;
     //Check max X border
     if(hypoPos[0] > mapWidth * getGridTileWidth()){
-        std::cerr<< "i'm illegal on maxX!" << std::endl;
       hypoPos[0] = mapWidth * getGridTileWidth();
       dist = hypoPos[0] - g.getGridPosition()[0];
 
@@ -225,7 +224,6 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
     }
     //Check min X border
     else if(hypoPos[0] < 0){
-        std::cerr<< "i'm illegal on minX!" << std::endl;
       hypoPos[0] = 0;
       dist = 0.-g.getGridPosition()[0];
 
@@ -241,7 +239,6 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
  
     //Check max Y border
     else if(hypoPos[1] > mapHeight * getGridTileHeight()){
-        std::cerr<< "i'm illegal on maxY!" << std::endl;
       hypoPos[1] = mapHeight * getGridTileHeight();
       dist = hypoPos[1] - g.getGridPosition()[1];
 
@@ -257,7 +254,6 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
  
     //Check min Y border
     else if(hypoPos[1] < 0){
-        std::cerr<< "i'm illegal on minY!" << std::endl;
       hypoPos[1] = 0;
       dist = 0.-g.getGridPosition()[1];
 
