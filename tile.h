@@ -19,6 +19,7 @@ public:
     bool isCollidable() const { return collidable; }
     void setParticleSystem(ParticleSystem* ps) { delete particleSys; particleSys = ps; }
     const std::string& getId() const { return id; }
+    bool pointOn(const Vector2f&) const;
 private:
     std::string id;
     Sprite *sprite;

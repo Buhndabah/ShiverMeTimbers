@@ -1,7 +1,10 @@
 #include <algorithm>
 #include <sstream>
+#include <SDL/SDL.h>
 #include <iostream>
 #include <math.h>
+#include "viewport.h"
+#include "ioManager.h"
 #include "vector2f.h"
 #include "gamedata.h"
 #include "mapManager.h"
@@ -46,10 +49,12 @@ MapManager::MapManager(const std::string& fn) :
     strm >> weather;
     strm.clear();
 
-    for(int i=0; i < tileHeight*tileWidth; i++)
+
+    gridElements.reserve(mapWidth*mapHeight);
+    int i;
+    for(i=0; i < mapHeight * mapWidth; i++)
     {   
-        std::list<GridElement*> newList;
-        gridElements.push_back(newList);
+        gridElements.push_back( new std::list<GridElement* >);
     }
 
     createTiles();
@@ -57,14 +62,15 @@ MapManager::MapManager(const std::string& fn) :
 }
 
 MapManager::~MapManager() {
-    std::list<GridElement*>::iterator geIt;
-    for(std::vector<std::list<GridElement*> >::iterator it =gridElements.begin(); it!=gridElements.end();++it)
+    while (gridElements.size()!=0)
     {
-        while(!(*it).empty())
+        while(!gridElements.front()->empty())
         {
-            delete (*it).front();
-            (*it).pop_front();
+            delete gridElements.front()->front();
+            gridElements.front()->pop_front();
         }
+        delete gridElements.front();
+        gridElements.erase(gridElements.begin());
     }
 }
 
@@ -177,8 +183,8 @@ const Tile& MapManager::findTileAt(const Vector2f& coord) const {
 
     std::string errMess;
     std::stringstream strm;
-    unsigned int indexX = coord[0]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2));
-    unsigned int indexY = coord[1]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2));
+    unsigned int indexX = coord[0]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)-1);
+    unsigned int indexY = coord[1]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)-1);
     unsigned int i =0;
 
     for(std::vector<Tile>::const_iterator it = (*mapLayers.begin()).begin(); it != (*mapLayers.end()).end(); ++it)
@@ -209,7 +215,8 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
 
     float dist = 0.;
     //Check max X border
-    if(hypoPos[0] > mapWidth * getGridTileWidth()){
+    if((hypoPos[0] > mapWidth * getGridTileWidth()))
+       {
       hypoPos[0] = mapWidth * getGridTileWidth();
       dist = hypoPos[0] - g.getGridPosition()[0];
 
@@ -221,6 +228,15 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
       dist = sqrt( pow(hypoPos[0] - g.getGridPosition()[0],2) + pow(hypoPos[1] - g.getGridPosition()[1],2));
       fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
       atEdge = true;
+    }
+
+    // JOHN'S SUPER HACKY MOVEMENT CODE XXX TODO I'M SO SORRY
+    else if((getIndexAt(hypoPos+g.getSprite().getSize())+1)%(mapWidth) == 0)
+    {
+         std::cerr<< getIndexAt(hypoPos+g.getSprite().getSize()) << std::endl;
+         hypoPos =g.getGridPosition();
+         fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
+         atEdge = true;
     }
     //Check min X border
     else if(hypoPos[0] < 0){
@@ -238,7 +254,7 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
     }
  
     //Check max Y border
-    else if(hypoPos[1] > mapHeight * getGridTileHeight()){
+    else if(hypoPos[1] > mapHeight * getGridTileHeight() ){
       hypoPos[1] = mapHeight * getGridTileHeight();
       dist = hypoPos[1] - g.getGridPosition()[1];
 
@@ -251,7 +267,15 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
       fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
       atEdge = true;
     }
- 
+
+    // JOHN'S SUPER HACKY MOVEMENT CODE XXX TODO I'M SO SORRY
+    else if(getIndexAt(hypoPos+g.getSprite().getSize()) > mapWidth*mapHeight)
+     {
+         hypoPos =g.getGridPosition();
+         fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
+         atEdge = true;
+     }
+
     //Check min Y border
     else if(hypoPos[1] < 0){
       hypoPos[1] = 0;
@@ -269,6 +293,7 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
 
     return hypoPos;
 }
+
 
 // For each tile in each layer, draw
 void MapManager::draw() const {
@@ -308,21 +333,33 @@ void MapManager::draw() const {
 }
 
 void MapManager::drawGridElements(int index) const {
-    if(gridElements[index].empty()) return;
-    for(std::list<GridElement* >::const_iterator it = gridElements[index].begin(); it!=gridElements[index].end(); ++it)
+    if(gridElements[index]->empty()) return;
+    for(std::list<GridElement* >::const_iterator it = gridElements[index]->begin(); it!=gridElements[index]->end(); ++it)
     {
+        #ifdef HITBOX
+        SDL_Rect rect;
+        Uint32 color;
+                 
+        rect.x = (*it)->getPosition()[0] - Viewport::getInstance().X();
+        rect.y = (*it)->getPosition()[1]- Viewport::getInstance().Y();
+        rect.w = (*it)->getSprite().getW();
+        rect.h= (*it)->getSprite().getH();
+        color = SDL_MapRGB(IOManager::getInstance().getScreen()->format,0,0,0);
+        SDL_FillRect(IOManager::getInstance().getScreen(), &rect, color);
+        #endif 
         (*it)->draw();
+
     }
 }
 
 // For each tile in each layer, update
 void MapManager::update(Uint32& ticks) {
     GridElement* element;
-    std::vector<std::list<GridElement *> > vec;
-    for(int i=0; i < tileHeight*tileWidth; i++)
+    std::vector<std::list<GridElement *> *> vec;
+    vec.reserve(mapWidth*mapHeight);
+    for(int i=0; i < mapWidth*mapHeight; i++)
     {   
-        std::list<GridElement*> newList;
-        vec.push_back(newList);
+        vec.push_back(new std::list<GridElement*>);
     }
     for(std::list<std::vector<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
     {   
@@ -333,31 +370,31 @@ void MapManager::update(Uint32& ticks) {
     }
 
 
-    for(std::vector<std::list<GridElement*> >::iterator it=gridElements.begin(); it!=gridElements.end(); ++it)
+    for(std::vector<std::list<GridElement*> *>::iterator it=gridElements.begin(); it!=gridElements.end(); ++it)
        {
-           if(!(*it).empty())
+           if(!(*it)->empty())
            {
-               while(!(*it).empty())
+               while(!(*it)->empty())
                {
-                   element = (*it).front();
-                   (*it).pop_front();
+                   element = (*it)->front();
+                   (*it)->pop_front();
                    element->update(ticks);
-
-                   vec[getIndexAt(element->getGridPosition())].push_back(element);
+   
+                   vec[getIndexAt(element->getGridPosition()+element->getSprite().getSize())]->push_back(element);
                }
            }
        }
-       gridElements = std::vector<std::list<GridElement*> >(vec);
+       gridElements = std::vector<std::list<GridElement*> *>(vec);
 }
 
 int MapManager::getIndexAt(const Vector2f& coord) const {
-    unsigned int indexX = coord[0]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2));
-    unsigned int indexY = coord[1]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2));
+    int indexX = floor(coord[0]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)))-1;
+    int indexY = floor(coord[1]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)))-1;
     return indexX+(indexY*mapHeight);
 }
     
 void MapManager::addGridElement(GridElement* gridE) {
-    gridElements[getIndexAt(gridE->getGridPosition())].push_back(gridE);
+    gridElements[getIndexAt(gridE->getGridPosition()+gridE->getSprite().getSize())]->push_back(gridE);
 }
 
 

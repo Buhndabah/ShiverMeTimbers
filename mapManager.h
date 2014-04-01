@@ -33,7 +33,7 @@ public:
 
     const Tile& findTileAt(const Vector2f&) const;
     //Vector2f validateMovement(Vector2f, Vector2f, int, float&, float, bool&) const;
-    Vector2f validateMovement(GridElement&, Vector2f, float&, bool&) const;
+    Vector2f validateMovement(GridElement&,  Vector2f, float&, bool&) const;
     //void addGridElement(const gridElement&);
     void addGridElement(GridElement*);
 
@@ -51,7 +51,7 @@ private:
 
     std::map<std::string, std::string> tiles;
     std::list<std::vector<Tile> > mapLayers;
-    std::vector<std::list<GridElement*> > gridElements; // ordered by relevant tile
+    std::vector<std::list<GridElement*>*> gridElements; // ordered by relevant tile
     // in display coord
     unsigned int tileWidth;
     unsigned int tileHeight;

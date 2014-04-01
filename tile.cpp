@@ -46,3 +46,15 @@ void Tile::update(Uint32& ticks) const {
         particleSys->update(ticks);
     }
 }
+
+bool Tile::pointOn(const Vector2f& coord) const {
+    if( !coord[0] >= sprite->getPosition()[0] &&
+        !coord[0] <= sprite->getPosition()[0] + sprite->getW() &&
+        !coord[1] >= sprite->getPosition()[1] &&
+        !coord[1] <= sprite->getPosition()[1] + sprite->getH()
+      )
+    {
+        return false;
+    }
+    else return true;
+}
