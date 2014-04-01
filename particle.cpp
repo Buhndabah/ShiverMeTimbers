@@ -3,6 +3,7 @@
 #include "viewport.h"
 #include "particle.h"
 
+// Default constructor creates a system that does nothing, for now
 ParticleSystem::ParticleSystem() :
     pos(Vector2f(0,0)),
     dim(Vector2f(0,0)),
@@ -12,9 +13,9 @@ ParticleSystem::ParticleSystem() :
     maxLifeTime(0),
     maxCount(0),
     particles(0,NULL)
-{
-}
+{ }
 
+// Currently these are all values specific to "snow" particles
 ParticleSystem::ParticleSystem(const Vector2f& p, const Vector2f& d, int h) : 
     pos(p),
     dim(d),
@@ -74,12 +75,18 @@ ParticleSystem::~ParticleSystem() {
     }
 }
 
+// Currently this is snow specific
 void ParticleSystem::draw() const {
     SDL_Rect rect;
     Uint32 color;
     int borderSize;
+
+    // Iterate through particles
     for(std::list<Particle*>::const_iterator it=particles.begin(); it!= particles.end(); ++it)
     {
+
+        /* Draws a grey-white rect surrounded by a black border */
+  
         borderSize = 2;
         //borderSize = (*it)->size/4 > 0 ? (*it)->size/3 : 1;
 
@@ -102,19 +109,22 @@ void ParticleSystem::draw() const {
     }
 }
 
+// Currently snow specific
 void ParticleSystem::update(Uint32 ticks) {
     Vector2f incr;
     std::list<Particle*>::iterator it = particles.begin();
     Particle* p;
     int startX;
     int startY;
+
     while(it!=particles.end())
     {
             p=*it;
+
+            // Decrement this particle's life
             p->lifetime-=static_cast<float>(ticks)/1000.0;
 
-
-            // Reinitialize particles
+            // Reinitialize particles if they've expired XXX TODO THIS IS BAD READ IN FROM SOMEWHERE ELSE PLEASE
             if(p->lifetime<=0 
                 || (p->z <= p->startPos[1]))
             {
@@ -129,32 +139,35 @@ void ParticleSystem::update(Uint32 ticks) {
                 p->g= p->startPos[1]+p->g > 255 ?  255 : p-> startPos[1] + p->g; 
                 p->b= p->startPos[1]+p->b > 255 ?  255 : p-> startPos[1] + p->b; 
                  
-                ++it;
             }
             else
             {
+                // increment by velocity
                 incr = p->vel*static_cast<float>(ticks)/1000.0;
                 p->x+=incr[0];
                 p->y;
                 p->z-=incr[1];
-                it++;
             }
+                ++it;
     }
 }
 
+// fill container with maxCount particles
 void ParticleSystem::spawnParticles() {
     Particle *p;
     Vector2f newPos;
-    int startX;
-    int startY;
+    int xOffset;
+    int yOffset;
+
     while(particles.size() < maxCount)
     {
-        startX = rand() % static_cast<int>(dim[0]);
-        startY= rand() % static_cast<int>(dim[1]);
+        // Random offset
+        xOffset = rand() % static_cast<int>(dim[0]);
+        yOffset = rand() % static_cast<int>(dim[1]);
 
         p = new Particle(rand() % maxLifeTime + 5,
-                         pos[0] + startX,
-                         pos[1]  + startY,
+                         pos[0] + xOffset,
+                         pos[1]  + yOffset,
                          rand() % maxHeight + maxHeight/4,
                          220,
                          220,
@@ -163,7 +176,7 @@ void ParticleSystem::spawnParticles() {
                          1,
                          Vector2f(0,50)
                 );
-        p->startPos=Vector2f(startX,startY);
+        p->startPos=Vector2f(p->x,p->y);
         p->r= p->startPos[1]+p->r > 255 ?  255 : p-> startPos[1] + p->r; 
         p->g= p->startPos[1]+p->g > 255 ?  255 : p-> startPos[1] + p->g; 
         p->b= p->startPos[1]+p->b > 255 ?  255 : p-> startPos[1] + p->b; 

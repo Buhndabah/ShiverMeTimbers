@@ -382,11 +382,11 @@ void MapManager::update(Uint32& ticks) {
 
 
     // This is a temp list used to store GridElements as we sort them by index
-    std::vector<std::list<GridElement *> > vec;
-    vec.reserve(mapWidth*mapHeight);
+    std::vector<std::list<GridElement *> > tempVec;
+    tempVec.reserve(mapWidth*mapHeight);
     for(int i=0; i < mapWidth*mapHeight; i++)
     {   
-        vec.push_back(std::list<GridElement*>());
+        tempVec.push_back(std::list<GridElement*>());
     }
 
     // Walk through Grid elements, remove them from the list, update, and then find their new position
@@ -401,12 +401,12 @@ void MapManager::update(Uint32& ticks) {
                    (*it).pop_front();
                    element->update(ticks);
    
-                   vec[getIndexAt(element->getGridPosition()+element->getSprite().getSize())].push_back(element);
+                   tempVec[getIndexAt(element->getGridPosition()+element->getSprite().getSize())].push_back(element);
                }
            }
        }
        // copy temp list into permanent list
-       gridElements = std::vector<std::list<GridElement*> >(vec);
+       gridElements = std::vector<std::list<GridElement*> >(tempVec);
 }
 
 /* Give a grid coordinate, will return the index of the tile underneath that coordinate, if any. */
