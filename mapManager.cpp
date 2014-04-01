@@ -138,7 +138,7 @@ void MapManager::createLayers()
 
             // Calculate draw coordinates for new tile
             int offsetX = worldWidth/2 - tileWidth/2;
-            int offsetY = worldHeight/2 - mapHeight*tileHeight/2;
+            int offsetY = worldHeight/2 - mapHeight*tileHeight/2+100;
             int offsetZ = layerIndex*tileRise;
             int tileLocX=  ((tileIndex/mapWidth)*tileWidth/2)-((tileIndex%mapWidth)*tileWidth/2)+offsetX;
             int tileLocY= ((tileIndex/mapHeight)*tileHeight/2)+((tileIndex%mapHeight)*tileHeight/2)+offsetY-offsetZ;
@@ -166,7 +166,7 @@ void MapManager::createLayers()
     {
         if(weather.compare("snow")==0)
         {
-            (*weatherIt)->setParticleSystem(new ParticleSystem((*weatherIt)->getCoord(),Vector2f(tileWidth,tileHeight),(*weatherIt)->getCoord()[1]));
+            (*weatherIt)->setParticleSystem(new ParticleSystem((*weatherIt)->getCoord(),Vector2f(tileWidth,tileHeight),(*weatherIt)->getCoord()[1]+2*tileHeight));
             
         }
     }

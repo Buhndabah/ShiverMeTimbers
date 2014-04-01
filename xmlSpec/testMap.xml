@@ -52,26 +52,13 @@
         <element id="10" collision ="false"/>
     </layer>
     <layer name="layer2">
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
         <element id="10" collision ="true"/>
-        <element id="0" collision ="true"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
@@ -82,15 +69,28 @@
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="10" collision ="true"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
         <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
     </layer>
     <layer name="layer3">
-        <element id="0" collision ="false"/>
+        <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
@@ -125,10 +125,10 @@
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
+        <element id="10" collision ="true"/>
     </layer>
     <layer name="layer4">
-        <element id="0" collision ="false"/>
+        <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
@@ -163,10 +163,10 @@
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
+        <element id="10" collision ="true"/>
     </layer>
     <layer name="layer5">
-        <element id="0" collision ="false"/>
+        <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
@@ -201,29 +201,16 @@
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
+        <element id="10" collision ="true"/>
     </layer>
     <layer name="layer6">
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="true"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
@@ -234,12 +221,25 @@
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
-        <element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="10" collision ="true"/>
+        <element id="10" collision ="true"/>
     </layer>
     <layer name="layer7">
         <element id="10" collision ="false"/>
@@ -253,30 +253,30 @@
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
+        <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
+        <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
+        <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
         <element id="10" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
+        <element id="10" collision ="false"/>
+        <element id="10" collision ="false"/>
+        <element id="10" collision ="false"/>
+        <element id="10" collision ="false"/>
+        <element id="10" collision ="false"/>
+        <element id="10" collision ="false"/>
     </layer>
 </map>

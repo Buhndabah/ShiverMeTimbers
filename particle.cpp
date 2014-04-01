@@ -24,7 +24,9 @@ ParticleSystem::ParticleSystem(const Vector2f& p, const Vector2f& d, int h) :
     maxLifeTime(30),
     maxCount(3),
     particles()
-{ }
+{ 
+    spawnParticles();
+    }
 
 ParticleSystem::ParticleSystem(const ParticleSystem& rhs) :
     pos(rhs.pos),
@@ -103,25 +105,41 @@ void ParticleSystem::draw() const {
 void ParticleSystem::update(Uint32 ticks) {
     Vector2f incr;
     std::list<Particle*>::iterator it = particles.begin();
+    Particle* p;
+    int startX;
+    int startY;
     while(it!=particles.end())
     {
-            
-            (*it)->lifetime-=static_cast<float>(ticks)/1000.0;
-            if((*it)->lifetime<=0 
-                || ((*it)->z <= (*it)->startPos[1]))
+            p=*it;
+            p->lifetime-=static_cast<float>(ticks)/1000.0;
+
+
+            // Reinitialize particles
+            if(p->lifetime<=0 
+                || (p->z <= p->startPos[1]))
             {
-                particles.erase(it++);
+                p->lifetime=rand()%maxLifeTime + 5;
+                startX = rand() % static_cast<int>(dim[0]);
+                startY= rand() % static_cast<int>(dim[1]);
+                p->x=pos[0]+startX;
+                p->y=pos[1] + startY;
+                p->z=rand() % maxHeight + 3*maxHeight/4,
+                p->startPos=Vector2f(startX,startY);
+                p->r= p->startPos[1]+p->r > 255 ?  255 : p-> startPos[1] + p->r; 
+                p->g= p->startPos[1]+p->g > 255 ?  255 : p-> startPos[1] + p->g; 
+                p->b= p->startPos[1]+p->b > 255 ?  255 : p-> startPos[1] + p->b; 
+                 
+                ++it;
             }
             else
             {
-                incr = (*it)->vel*static_cast<float>(ticks)/1000.0;
-                (*it)->x+=incr[0];
-                (*it)->y;
-                (*it)->z-=incr[1];
+                incr = p->vel*static_cast<float>(ticks)/1000.0;
+                p->x+=incr[0];
+                p->y;
+                p->z-=incr[1];
                 it++;
             }
     }
-    spawnParticles();
 }
 
 void ParticleSystem::spawnParticles() {
@@ -150,5 +168,6 @@ void ParticleSystem::spawnParticles() {
         p->g= p->startPos[1]+p->g > 255 ?  255 : p-> startPos[1] + p->g; 
         p->b= p->startPos[1]+p->b > 255 ?  255 : p-> startPos[1] + p->b; 
         particles.push_back(p);
+
     }
 }
