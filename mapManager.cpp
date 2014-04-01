@@ -54,7 +54,7 @@ MapManager::MapManager(const std::string& fn) :
     int i;
     for(i=0; i < mapHeight * mapWidth; i++)
     {   
-        gridElements.push_back( new std::list<GridElement* >);
+        gridElements.push_back( std::list<GridElement* >());
     }
 
     createTiles();
@@ -62,14 +62,15 @@ MapManager::MapManager(const std::string& fn) :
 }
 
 MapManager::~MapManager() {
-    while (gridElements.size()!=0)
+    std::list<GridElement*> list;
+    while (!gridElements.empty())
     {
-        while(!gridElements.front()->empty())
+        list=gridElements.front();
+        while(!list.empty())
         {
-            delete gridElements.front()->front();
-            gridElements.front()->pop_front();
+            delete list.front();
+            list.erase(list.begin());
         }
-        delete gridElements.front();
         gridElements.erase(gridElements.begin());
     }
 }
@@ -333,8 +334,8 @@ void MapManager::draw() const {
 }
 
 void MapManager::drawGridElements(int index) const {
-    if(gridElements[index]->empty()) return;
-    for(std::list<GridElement* >::const_iterator it = gridElements[index]->begin(); it!=gridElements[index]->end(); ++it)
+    if(gridElements[index].empty()) return;
+    for(std::list<GridElement* >::const_iterator it = gridElements[index].begin(); it!=gridElements[index].end(); ++it)
     {
         #ifdef HITBOX
         SDL_Rect rect;
@@ -355,11 +356,11 @@ void MapManager::drawGridElements(int index) const {
 // For each tile in each layer, update
 void MapManager::update(Uint32& ticks) {
     GridElement* element;
-    std::vector<std::list<GridElement *> *> vec;
+    std::vector<std::list<GridElement *> > vec;
     vec.reserve(mapWidth*mapHeight);
     for(int i=0; i < mapWidth*mapHeight; i++)
     {   
-        vec.push_back(new std::list<GridElement*>);
+        vec.push_back(std::list<GridElement*>());
     }
     for(std::list<std::vector<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
     {   
@@ -370,21 +371,21 @@ void MapManager::update(Uint32& ticks) {
     }
 
 
-    for(std::vector<std::list<GridElement*> *>::iterator it=gridElements.begin(); it!=gridElements.end(); ++it)
+    for(std::vector<std::list<GridElement*> >::iterator it=gridElements.begin(); it!=gridElements.end(); ++it)
        {
-           if(!(*it)->empty())
+           if(!(*it).empty())
            {
-               while(!(*it)->empty())
+               while(!(*it).empty())
                {
-                   element = (*it)->front();
-                   (*it)->pop_front();
+                   element = (*it).front();
+                   (*it).pop_front();
                    element->update(ticks);
    
-                   vec[getIndexAt(element->getGridPosition()+element->getSprite().getSize())]->push_back(element);
+                   vec[getIndexAt(element->getGridPosition()+element->getSprite().getSize())].push_back(element);
                }
            }
        }
-       gridElements = std::vector<std::list<GridElement*> *>(vec);
+       gridElements = std::vector<std::list<GridElement*> >(vec);
 }
 
 int MapManager::getIndexAt(const Vector2f& coord) const {
@@ -394,7 +395,7 @@ int MapManager::getIndexAt(const Vector2f& coord) const {
 }
     
 void MapManager::addGridElement(GridElement* gridE) {
-    gridElements[getIndexAt(gridE->getGridPosition()+gridE->getSprite().getSize())]->push_back(gridE);
+    gridElements[getIndexAt(gridE->getGridPosition()+gridE->getSprite().getSize())].push_back(gridE);
 }
 
 
