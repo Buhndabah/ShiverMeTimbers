@@ -21,10 +21,13 @@ bool XMLParser::parse(const std::string& fn) {
 
     std::ifstream file;
     file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    std::map<std::string, std::pair<rapidxml::xml_document<>*, std::vector<char> > >::const_iterator it;
+
 
     // We've already parsed in this document
-    if(docs.find(fn)!=docs.end())
-    {
+    if( (it=docs.find(fn)) !=docs.end())
+    {  
+        curDoc=it->second.first; 
         return true;
     }
     else {
