@@ -21,13 +21,11 @@ float Gamedata::getRandInRange(int min, int max) const {
 }
 
 bool Gamedata::getXmlBool(const std::string& tag) const {
-    std::cerr << "bool" <<std::endl;
     parser.setCurDocument(readFile);
     return (strcmp(std::string(parser.find_value(tag)).c_str(),"true") ? false:true);
 }
 
 int Gamedata::getXmlInt(const std::string& tag) const {
-    std::cerr << readFile << std::endl;
     parser.setCurDocument(readFile);
     std::stringstream strm;
     strm<< std::string(parser.find_value(tag));
@@ -37,7 +35,6 @@ int Gamedata::getXmlInt(const std::string& tag) const {
 }
 
 float Gamedata::getXmlFloat(const std::string& tag) const {
-    std::cerr << "float" << std::endl;
     parser.setCurDocument(readFile);
     std::stringstream strm;
     strm << std::string(parser.find_value(tag));
@@ -47,7 +44,6 @@ float Gamedata::getXmlFloat(const std::string& tag) const {
 }
 
 const std::string Gamedata::getXmlStr(const std::string& tag) const {
-    std::cerr<< " str" << std::endl;
     parser.setCurDocument(readFile);
     return parser.find_value(tag);
 }
