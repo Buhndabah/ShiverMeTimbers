@@ -20,7 +20,6 @@ public:
   const Drawable* getObjectToTrack() const { return objectToTrack; } 
 
 private:
-  HUD& hud;
   const Gamedata& gdata;
   Vector2f position;
   unsigned viewWidth;
