@@ -23,6 +23,7 @@ IOManager::IOManager( ) :
     title( gdata.getXmlStr("screenTitle") ),
     inputString()  
 {
+    std::cerr<< " hey" << std::endl;
   if (screen == NULL) { 
     throw string("Unable to set video mode; screen is NULL in IOMAnager"); 
   }
@@ -32,6 +33,7 @@ IOManager::IOManager( ) :
   parser.parse("xmlSpec/font.xml");
   parseFonts();
   parseColors();
+  std::cerr<< "hey " << std::endl;
   parser.removeDoc("xmlSpec/font.xml");
   SDL_EnableUNICODE( SDL_ENABLE );
   SDL_WM_SetCaption(title.c_str(), NULL);

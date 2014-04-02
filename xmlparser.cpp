@@ -20,6 +20,7 @@ XMLParser::~XMLParser() {
 bool XMLParser::parse(const std::string& fn) {
 
     std::ifstream file;
+    file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
     // We've already parsed in this document
     if(docs.find(fn)!=docs.end())
@@ -41,7 +42,7 @@ bool XMLParser::parse(const std::string& fn) {
         }
         catch(std::ifstream::failure e)
         {
-            std::cerr << "Error trying to open file \" " << fn << "\"" << std::endl;
+            std::cerr << "Error in XMLParser::parse(const std::string& fn) trying to open file \"" << fn << "\"" << std::endl;
             return false;
         }
 
@@ -49,7 +50,7 @@ bool XMLParser::parse(const std::string& fn) {
         try { docs.find(fn)->second.first->parse<0>(&((docs.find(fn)->second.second[0]))); }
         catch(rapidxml::parse_error e)
         {
-            std::cerr << "Parse error for file " << fn << std::endl;
+            std::cerr << "Parse error in XMLParser::parse(const std::string& fn) for file " << fn << std::endl;
             std::cerr << e.what() << std::endl;
             return false;
         }

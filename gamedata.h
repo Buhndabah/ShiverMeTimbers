@@ -20,9 +20,11 @@ public:
   float getRandInRange(int min, int max) const;
 private:
   XMLParser& parser;
+  const std::string readFile;
   bool roto;
 
-  Gamedata(const std::string& fn = "xmlSpec/game.xml");
+
+  Gamedata();
   Gamedata(const Gamedata&);
   Gamedata& operator=(const Gamedata&);
 };

@@ -26,7 +26,6 @@ MapManager::MapManager(const std::string& fn) :
     mapHeight(),
     weather()
 {
-
     parser.parse(fn);
 
     // Read in map constants
