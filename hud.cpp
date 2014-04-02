@@ -13,12 +13,13 @@ HUD& HUD::getInstance() {
 }
 
 HUD::HUD(const std::string& fn) :
-    parser(fn),
+    parser(XMLParser::getInstance()),
     components(),
     visible(true),
     fade(false),
     player(NULL)
 { 
+    parser.parse(fn);
     parseComponents();
 }
 
@@ -267,6 +268,7 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
 
 /* Read in components from xml file */
 void HUD::parseComponents() {
+    parser.setCurDocument("xmlSpec/hud.xml");
 
     std::list<std::map<std::string, std::string> > componentList = parser.parseNodesWithTag("component");   // components are immediately ready to parse in...
 
@@ -292,4 +294,6 @@ void HUD::parseComponents() {
              createComponent(*contComp, newContainer);
          }
     }
+
+    parser.removeDoc("xmlSpec/hud.xml");
 } 

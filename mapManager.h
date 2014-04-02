@@ -49,7 +49,7 @@ private:
     int getIndexAt(const Vector2f&) const;
 
 
-    XMLParser parser;
+    XMLParser& parser;
 
     /* Storage Structures */
 

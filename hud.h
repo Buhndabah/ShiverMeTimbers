@@ -35,7 +35,7 @@ private:
 
     void parseComponents();
 
-    XMLParser parser;
+    XMLParser& parser;
     std::list<HUDComponent*> components;
     HUDComponent* createComponent(std::map<std::string, std::string> );
     HUDComponent* createComponent(std::map<std::string, std::string>, HUDContainer*);

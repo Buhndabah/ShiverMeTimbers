@@ -19,7 +19,7 @@ public:
   // An auxilliary function:
   float getRandInRange(int min, int max) const;
 private:
-  XMLParser parser;
+  XMLParser& parser;
   bool roto;
 
   Gamedata(const std::string& fn = "xmlSpec/game.xml");

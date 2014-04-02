@@ -9,7 +9,7 @@ IOManager& IOManager::getInstance() {
 }
 
 IOManager::IOManager( ) :
-  parser("xmlSpec/font.xml"),
+  parser( XMLParser::getInstance() ),
   gdata( Gamedata::getInstance() ),
   viewWidth( gdata.getXmlInt("viewWidth") ),
   viewHeight( gdata.getXmlInt("viewHeight") ),
@@ -29,8 +29,10 @@ IOManager::IOManager( ) :
   if ( TTF_Init() == -1 ) {
     throw string("TTF_Init failed: ") + TTF_GetError();
   }
+  parser.parse("xmlSpec/font.xml");
   parseFonts();
   parseColors();
+  parser.removeDoc("xmlSpec/font.xml");
   SDL_EnableUNICODE( SDL_ENABLE );
   SDL_WM_SetCaption(title.c_str(), NULL);
   atexit(TTF_Quit);

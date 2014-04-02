@@ -16,7 +16,7 @@
 
 <world>
   <worldWidth>1000</worldWidth>
-  <worldHeight>666</worldHeight>
+  <worldHeight>1000</worldHeight>
 </world>
 
 <defaultFont>dyslexic</defaultFont>
@@ -266,7 +266,7 @@
   <coolyetiFrameInterval>160</coolyetiFrameInterval>
   <coolyetiChunks>25</coolyetiChunks>
 
-  <coolyetiMoveSpeed>100</coolyetiMoveSpeed>
+  <coolyetiMoveSpeed>200</coolyetiMoveSpeed>
 
   <coolyetiSrcX>0</coolyetiSrcX>
   <coolyetiSrcY>0</coolyetiSrcY>

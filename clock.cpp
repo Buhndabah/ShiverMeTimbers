@@ -27,7 +27,7 @@ Clock::Clock() :
   sumOfAllTicks(0),
   timeAtStart(0), timeAtPause(0),
   currTicks(0), prevTicks(0), ticks(0) 
-  {
+{
   start();
 }
 
@@ -42,7 +42,7 @@ Clock::Clock(const Clock& c) :
   sumOfAllTicks(c.sumOfAllTicks),
   timeAtStart(c.timeAtStart), timeAtPause(c.timeAtPause),
   currTicks(c.currTicks), prevTicks(c.prevTicks), ticks(c.ticks) 
-  {
+{
   start();
 }
 

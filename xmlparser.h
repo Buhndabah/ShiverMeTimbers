@@ -1,6 +1,5 @@
 #ifndef XMLPARSER_H
 #define XMLPARSER_H
-#include <fstream>
 #include <iterator>
 #include <vector>
 #include <iostream>
@@ -10,19 +9,12 @@
 
 class XMLParser {
 public:
-    XMLParser(const std::string& fn) :
-        doc(),
-        file(fn.c_str(),std::ifstream::in),
-        buf(std::istreambuf_iterator<char>(file),std::istreambuf_iterator<char>())
-    {
-        buf.push_back('\0');
-        try { doc.parse<0>(&buf[0]);}
-        catch(rapidxml::parse_error e)
-        {
-            std::cerr << "Parse error for file " << fn << std::endl;
-            std::cerr << e.what() << std::endl;
-        }
-    }
+    static XMLParser& getInstance();
+    ~XMLParser();
+
+    bool parse(const std::string&);
+    bool setCurDocument(const std::string&);
+    void removeDoc(const std::string&);
 
     const char* find_value(const std::string& tag) const;
     std::list<const rapidxml::xml_node<>*> findNodes(const std::string& tag) const;
@@ -33,10 +25,15 @@ public:
     void displayData() const;
 
 private:
+    XMLParser() :
+        curDoc(),
+        docs()
+    { }
+
+    rapidxml::xml_document<> *curDoc;
+
     XMLParser& operator=(const XMLParser&);
     XMLParser(const XMLParser&);
-    rapidxml::xml_document<> doc;
-    std::ifstream file;
-    std::vector<char> buf;  // doc retains references to the input vector, so this needs to be a member
+    std::map<std::string, std::pair<rapidxml::xml_document<>*, std::vector<char> > >docs;
 };
 #endif

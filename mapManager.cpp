@@ -15,7 +15,7 @@ MapManager& MapManager::getInstance() {
 }
 
 MapManager::MapManager(const std::string& fn) :
-    parser(fn),
+    parser(XMLParser::getInstance()),
     tiles(),
     mapLayers(),
     gridElements(),
@@ -27,6 +27,7 @@ MapManager::MapManager(const std::string& fn) :
     weather()
 {
 
+    parser.parse(fn);
 
     // Read in map constants
     std::stringstream strm; 
@@ -242,7 +243,7 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
     }
 
     // JOHN'S SUPER HACKY MOVEMENT CODE XXX TODO I'M SO SORRY
-    else if((getIndexAt(hypoPos+g.getSprite().getSize())+1)%(mapWidth) == 0)
+    else if((getIndexAt(hypoPos+g.getSprite().getSize()))%(mapWidth) == 0)
     {
          std::cerr<< getIndexAt(hypoPos+g.getSprite().getSize()) << std::endl;
          hypoPos =g.getGridPosition();
@@ -351,6 +352,7 @@ void MapManager::drawGridElements(int index) const {
     {
 
         /* If enabled will draw a box around the sprite boundaries */
+#define HITBOX
         #ifdef HITBOX
         SDL_Rect rect;
         Uint32 color;
@@ -419,6 +421,7 @@ int MapManager::getIndexAt(const Vector2f& coord) const {
 
 // Spit out what the parser is storing
 void MapManager::displayData() const {
+    parser.setCurDocument("xmlSpec/testMap.xml");
     parser.displayData();
 }
 

@@ -9,19 +9,23 @@ Gamedata& Gamedata::getInstance() {
 }
 
 Gamedata::Gamedata(const std::string& fn ) :
-  parser(fn),
+  parser(XMLParser::getInstance()),
   roto(false)
-{ }
+{ 
+    parser.parse(fn);
+}
 
 float Gamedata::getRandInRange(int min, int max) const {
   return min + (rand()/(std::numeric_limits<int>::max()+1.0f))*(max-min);
 }
 
 bool Gamedata::getXmlBool(const std::string& tag) const {
+    parser.setCurDocument("xmlSpec/game.xml");
     return (strcmp(std::string(parser.find_value(tag)).c_str(),"true") ? false:true);
 }
 
 int Gamedata::getXmlInt(const std::string& tag) const {
+    parser.setCurDocument("xmlSpec/game.xml");
     std::stringstream strm;
     strm<< std::string(parser.find_value(tag));
     int data;
@@ -30,6 +34,7 @@ int Gamedata::getXmlInt(const std::string& tag) const {
 }
 
 float Gamedata::getXmlFloat(const std::string& tag) const {
+    parser.setCurDocument("xmlSpec/game.xml");
     std::stringstream strm;
     strm << std::string(parser.find_value(tag));
     float data;
@@ -38,10 +43,12 @@ float Gamedata::getXmlFloat(const std::string& tag) const {
 }
 
 const std::string Gamedata::getXmlStr(const std::string& tag) const {
+    parser.setCurDocument("xmlSpec/game.xml");
     return parser.find_value(tag);
 }
 
 void Gamedata::displayData() const {
+    parser.setCurDocument("xmlSpec/game.xml");
     parser.displayData();
 }
 

@@ -53,7 +53,7 @@ private:
   IOManager();
   IOManager(const IOManager&);
   IOManager& operator=(const IOManager&);
-  XMLParser parser;
+  XMLParser& parser;
   const Gamedata& gdata;
   int viewWidth;
   int viewHeight;
