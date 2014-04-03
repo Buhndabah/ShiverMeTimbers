@@ -36,10 +36,11 @@ public:
     int getGridTileWidth() const { return  sqrt(pow(tileWidth/2.0,2) + pow(tileHeight/2.0,2)) ;}
     int getGridTileHeight() const { return  sqrt(pow(tileWidth/2.0,2) + pow(tileHeight/2.0,2)) ;}
     Vector2f getOrigin() const;
-
+    Vector2f gridToWorld(Vector2f) const;
 
 private:
-    MapManager(const std::string& fn = "xmlSpec/testMap.xml");
+//    MapManager(const std::string& fn = "xmlSpec/testMap.xml");
+    MapManager(const std::string& fn = "xmlSpec/basicMap.xml");
     MapManager(const MapManager&);
     MapManager& operator=(const MapManager&);
 
