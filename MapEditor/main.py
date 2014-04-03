@@ -93,7 +93,7 @@ def printMap(tiles):
    file.write(str(E_VARS.CELLHEIGHT))
    file.write("\" tileRise=\"")
    file.write("")
-   file.write("\" weather=\"snow>\"\n")
+   file.write("\" weather=\"snow\">\n")
 
    i=0
    file.write("\t<tileset>\n")
