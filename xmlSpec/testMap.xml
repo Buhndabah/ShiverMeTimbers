@@ -1,5 +1,5 @@
 <?xml version = "1.0"?>
-<map width="6" height="6" tilewidth="128" tileheight="64" tileRise="49" weather="snow">
+<map width="8" height="8" tilewidth="128" tileheight="64" tileRise="49" weather="snow">
     <tileset>
         <tile id="0" name="empty"/>
         <tile id="1" name="tile1"/>
@@ -14,269 +14,518 @@
         <tile id="10" name="snow"/>
     </tileset>
     <layer name="ground">
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+
     </layer>
     <layer name="layer2">
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
         <element id="10" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
         <element id="10" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+
     </layer>
     <layer name="layer3">
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+
     </layer>
     <layer name="layer4">
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
     </layer>
     <layer name="layer5">
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
     </layer>
     <layer name="layer6">
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
         <element id="10" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+	
+	<element id="0" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
+	<element id="0" collision ="true"/>
+	
+	<element id="0" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
+	<element id="0" collision ="true"/>
+	
+	<element id="0" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="10" collision ="true"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="true"/>
         <element id="10" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
     </layer>
     <layer name="layer7">
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="0" collision ="false"/>
-        <element id="10" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="0" collision ="false"/>
         <element id="10" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
+        <element id="10" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="10" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
+        <element id="10" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="10" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
+        <element id="10" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="0" collision ="false"/>
+        <element id="10" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
+	<element id="0" collision ="true"/>
     </layer>
 </map>
