@@ -40,7 +40,7 @@
 </grid>
 
 <back>
-  <backFile>images/icecave.png</backFile>
+  <backFile>images/testgrid2.png</backFile>
   <backFactor>1</backFactor>
   <backSrcX>0</backSrcX>
   <backSrcY>0</backSrcY>
