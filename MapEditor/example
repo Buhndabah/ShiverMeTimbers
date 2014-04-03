@@ -1,1 +1,0 @@
-netAll(S,W,X), netAll(S,[x],y),y*-.5x

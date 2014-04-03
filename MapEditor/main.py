@@ -81,7 +81,7 @@ def handleEvents(player,tiles):
                 player.setDir(event.key)
 
 def printMap(tiles):
-   file = open('test.xml','w')
+   file = open('maps/test.xml','w')
    file.write("<?xml version=\"1.0\"?>\n")
    file.write("<map width=\"")
    file.write(str(len(MAP[0])))
