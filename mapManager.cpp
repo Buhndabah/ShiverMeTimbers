@@ -3,6 +3,7 @@
 #include <SDL/SDL.h>
 #include <iostream>
 #include <math.h>
+#include <stdexcept>
 #include "viewport.h"
 #include "ioManager.h"
 #include "vector2f.h"
@@ -85,7 +86,10 @@ void MapManager::debug() const{
 }
 
 void MapManager::addGridElement(GridElement* gridE) {
-    gridElements[getIndexAt(gridE->getGridPosition()+gridE->getSprite().getSize())].push_back(gridE);
+    try { gridElements[getIndexAt(gridE->getGridPosition()+gridE->getSprite().getSize())].push_back(gridE); }
+    catch(const std::out_of_range& e) {
+        std::cerr << "Tried to add GridElement with name " << gridE->getSprite().getName() << " to map at invalid grid position " << gridE->gridX() << ", " << gridE->gridY() << std::endl;
+    }
 }
 
 // Parse tile definitions (not the actual objects though)
@@ -223,10 +227,9 @@ const Tile& MapManager::findTileAt(const Vector2f& coord) const {
    The boolean, atEdge, is passed by reference to let the caller know if the movement was cut short
 */
 Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& fticks, bool& atEdge) const{
-
     float dist = 0.;
     //Check max X border
-    if((hypoPos[0] > mapWidth * getGridTileWidth()))
+   /* if((hypoPos[0] > mapWidth * getGridTileWidth()))
        {
       hypoPos[0] = mapWidth * getGridTileWidth();
       dist = hypoPos[0] - g.getGridPosition()[0];
@@ -239,10 +242,10 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
       dist = sqrt( pow(hypoPos[0] - g.getGridPosition()[0],2) + pow(hypoPos[1] - g.getGridPosition()[1],2));
       fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
       atEdge = true;
-    }
+    }*/
 
     // JOHN'S SUPER HACKY MOVEMENT CODE XXX TODO I'M SO SORRY
-    else if((getIndexAt(hypoPos+g.getSprite().getSize()))%(mapWidth) == 0)
+    if((getIndexAt(hypoPos+g.getSprite().getSize())) == -3)
     {
          std::cerr<< getIndexAt(hypoPos+g.getSprite().getSize()) << std::endl;
          hypoPos =g.getGridPosition();
@@ -265,7 +268,8 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
     }
  
     //Check max Y border
-    else if(hypoPos[1] > mapHeight * getGridTileHeight() ){
+    /*else if(getIndexAt(hypoPos+g.getSprite().getSize())==-4 ){
+         std::cerr<< getIndexAt(hypoPos+g.getSprite().getSize()) << std::endl;
       hypoPos[1] = mapHeight * getGridTileHeight();
       dist = hypoPos[1] - g.getGridPosition()[1];
 
@@ -277,10 +281,10 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
       dist = sqrt( pow(hypoPos[0] - g.getGridPosition()[0],2) + pow(hypoPos[1] - g.getGridPosition()[1],2));
       fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
       atEdge = true;
-    }
+    }*/
 
     // JOHN'S SUPER HACKY MOVEMENT CODE XXX TODO I'M SO SORRY
-    else if(getIndexAt(hypoPos+g.getSprite().getSize()) > mapWidth*mapHeight)
+    else if(getIndexAt(hypoPos+g.getSprite().getSize()) ==-4)
      {
          hypoPos =g.getGridPosition();
          fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
@@ -401,8 +405,12 @@ void MapManager::update(Uint32& ticks) {
                    element = (*it).front();
                    (*it).pop_front();
                    element->update(ticks);
-   
-                   tempVec[getIndexAt(element->getGridPosition()+element->getSprite().getSize())].push_back(element);
+  
+                    
+                   try {tempVec[getIndexAt(element->getGridPosition()+element->getSprite().getSize())].push_back(element); }
+                   catch(const std::out_of_range& e) {
+                       std::cerr << "Tried to access GridElement at index " << getIndexAt(element->getGridPosition()+element->getSprite().getSize()) << std::endl;
+                   }
                }
            }
        }
@@ -411,10 +419,22 @@ void MapManager::update(Uint32& ticks) {
 }
 
 /* Give a grid coordinate, will return the index of the tile underneath that coordinate, if any. */
-// XXX TODO Should probably retrn some unique value if out of bounds
+// returns a negative on out of bounds
+// -1 = minX
+// -2 = minY
+// -3 = maxX
+// -4 = maxY
 int MapManager::getIndexAt(const Vector2f& coord) const {
     int indexX = floor(coord[0]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)))-1;
     int indexY = floor(coord[1]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)))-1;
+
+
+    // Check for out of bounds index
+    if(indexX < 0) {std::cerr<<"1" << std::endl;return -1; } 
+    if(indexY < 0) {std::cerr<< "2" << std::endl;return -2; }
+    if(indexX >= mapWidth)  { std::cerr << "3" << std::endl; return -3; }
+    if(indexY >= mapHeight) { std::cerr << "4" << std::endl; return -4; }
+
     return indexX+(indexY*mapHeight);
 }
 
