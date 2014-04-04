@@ -9,12 +9,12 @@ from tile import Tile
 
 MAP =[]
 TODRAW = 1
-COLLIDABLE=1
-NONCOLLIDABLE=0
+COLLIDABLE=True
+NONCOLLIDABLE=False
 for i in range(0,E_VARS.MAPHEIGHT):
     MAP.append([])
     for j in range(0,E_VARS.MAPWIDTH):
-        MAP[i].append(0)
+        MAP[i].append({"id": 0, "coord": {STRINGS.X:0, STRINGS.Y:0}, "collidable":NONCOLLIDABLE})
 
 
 def main():
@@ -66,6 +66,8 @@ def handleEvents(player,tiles):
     for event in pygame.event.get():
         if event.type == QUIT:  #exit program
             terminate()
+        elif event.type == KEYUP:
+            pygame.key.set_repeat(1,100)
         elif event.type == KEYDOWN:
             if event.key == K_ESCAPE:   # exit program
                 terminate()
@@ -81,6 +83,9 @@ def handleEvents(player,tiles):
                 removeItem(player)
             elif event.key == K_m:
                 printMap(tiles)
+            elif event.key == K_c:
+                pygame.key.set_repeat()
+                setCollide(player)
             else:                       # tell player to move in dir
                 player.setDir(event.key)
 
@@ -119,10 +124,13 @@ def printMap(tiles):
        for tile in tileList:
            file.write("\t\t<element id=\"")
            if(tile is 0):
-               file.write(str(tile))
+               file.write(str(0))
+               file.write("\" collision=\"false\"/>\n")
            else:
-               file.write(str(tile[0]))
-           file.write("\" collision=\"false\"/>\n")
+               file.write(str(tile["id"]))
+               file.write("\" collision=\"")
+               file.write(str(tile["collidable"]).lower())
+               file.write("\"/>\n")
            if((i+1)%E_VARS.MAPWIDTH is 0):
                file.write("\n")
            i=i+1
@@ -138,14 +146,27 @@ def insertItem(player):
 
     # check boundaries
     if not (pos[0] > E_VARS.MAPWIDTH-1) and not (pos[0] < 0) and not (pos[0] % 1.0 > 0) and not (pos[1] > E_VARS.MAPHEIGHT-1) and not (pos[1] < 0) and not (pos[0] % 1.0 > 0):
-        MAP[int(pos[1])][int(pos[0])] = [TODRAW,drawPos]
+        MAP[int(pos[1])][int(pos[0])]["id"] = TODRAW
+        MAP[int(pos[1])][int(pos[0])]["coord"] = drawPos
 
 def removeItem(player):
     pos = copy.copy(player.getMapPos())
     drawPos = copy.copy(player.getCoords())
     # check boundaries
     if not (pos[0] > E_VARS.MAPWIDTH-1) and not (pos[0] < 0) and not (pos[0] % 1.0 > 0) and not (pos[1] > E_VARS.MAPHEIGHT-1) and not (pos[1] < 0) and not (pos[0] % 1.0 > 0):
-        MAP[int(pos[1])][int(pos[0])] = [0,drawPos]
+        MAP[int(pos[1])][int(pos[0])]["id"] = TODRAW
+        MAP[int(pos[1])][int(pos[0])]["coord"] = drawPos
+        MAP[int(pos[1])][int(pos[0])]["collidale"] = NONCOLLIDABLE
+
+def setCollide(player):
+    pos = copy.copy(player.getMapPos())
+    drawPos = copy.copy(player.getCoords())
+    # check boundaries
+    if not (pos[0] > E_VARS.MAPWIDTH-1) and not (pos[0] < 0) and not (pos[0] % 1.0 > 0) and not (pos[1] > E_VARS.MAPHEIGHT-1) and not (pos[1] < 0) and not (pos[0] % 1.0 > 0):
+        MAP[int(pos[1])][int(pos[0])]["coord"] = drawPos
+        MAP[int(pos[1])][int(pos[0])]["collidable"] = not MAP[int(pos[1])][int(pos[0])]["collidable"]
+        print "set collidable to ", MAP[int(pos[1])][int(pos[0])]["collidable"]
+    
 
 # Disabled player wrapping code
 '''
@@ -184,10 +205,10 @@ def fillTiles(tiles):
                 mapX =(i + ((i+1)%E_VARS.MAPWIDTH)*(E_VARS.MAPWIDTH-1) + j*(E_VARS.MAPWIDTH-1)) / E_VARS.MAPWIDTH;
             #print mapX, mapY
             if MAP[mapY][mapX] is not 0:
-                item = tiles[MAP[mapY][mapX][0]].getPic()
+                item = tiles[MAP[mapY][mapX]["id"]].getPic()
                 item.convert_alpha()
                 item.set_alpha(128)
-                DISPLAYSURF.blit(item, (MAP[mapY][mapX][1][STRINGS.X], MAP[mapY][mapX][1][STRINGS.Y]))
+                DISPLAYSURF.blit(item, (MAP[mapY][mapX]["coord"][STRINGS.X], MAP[mapY][mapX]["coord"][STRINGS.Y]))
 
 def drawGrid():
 

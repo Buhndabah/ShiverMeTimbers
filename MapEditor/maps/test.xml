@@ -5,15 +5,15 @@
 		<tile id="1" name="tile"/>
 	</tileset>
 	<layer name="test">
-		<element id="1" collision="false"/>
 		<element id="0" collision="false"/>
+		<element id="0" collision="false"/>
+		<element id="1" collision="false"/>
+
+		<element id="0" collision="false"/>
+		<element id="1" collision="false"/>
 		<element id="0" collision="false"/>
 
 		<element id="0" collision="false"/>
-		<element id="0" collision="false"/>
-		<element id="0" collision="false"/>
-
-		<element id="1" collision="false"/>
 		<element id="0" collision="false"/>
 		<element id="0" collision="false"/>
 
