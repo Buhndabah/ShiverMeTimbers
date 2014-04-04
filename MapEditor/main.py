@@ -9,6 +9,8 @@ from tile import Tile
 
 MAP =[]
 TODRAW = 1
+COLLIDABLE=1
+NONCOLLIDABLE=0
 for i in range(0,E_VARS.MAPHEIGHT):
     MAP.append([])
     for j in range(0,E_VARS.MAPWIDTH):
@@ -133,15 +135,17 @@ def printMap(tiles):
 def insertItem(player):
     pos = copy.copy(player.getMapPos())
     drawPos = copy.copy(player.getCoords())
-    print "player pos is",pos
+
+    # check boundaries
     if not (pos[0] > E_VARS.MAPWIDTH-1) and not (pos[0] < 0) and not (pos[0] % 1.0 > 0) and not (pos[1] > E_VARS.MAPHEIGHT-1) and not (pos[1] < 0) and not (pos[0] % 1.0 > 0):
-        print "inserting"
         MAP[int(pos[1])][int(pos[0])] = [TODRAW,drawPos]
 
 def removeItem(player):
-    pos = copy.copy(player.getCoords())
+    pos = copy.copy(player.getMapPos())
+    drawPos = copy.copy(player.getCoords())
+    # check boundaries
     if not (pos[0] > E_VARS.MAPWIDTH-1) and not (pos[0] < 0) and not (pos[0] % 1.0 > 0) and not (pos[1] > E_VARS.MAPHEIGHT-1) and not (pos[1] < 0) and not (pos[0] % 1.0 > 0):
-        MAP[0][1] = [0,drawPos]
+        MAP[int(pos[1])][int(pos[0])] = [0,drawPos]
 
 # Disabled player wrapping code
 '''
@@ -157,22 +161,13 @@ def edgeCheck(playerCoords):
 '''
 
 def fillTiles(tiles):
-    '''for y in range(0,len(MAP[0])):
-        for x in range(0,len(MAP)):
-            if(MAP[x] is []):    # if out of range, draw nothing
-                pass
-            else:                            # else get pic and draw
-                item = tiles[MAP[x][y]].getPic()
-                #XXX TODO why 10? I don't like the magic number here
-                item.convert_alpha()
-                item.set_alpha(128)
-                DISPLAYSURF.blit(item,(x*item.get_width(), y*E_VARS.CELLHEIGHT-10))'''
 
     # finding the index for draw order
     num=0
     mapX=0
     mapY=0
-    print "go"
+
+    # same as draw order code in mapManager.cpp
     for i in range(E_VARS.MAPWIDTH+E_VARS.MAPHEIGHT-1):
         if(i < E_VARS.MAPWIDTH):
             num=i+1
@@ -189,45 +184,20 @@ def fillTiles(tiles):
                 mapX =(i + ((i+1)%E_VARS.MAPWIDTH)*(E_VARS.MAPWIDTH-1) + j*(E_VARS.MAPWIDTH-1)) / E_VARS.MAPWIDTH;
             #print mapX, mapY
             if MAP[mapY][mapX] is not 0:
-                print "map index", mapX, mapY
-                print MAP[0]
-                print "printing at coordinate"
-                print MAP[mapY][mapX][1][STRINGS.X], MAP[mapY][mapX][1][STRINGS.Y]
                 item = tiles[MAP[mapY][mapX][0]].getPic()
-                print "index "
-                print MAP[mapY][mapX][0]
                 item.convert_alpha()
                 item.set_alpha(128)
                 DISPLAYSURF.blit(item, (MAP[mapY][mapX][1][STRINGS.X], MAP[mapY][mapX][1][STRINGS.Y]))
 
 def drawGrid():
-    #draw vertical lines
 
     for x in range(0,E_VARS.MAPWIDTH+1):
+
+        # down and left
         pygame.draw.line(DISPLAYSURF, COLORS.BLACK, (E_VARS.W_WIDTH/2+x*E_VARS.CELLWIDTH/2, E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2 + x*E_VARS.CELLHEIGHT/2), (E_VARS.W_WIDTH/2 - E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2+ E_VARS.CELLWIDTH/2*x, E_VARS.W_HEIGHT/2 + x*E_VARS.CELLHEIGHT/2),1)
+        
+        #down and right
         pygame.draw.line(DISPLAYSURF, COLORS.BLACK, (E_VARS.W_WIDTH/2 - x*E_VARS.CELLWIDTH/2, E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2 + x*E_VARS.CELLHEIGHT/2), (E_VARS.W_WIDTH/2 + E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2 - E_VARS.CELLWIDTH/2*x, E_VARS.W_HEIGHT/2 + x*E_VARS.CELLHEIGHT/2),1)
-
-    '''for x in range(-E_VARS.W_WIDTH,E_VARS.W_WIDTH*2,E_VARS.CELLWIDTH):
-        x2 = x + math.cos(math.radians(26.565)) * math.sqrt(E_VARS.W_HEIGHT**2 + E_VARS.W_WIDTH**2)
-        y2 = 0 + math.sin(math.radians(26.565)) * math.sqrt(E_VARS.W_HEIGHT**2 + E_VARS.W_WIDTH**2)
-        pygame.draw.line(DISPLAYSURF,COLORS.BLACK, (x+E_VARS.CELLWIDTH/2,0), (0,(E_VARS.CELLHEIGHT/2) + (x/E_VARS.CELLWIDTH*E_VARS.CELLHEIGHT)),1)
-        pygame.draw.line(DISPLAYSURF,COLORS.BLACK, (x-E_VARS.CELLWIDTH/2,0), (x2-E_VARS.CELLWIDTH/2,y2),1)'''
-''' for x1 in range(0, E_VARS.W_WIDTH, E_VARS.CELLWIDTH):
-        xa = x1 + math.cos(math.radians(26.565)) * math.sqrt(E_VARS.W_HEIGHT**2 + E_VARS.W_WIDTH**2)
-        ya = 0 + math.sin(math.radians(26.565)) * math.sqrt(E_VARS.W_HEIGHT**2 + E_VARS.W_WIDTH**2)
-        pygame.draw.line(DISPLAYSURF,COLORS.WHITE, (x1,0), (xa,ya),1)
-    for y1 in range(E_VARS.CELLHEIGHT, E_VARS.W_HEIGHT, E_VARS.CELLHEIGHT):
-        xc = 0 +  math.cos(math.radians(26.565)) * math.sqrt(E_VARS.W_HEIGHT**2 + E_VARS.W_WIDTH**2)
-        yc = y1 + math.sin(math.radians(26.565)) * math.sqrt(E_VARS.W_HEIGHT**2 + E_VARS.W_WIDTH**2)
-        pygame.draw.line(DISPLAYSURF,COLORS.WHITE, (0,y1), (xc,yc),1)
-        pygame.draw.line(DISPLAYSURF,COLORS.WHITE, (0, y1), '''
-
-
-'''    for x in range(0, E_VARS.W_WIDTH,E_VARS.CELLWIDTH): 
-        pygame.draw.line(DISPLAYSURF,COLORS.WHITE, (x,0),(x,E_VARS.W_HEIGHT))
-    #draw horizontal lines
-    for y in range(0, E_VARS.W_HEIGHT,E_VARS.CELLHEIGHT): 
-        pygame.draw.line(DISPLAYSURF,COLORS.WHITE,(0,y),(E_VARS.W_WIDTH,y))  '''
             
 def terminate():
     pygame.quit()
