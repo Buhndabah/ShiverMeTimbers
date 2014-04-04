@@ -7,14 +7,19 @@ from globals import COLORS
 from player import Player
 from tile import Tile
 
+def createLayer():
+    newLayer = []
+    for i in range(0,E_VARS.MAPHEIGHT):
+        newLayer.append([])
+        for j in range(0,E_VARS.MAPWIDTH):
+            newLayer[i].append({"id": 0, "coord": {STRINGS.X:0, STRINGS.Y:0}, "collidable":NONCOLLIDABLE})
+    return newLayer
+
 MAP =[]
 TODRAW = 1
 COLLIDABLE=True
 NONCOLLIDABLE=False
-for i in range(0,E_VARS.MAPHEIGHT):
-    MAP.append([])
-    for j in range(0,E_VARS.MAPWIDTH):
-        MAP[i].append({"id": 0, "coord": {STRINGS.X:0, STRINGS.Y:0}, "collidable":NONCOLLIDABLE})
+MAP.append(createLayer())
 
 
 def main():
@@ -49,15 +54,14 @@ def runGame(tiles):
 
         DISPLAYSURF.fill(COLORS.BGCOLOR)
         
-        # XXX TODO drawGrid() is broken - doesn't match bases of tiles
-        fillTiles(tiles)
+        drawLowerGrid()
+        fillTiles(tiles,p)
         p.draw(DISPLAYSURF)
 
         # draw currently selected tile at player's loc
-        DISPLAYSURF.blit(tiles[TODRAW].getPic(),(p.getCoords()[STRINGS.X],p.getCoords()[STRINGS.Y]))
+        DISPLAYSURF.blit(tiles[TODRAW].getPic(),(p.getCoords()[STRINGS.X],p.getCoords()[STRINGS.Y]-p.getLevel()*E_VARS.CELLRISE))
 
-        if GRID:
-            drawGrid()
+        drawUpperGrid(p)
         pygame.display.update()
         FPSCLOCK.tick(E_VARS.FPS)
 
@@ -86,6 +90,11 @@ def handleEvents(player,tiles):
             elif event.key == K_c:
                 pygame.key.set_repeat()
                 setCollide(player)
+            elif event.key == K_q:
+                player.goUp()
+            elif event.key == K_w:
+                if not (player.getLevel() == 0):
+                    player.goDown()
             else:                       # tell player to move in dir
                 player.setDir(event.key)
 
@@ -96,15 +105,15 @@ def printMap(tiles):
    file = open('maps/test.xml','w')
    file.write("<?xml version=\"1.0\"?>\n")
    file.write("<map width=\"")
-   file.write(str(len(MAP[0])))
+   file.write(str(len(MAP[0][0])))
    file.write("\" height=\"")
-   file.write(str(len(MAP)))
+   file.write(str(len(MAP[0])))
    file.write("\" tilewidth=\"")
    file.write(str(E_VARS.CELLWIDTH))
    file.write("\" tileheight=\"")
    file.write(str(E_VARS.CELLHEIGHT))
    file.write("\" tileRise=\"")
-   file.write("")
+   file.write(str(E_VARS.CELLRISE))
    file.write("\" weather=\"snow\">\n")
 
    i=0
@@ -117,24 +126,29 @@ def printMap(tiles):
        file.write("\"/>\n")
        i=i+1
    file.write("\t</tileset>\n")
-
-   file.write("\t<layer name=\"test\">\n")
-   i=0
-   for tileList in MAP:
-       for tile in tileList:
-           file.write("\t\t<element id=\"")
-           if(tile is 0):
-               file.write(str(0))
-               file.write("\" collision=\"false\"/>\n")
-           else:
-               file.write(str(tile["id"]))
-               file.write("\" collision=\"")
-               file.write(str(tile["collidable"]).lower())
-               file.write("\"/>\n")
-           if((i+1)%E_VARS.MAPWIDTH is 0):
-               file.write("\n")
-           i=i+1
-   file.write("\t</layer>\n")
+    
+   j=0
+   for layer in MAP:
+       file.write("\t<layer name=\"")
+       file.write(str(j))
+       file.write("\">\n")
+       for tileList in layer:
+            i=0
+            for tile in tileList:
+               file.write("\t\t<element id=\"")
+               if(tile is 0):
+                   file.write(str(0))
+                   file.write("\" collision=\"false\"/>\n")
+               else:
+                   file.write(str(tile["id"]))
+                   file.write("\" collision=\"")
+                   file.write(str(tile["collidable"]).lower())
+                   file.write("\"/>\n")
+               if((i+1)%E_VARS.MAPWIDTH is 0):
+                   file.write("\n")
+               i=i+1
+       file.write("\t</layer>\n")
+       j=j+1
    file.write("</map>")
    file.close()
 
@@ -146,14 +160,17 @@ def insertItem(player):
 
     # check boundaries
     if not (pos[0] > E_VARS.MAPWIDTH-1) and not (pos[0] < 0) and not (pos[0] % 1.0 > 0) and not (pos[1] > E_VARS.MAPHEIGHT-1) and not (pos[1] < 0) and not (pos[0] % 1.0 > 0):
-        MAP[int(pos[1])][int(pos[0])]["id"] = TODRAW
-        MAP[int(pos[1])][int(pos[0])]["coord"] = drawPos
+        if player.getLevel() > len(MAP)-1:
+            for i in range(player.getLevel() - len(MAP)+1):
+                MAP.append(createLayer())
+        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["id"] = TODRAW
+        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["coord"] = drawPos
 
 def removeItem(player):
     pos = copy.copy(player.getMapPos())
     drawPos = copy.copy(player.getCoords())
     # check boundaries
-    if not (pos[0] > E_VARS.MAPWIDTH-1) and not (pos[0] < 0) and not (pos[0] % 1.0 > 0) and not (pos[1] > E_VARS.MAPHEIGHT-1) and not (pos[1] < 0) and not (pos[0] % 1.0 > 0):
+    if not (pos[0] > E_VARS.MAPWIDTH-1) and not (pos[0] < 0) and not (pos[0] % 1.0 > 0) and not (pos[1] > E_VARS.MAPHEIGHT-1) and not (pos[1] < 0) and not (pos[0] % 1.0 > 0) and not (player.getLevel() > len(MAP)-1):
         MAP[int(pos[1])][int(pos[0])]["id"] = TODRAW
         MAP[int(pos[1])][int(pos[0])]["coord"] = drawPos
         MAP[int(pos[1])][int(pos[0])]["collidale"] = NONCOLLIDABLE
@@ -162,7 +179,7 @@ def setCollide(player):
     pos = copy.copy(player.getMapPos())
     drawPos = copy.copy(player.getCoords())
     # check boundaries
-    if not (pos[0] > E_VARS.MAPWIDTH-1) and not (pos[0] < 0) and not (pos[0] % 1.0 > 0) and not (pos[1] > E_VARS.MAPHEIGHT-1) and not (pos[1] < 0) and not (pos[0] % 1.0 > 0):
+    if not (pos[0] > E_VARS.MAPWIDTH-1) and not (pos[0] < 0) and not (pos[0] % 1.0 > 0) and not (pos[1] > E_VARS.MAPHEIGHT-1) and not (pos[1] < 0) and not (pos[0] % 1.0 > 0) and not (player.getLevel() > len(MAP)-1):
         MAP[int(pos[1])][int(pos[0])]["coord"] = drawPos
         MAP[int(pos[1])][int(pos[0])]["collidable"] = not MAP[int(pos[1])][int(pos[0])]["collidable"]
         print "set collidable to ", MAP[int(pos[1])][int(pos[0])]["collidable"]
@@ -181,7 +198,7 @@ def edgeCheck(playerCoords):
         playerCoords[STRINGS.Y] = 0
 '''
 
-def fillTiles(tiles):
+def fillTiles(tiles,player):
 
     # finding the index for draw order
     num=0
@@ -190,36 +207,67 @@ def fillTiles(tiles):
 
     # same as draw order code in mapManager.cpp
     for i in range(E_VARS.MAPWIDTH+E_VARS.MAPHEIGHT-1):
-        if(i < E_VARS.MAPWIDTH):
-            num=i+1
-        elif i is E_VARS.MAPWIDTH:
-            num = E_VARS.MAPWIDTH-1
-        elif i > E_VARS.MAPWIDTH:
-            num = E_VARS.MAPWIDTH - i%E_VARS.MAPWIDTH-1
-        for j in range(num):
-            if i < E_VARS.MAPWIDTH:
-                mapY = (i + (j*(E_VARS.MAPWIDTH-1))) % E_VARS.MAPWIDTH;
-                mapX = (i + (j*(E_VARS.MAPWIDTH-1))) / E_VARS.MAPWIDTH;
-            else:
-                mapY = (i + ((i+1)%E_VARS.MAPWIDTH)*(E_VARS.MAPWIDTH-1) + j*(E_VARS.MAPWIDTH-1)) % E_VARS.MAPWIDTH;
-                mapX =(i + ((i+1)%E_VARS.MAPWIDTH)*(E_VARS.MAPWIDTH-1) + j*(E_VARS.MAPWIDTH-1)) / E_VARS.MAPWIDTH;
-            #print mapX, mapY
-            if MAP[mapY][mapX] is not 0:
-                item = tiles[MAP[mapY][mapX]["id"]].getPic()
-                item.convert_alpha()
-                item.set_alpha(128)
-                DISPLAYSURF.blit(item, (MAP[mapY][mapX]["coord"][STRINGS.X], MAP[mapY][mapX]["coord"][STRINGS.Y]))
+        for k in range(len(MAP)):
+            if(i < E_VARS.MAPWIDTH):
+                num=i+1
+            elif i is E_VARS.MAPWIDTH:
+                num = E_VARS.MAPWIDTH-1
+            elif i > E_VARS.MAPWIDTH:
+                num = E_VARS.MAPWIDTH - i%E_VARS.MAPWIDTH-1
+            for j in range(num):
+                if i < E_VARS.MAPWIDTH:
+                    mapY = (i + (j*(E_VARS.MAPWIDTH-1))) % E_VARS.MAPWIDTH;
+                    mapX = (i + (j*(E_VARS.MAPWIDTH-1))) / E_VARS.MAPWIDTH;
+                else:
+                    mapY = (i + ((i+1)%E_VARS.MAPWIDTH)*(E_VARS.MAPWIDTH-1) + j*(E_VARS.MAPWIDTH-1)) % E_VARS.MAPWIDTH;
+                    mapX =(i + ((i+1)%E_VARS.MAPWIDTH)*(E_VARS.MAPWIDTH-1) + j*(E_VARS.MAPWIDTH-1)) / E_VARS.MAPWIDTH;
+                #print mapX, mapY
+                if MAP[k][mapY][mapX] is not 0:
+                    item = tiles[MAP[k][mapY][mapX]["id"]].getPic()
+                    item.convert_alpha()
+                    item.set_alpha(128)
+                    DISPLAYSURF.blit(item, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS.CELLRISE))
 
-def drawGrid():
 
+def drawLowerGrid():
+
+           
     for x in range(0,E_VARS.MAPWIDTH+1):
-
+        # base grid
+            
         # down and left
-        pygame.draw.line(DISPLAYSURF, COLORS.BLACK, (E_VARS.W_WIDTH/2+x*E_VARS.CELLWIDTH/2, E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2 + x*E_VARS.CELLHEIGHT/2), (E_VARS.W_WIDTH/2 - E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2+ E_VARS.CELLWIDTH/2*x, E_VARS.W_HEIGHT/2 + x*E_VARS.CELLHEIGHT/2),1)
+        pygame.draw.line(DISPLAYSURF, 
+                         COLORS.BLACK, 
+                        (E_VARS.W_WIDTH/2+x*E_VARS.CELLWIDTH/2, E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2 + x*E_VARS.CELLHEIGHT/2), 
+                        (E_VARS.W_WIDTH/2 - E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2+ E_VARS.CELLWIDTH/2*x, E_VARS.W_HEIGHT/2 + x*E_VARS.CELLHEIGHT/2)
+                        ,1)
         
         #down and right
-        pygame.draw.line(DISPLAYSURF, COLORS.BLACK, (E_VARS.W_WIDTH/2 - x*E_VARS.CELLWIDTH/2, E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2 + x*E_VARS.CELLHEIGHT/2), (E_VARS.W_WIDTH/2 + E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2 - E_VARS.CELLWIDTH/2*x, E_VARS.W_HEIGHT/2 + x*E_VARS.CELLHEIGHT/2),1)
-            
+        pygame.draw.line(DISPLAYSURF, 
+                         COLORS.BLACK, 
+                        (E_VARS.W_WIDTH/2 - x*E_VARS.CELLWIDTH/2, E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2 + x*E_VARS.CELLHEIGHT/2), 
+                        (E_VARS.W_WIDTH/2 + E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2 - E_VARS.CELLWIDTH/2*x, E_VARS.W_HEIGHT/2 + x*E_VARS.CELLHEIGHT/2),
+                        1)
+        
+def drawUpperGrid(player):
+    for x in range(0,E_VARS.MAPWIDTH+1):
+
+        # upper grid
+
+        # down and left
+        pygame.draw.line(DISPLAYSURF, 
+                         COLORS.WHITE, 
+                        (E_VARS.W_WIDTH/2+x*E_VARS.CELLWIDTH/2, E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2 + x*E_VARS.CELLHEIGHT/2 - player.getLevel()*E_VARS.CELLRISE), 
+                        (E_VARS.W_WIDTH/2 - E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2+ E_VARS.CELLWIDTH/2*x, E_VARS.W_HEIGHT/2 + x*E_VARS.CELLHEIGHT/2-player.getLevel()*E_VARS.CELLRISE)
+                        ,1)
+        
+        #down and right
+        pygame.draw.line(DISPLAYSURF, 
+                         COLORS.WHITE, 
+                        (E_VARS.W_WIDTH/2 - x*E_VARS.CELLWIDTH/2, E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2 + x*E_VARS.CELLHEIGHT/2 - player.getLevel()*E_VARS.CELLRISE), 
+                        (E_VARS.W_WIDTH/2 + E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2 - E_VARS.CELLWIDTH/2*x, E_VARS.W_HEIGHT/2 + x*E_VARS.CELLHEIGHT/2-player.getLevel()*E_VARS.CELLRISE),
+                        1)
+
 def terminate():
     pygame.quit()
     sys.exit()

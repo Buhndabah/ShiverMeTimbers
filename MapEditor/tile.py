@@ -14,9 +14,9 @@ class Tile:
         if name:
             self.__path = name
             self.__pic = pygame.image.load(name)
-            types = name.split('/')
-            types = name.split('_')
-            self.__name = types[len(types)-1].split('.')[0]
+            self.__name = name.split('.')[0]
+            temp = self.__name.split('/')
+            self.__name = temp[len(temp)-1]
         else:
             self.__path = E_VARS.PATH + "defaults/empty.png"
             self.__pic = pygame.image.load(self.__path)
