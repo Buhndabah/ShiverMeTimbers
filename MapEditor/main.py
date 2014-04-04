@@ -90,9 +90,9 @@ def handleEvents(player,tiles):
             elif event.key == K_c:
                 pygame.key.set_repeat()
                 setCollide(player)
-            elif event.key == K_q:
+            elif event.key == K_t:
                 player.goUp()
-            elif event.key == K_w:
+            elif event.key == K_y:
                 if not (player.getLevel() == 0):
                     player.goDown()
             else:                       # tell player to move in dir
