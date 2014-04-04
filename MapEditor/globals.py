@@ -5,6 +5,9 @@ class E_VARS:
     W_WIDTH=1280# width of window
     CELLWIDTH=128
     CELLHEIGHT=64
+    MAPWIDTH=3
+    MAPHEIGHT=3
+
     assert W_WIDTH%CELLWIDTH==0, "Window width must be a multiple of cell size."
     assert W_HEIGHT%CELLHEIGHT==0, "Window height must be a multiple of cell size."
     

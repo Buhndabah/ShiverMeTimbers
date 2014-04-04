@@ -1,4 +1,4 @@
-import pygame, sys, os, math
+import pygame, sys, os, math, copy
 from Tkinter import *
 from pygame.locals import *
 from globals import E_VARS
@@ -9,10 +9,10 @@ from tile import Tile
 
 MAP =[]
 TODRAW = 1
-for i in range(0,E_VARS.W_HEIGHT,E_VARS.CELLHEIGHT):
+for i in range(0,E_VARS.MAPHEIGHT):
     MAP.append([])
-    for j in range(0,E_VARS.W_WIDTH,E_VARS.CELLWIDTH):
-        MAP[i/E_VARS.CELLHEIGHT].append(0)
+    for j in range(0,E_VARS.MAPWIDTH):
+        MAP[i].append(0)
 
 
 def main():
@@ -37,7 +37,7 @@ def runGame(tiles):
     global TODRAW 
     # set player start
     #p = Player(0,-E_VARS.CELLHEIGHT/2)
-    p = Player(0,0)
+    p = Player()
     # main game loop
     while True:
         handleEvents(p,tiles)
@@ -50,8 +50,10 @@ def runGame(tiles):
         # XXX TODO drawGrid() is broken - doesn't match bases of tiles
         fillTiles(tiles)
         p.draw(DISPLAYSURF)
-        #drawPlayer(p.getCoords())
+
+        # draw currently selected tile at player's loc
         DISPLAYSURF.blit(tiles[TODRAW].getPic(),(p.getCoords()[STRINGS.X],p.getCoords()[STRINGS.Y]))
+
         if GRID:
             drawGrid()
         pygame.display.update()
@@ -67,10 +69,10 @@ def handleEvents(player,tiles):
                 terminate()
             elif event.key == K_RETURN: # edit map to new item (currently defaults to starpad
                 insertItem(player)
-            elif event.key == K_a:
+            elif event.key == K_z:
                 if TODRAW > 0:
                     TODRAW = TODRAW - 1
-            elif event.key == K_d:
+            elif event.key == K_x:
                 if TODRAW <  len(tiles)-1:
                     TODRAW = TODRAW + 1
             elif event.key == K_BACKSPACE:
@@ -81,6 +83,9 @@ def handleEvents(player,tiles):
                 player.setDir(event.key)
 
 def printMap(tiles):
+
+   print("\nPrinting map to file\n")
+
    file = open('maps/test.xml','w')
    file.write("<?xml version=\"1.0\"?>\n")
    file.write("<map width=\"")
@@ -107,20 +112,36 @@ def printMap(tiles):
    file.write("\t</tileset>\n")
 
    file.write("\t<layer name=\"test\">\n")
+   i=0
    for tileList in MAP:
        for tile in tileList:
-        file.write("\t\t<element id=\"")
-        file.write(str(tile))
-        file.write("\" collision=\"false\"/>\n")
+           file.write("\t\t<element id=\"")
+           if(tile is 0):
+               file.write(str(tile))
+           else:
+               file.write(str(tile[0]))
+           file.write("\" collision=\"false\"/>\n")
+           if((i+1)%E_VARS.MAPWIDTH is 0):
+               file.write("\n")
+           i=i+1
    file.write("\t</layer>\n")
    file.write("</map>")
    file.close()
 
+   print "Finished writing map\n"
+
 def insertItem(player):
-    MAP[player.getCoords()[STRINGS.X]/E_VARS.CELLWIDTH][player.getCoords()[STRINGS.Y]/E_VARS.CELLHEIGHT] = TODRAW
+    pos = copy.copy(player.getMapPos())
+    drawPos = copy.copy(player.getCoords())
+    print "player pos is",pos
+    if not (pos[0] > E_VARS.MAPWIDTH-1) and not (pos[0] < 0) and not (pos[0] % 1.0 > 0) and not (pos[1] > E_VARS.MAPHEIGHT-1) and not (pos[1] < 0) and not (pos[0] % 1.0 > 0):
+        print "inserting"
+        MAP[int(pos[1])][int(pos[0])] = [TODRAW,drawPos]
 
 def removeItem(player):
-    MAP[player.getCoords()[STRINGS.X]/E_VARS.CELLWIDTH][player.getCoords()[STRINGS.Y]/E_VARS.CELLHEIGHT] = 0
+    pos = copy.copy(player.getCoords())
+    if not (pos[0] > E_VARS.MAPWIDTH-1) and not (pos[0] < 0) and not (pos[0] % 1.0 > 0) and not (pos[1] > E_VARS.MAPHEIGHT-1) and not (pos[1] < 0) and not (pos[0] % 1.0 > 0):
+        MAP[0][1] = [0,drawPos]
 
 # Disabled player wrapping code
 '''
@@ -136,24 +157,61 @@ def edgeCheck(playerCoords):
 '''
 
 def fillTiles(tiles):
-    for y in range(0,len(MAP[0])):
+    '''for y in range(0,len(MAP[0])):
         for x in range(0,len(MAP)):
-            if(MAP[x][y] >= len(tiles)):    # if out of range, draw nothing
+            if(MAP[x] is []):    # if out of range, draw nothing
                 pass
             else:                            # else get pic and draw
                 item = tiles[MAP[x][y]].getPic()
                 #XXX TODO why 10? I don't like the magic number here
                 item.convert_alpha()
                 item.set_alpha(128)
-                DISPLAYSURF.blit(item,(x*item.get_width(), y*E_VARS.CELLHEIGHT-10))
-            
+                DISPLAYSURF.blit(item,(x*item.get_width(), y*E_VARS.CELLHEIGHT-10))'''
+
+    # finding the index for draw order
+    num=0
+    mapX=0
+    mapY=0
+    print "go"
+    for i in range(E_VARS.MAPWIDTH+E_VARS.MAPHEIGHT-1):
+        if(i < E_VARS.MAPWIDTH):
+            num=i+1
+        elif i is E_VARS.MAPWIDTH:
+            num = E_VARS.MAPWIDTH-1
+        elif i > E_VARS.MAPWIDTH:
+            num = E_VARS.MAPWIDTH - i%E_VARS.MAPWIDTH-1
+        for j in range(num):
+            if i < E_VARS.MAPWIDTH:
+                mapY = (i + (j*(E_VARS.MAPWIDTH-1))) % E_VARS.MAPWIDTH;
+                mapX = (i + (j*(E_VARS.MAPWIDTH-1))) / E_VARS.MAPWIDTH;
+            else:
+                mapY = (i + ((i+1)%E_VARS.MAPWIDTH)*(E_VARS.MAPWIDTH-1) + j*(E_VARS.MAPWIDTH-1)) % E_VARS.MAPWIDTH;
+                mapX =(i + ((i+1)%E_VARS.MAPWIDTH)*(E_VARS.MAPWIDTH-1) + j*(E_VARS.MAPWIDTH-1)) / E_VARS.MAPWIDTH;
+            #print mapX, mapY
+            if MAP[mapY][mapX] is not 0:
+                print "map index", mapX, mapY
+                print MAP[0]
+                print "printing at coordinate"
+                print MAP[mapY][mapX][1][STRINGS.X], MAP[mapY][mapX][1][STRINGS.Y]
+                item = tiles[MAP[mapY][mapX][0]].getPic()
+                print "index "
+                print MAP[mapY][mapX][0]
+                item.convert_alpha()
+                item.set_alpha(128)
+                DISPLAYSURF.blit(item, (MAP[mapY][mapX][1][STRINGS.X], MAP[mapY][mapX][1][STRINGS.Y]))
+
 def drawGrid():
     #draw vertical lines
-    for x in range(-E_VARS.W_WIDTH,E_VARS.W_WIDTH*2,E_VARS.CELLWIDTH):
+
+    for x in range(0,E_VARS.MAPWIDTH+1):
+        pygame.draw.line(DISPLAYSURF, COLORS.BLACK, (E_VARS.W_WIDTH/2+x*E_VARS.CELLWIDTH/2, E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2 + x*E_VARS.CELLHEIGHT/2), (E_VARS.W_WIDTH/2 - E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2+ E_VARS.CELLWIDTH/2*x, E_VARS.W_HEIGHT/2 + x*E_VARS.CELLHEIGHT/2),1)
+        pygame.draw.line(DISPLAYSURF, COLORS.BLACK, (E_VARS.W_WIDTH/2 - x*E_VARS.CELLWIDTH/2, E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2 + x*E_VARS.CELLHEIGHT/2), (E_VARS.W_WIDTH/2 + E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2 - E_VARS.CELLWIDTH/2*x, E_VARS.W_HEIGHT/2 + x*E_VARS.CELLHEIGHT/2),1)
+
+    '''for x in range(-E_VARS.W_WIDTH,E_VARS.W_WIDTH*2,E_VARS.CELLWIDTH):
         x2 = x + math.cos(math.radians(26.565)) * math.sqrt(E_VARS.W_HEIGHT**2 + E_VARS.W_WIDTH**2)
         y2 = 0 + math.sin(math.radians(26.565)) * math.sqrt(E_VARS.W_HEIGHT**2 + E_VARS.W_WIDTH**2)
         pygame.draw.line(DISPLAYSURF,COLORS.BLACK, (x+E_VARS.CELLWIDTH/2,0), (0,(E_VARS.CELLHEIGHT/2) + (x/E_VARS.CELLWIDTH*E_VARS.CELLHEIGHT)),1)
-        pygame.draw.line(DISPLAYSURF,COLORS.BLACK, (x-E_VARS.CELLWIDTH/2,0), (x2-E_VARS.CELLWIDTH/2,y2),1)
+        pygame.draw.line(DISPLAYSURF,COLORS.BLACK, (x-E_VARS.CELLWIDTH/2,0), (x2-E_VARS.CELLWIDTH/2,y2),1)'''
 ''' for x1 in range(0, E_VARS.W_WIDTH, E_VARS.CELLWIDTH):
         xa = x1 + math.cos(math.radians(26.565)) * math.sqrt(E_VARS.W_HEIGHT**2 + E_VARS.W_WIDTH**2)
         ya = 0 + math.sin(math.radians(26.565)) * math.sqrt(E_VARS.W_HEIGHT**2 + E_VARS.W_WIDTH**2)
