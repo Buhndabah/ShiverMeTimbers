@@ -171,18 +171,18 @@ def removeItem(player):
     drawPos = copy.copy(player.getCoords())
     # check boundaries
     if not (pos[0] > E_VARS.MAPWIDTH-1) and not (pos[0] < 0) and not (pos[0] % 1.0 > 0) and not (pos[1] > E_VARS.MAPHEIGHT-1) and not (pos[1] < 0) and not (pos[0] % 1.0 > 0) and not (player.getLevel() > len(MAP)-1):
-        MAP[int(pos[1])][int(pos[0])]["id"] = TODRAW
-        MAP[int(pos[1])][int(pos[0])]["coord"] = drawPos
-        MAP[int(pos[1])][int(pos[0])]["collidale"] = NONCOLLIDABLE
+        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["id"] = TODRAW
+        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["coord"] = drawPos
+        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["collidale"] = NONCOLLIDABLE
 
 def setCollide(player):
     pos = copy.copy(player.getMapPos())
     drawPos = copy.copy(player.getCoords())
     # check boundaries
     if not (pos[0] > E_VARS.MAPWIDTH-1) and not (pos[0] < 0) and not (pos[0] % 1.0 > 0) and not (pos[1] > E_VARS.MAPHEIGHT-1) and not (pos[1] < 0) and not (pos[0] % 1.0 > 0) and not (player.getLevel() > len(MAP)-1):
-        MAP[int(pos[1])][int(pos[0])]["coord"] = drawPos
-        MAP[int(pos[1])][int(pos[0])]["collidable"] = not MAP[int(pos[1])][int(pos[0])]["collidable"]
-        print "set collidable to ", MAP[int(pos[1])][int(pos[0])]["collidable"]
+        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["coord"] = drawPos
+        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["collidable"] = not MAP[player.getLevel()][int(pos[1])][int(pos[0])]["collidable"]
+        print "set collidable to ", MAP[player.getLevel()][int(pos[1])][int(pos[0])]["collidable"]
     
 
 # Disabled player wrapping code
@@ -225,8 +225,14 @@ def fillTiles(tiles,player):
                 if MAP[k][mapY][mapX] is not 0:
                     item = tiles[MAP[k][mapY][mapX]["id"]].getPic()
                     item.convert_alpha()
-                    item.set_alpha(128)
-                    DISPLAYSURF.blit(item, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS.CELLRISE))
+                    colored = item.copy()
+                    if MAP[k][mapY][mapX]["collidable"] is True:
+                        Tile.color_surface(colored,0,155,155)
+                        DISPLAYSURF.blit(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS.CELLRISE))
+                    else:
+                        Tile.color_surface(colored,155,155,0)
+                        DISPLAYSURF.blit(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS.CELLRISE))
+
 
 
 def drawLowerGrid():

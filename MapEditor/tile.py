@@ -35,6 +35,14 @@ class Tile:
         return self.__pic.get_height()
 
     @staticmethod
+    def color_surface(surface, r, g, b):
+        arr = pygame.surfarray.pixels3d(surface)
+        arr[:,:,0] = arr[:,:,0] - r
+        arr[:,:,1] = arr[:,:,1] - g
+        arr[:,:,2] = arr[:,:,2] - b
+
+
+    @staticmethod
     def loadTiles():
         tileList=[]
         listing = os.listdir(E_VARS.PATH)
