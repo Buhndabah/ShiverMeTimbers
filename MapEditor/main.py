@@ -1,5 +1,4 @@
 import pygame, sys, os, math, copy
-from Tkinter import *
 from pygame.locals import *
 from globals import E_VARS
 from globals import STRINGS
@@ -35,10 +34,7 @@ def main():
     BASICFONT = pygame.font.Font("freesansbold.ttf",18)
     pygame.display.set_caption('Editor')
 
-    root = Tk()
-
     runGame(tiles)
-    root.destroy()
 
 def runGame(tiles):
     global TODRAW 
