@@ -1,3 +1,4 @@
+import copy
 import pygame
 from pygame.locals import *
 
@@ -59,25 +60,8 @@ class Player:
         self.move()
         
     def getCoords(self):
-        return self.__coords
+        return copy.copy(self.__coords)
 
     def getMapPos(self):
-        return [self.__mapX, self.__mapY]
-
-    def draw(self,DISPLAYSURF):
-        x = self.__coords[STRINGS.X]
-        y = self.__coords[STRINGS.Y]
-        '''pygame.draw.line(DISPLAYSURF,COLORS.BLACK,(x,y),(x+E_VARS.CELLWIDTH,y),4)
-        pygame.draw.line(DISPLAYSURF,COLORS.BLACK,(x,y),(x,y+E_VARS.CELLHEIGHT),4)
-        pygame.draw.line(DISPLAYSURF,COLORS.BLACK,(x+E_VARS.CELLWIDTH,y),(x+E_VARS.CELLWIDTH,y+E_VARS.CELLHEIGHT),4)
-        pygame.draw.line(DISPLAYSURF,COLORS.BLACK,(x,y+E_VARS.CELLHEIGHT),(x+E_VARS.CELLWIDTH,y+E_VARS.CELLHEIGHT),4)
-
-        pygame.draw.line(DISPLAYSURF,COLORS.BLACK,(x,y),(x+E_VARS.CELLWIDTH/3, y+E_VARS.CELLHEIGHT*1.5-10),4)    
-        pygame.draw.line(DISPLAYSURF,COLORS.BLACK,(x+E_VARS.CELLWIDTH,y),(x+2*E_VARS.CELLWIDTH/3,y+E_VARS.CELLHEIGHT*1.5-10),4)
-        pygame.draw.line(DISPLAYSURF,COLORS.BLACK,(x+E_VARS.CELLWIDTH,y+E_VARS.CELLHEIGHT),(x+2*E_VARS.CELLWIDTH/3-5,y+E_VARS.CELLHEIGHT*1.5+10),4)
-        pygame.draw.line(DISPLAYSURF,COLORS.BLACK,(x,y+E_VARS.CELLHEIGHT),(x+E_VARS.CELLWIDTH/3+5,y+E_VARS.CELLHEIGHT*1.5+10),4)
-        pygame.draw.line(DISPLAYSURF,COLORS.BLACK,(x+E_VARS.CELLWIDTH/3,y+E_VARS.CELLHEIGHT*1.5-10),(x+E_VARS.CELLWIDTH/3+5,y+E_VARS.CELLHEIGHT*1.5+10),4)
-        pygame.draw.line(DISPLAYSURF,COLORS.BLACK,(x+E_VARS.CELLWIDTH/3,y+E_VARS.CELLHEIGHT*1.5-10),(x+2*E_VARS.CELLWIDTH/3, y+E_VARS.CELLHEIGHT*1.5-10),4)
-        pygame.draw.line(DISPLAYSURF,COLORS.BLACK,(x+2*E_VARS.CELLWIDTH/3,y+E_VARS.CELLHEIGHT*1.5-10),(x+2*E_VARS.CELLWIDTH/3-5,y+E_VARS.CELLHEIGHT*1.5+10),4)
-        pygame.draw.line(DISPLAYSURF,COLORS.BLACK,(x+2*E_VARS.CELLWIDTH/3-5,y+E_VARS.CELLHEIGHT*1.5+10),(x+E_VARS.CELLWIDTH/3+5,y+E_VARS.CELLHEIGHT*1.5+10),4)'''
+        return copy.copy([self.__mapX, self.__mapY])
 
