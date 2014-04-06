@@ -3,7 +3,7 @@
 #include <string>
 #include "sprite.h"
 #include "vector2f.h"
-#include "particle.h"
+#include "particleSystem.h"
 
 class Tile {
 public:

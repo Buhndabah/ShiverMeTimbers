@@ -9,6 +9,7 @@
 #include "vector2f.h"
 #include "gamedata.h"
 #include "mapManager.h"
+#include "particleSystem.h"
 
 MapManager& MapManager::getInstance() {
     static MapManager instance;

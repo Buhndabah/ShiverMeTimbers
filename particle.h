@@ -2,12 +2,9 @@
 #define PARTICLE_H
 #include <SDL.h>
 #include <SDL_image.h>
-#include <vector>
-#include <string>
-#include "gamedata.h"
 #include "vector2f.h"
 
-
+// ABC for particles, ParticleSystem stores a list of these
 class AbstractParticle {
 public:
     AbstractParticle(int posX, int posY, int posZ) :
@@ -161,10 +158,9 @@ private:
     Uint32 borderColor;
 };
 
-/* This class stores constants used to create the actual particles, contains no actual methods */
+/* Templated, concrete implementation of AbstractParticle */
 template <class particleT>
 class Particle : public AbstractParticle{
-friend class ParticleSystem;
 public:
         Particle(int posX, int posY, int posZ, particleT behavior) :
             AbstractParticle(posX,posY,posZ),
@@ -191,6 +187,8 @@ private:
         const particleT updateBehavior;
 };
 
+
+// update method for snow particles
 class SnowBehavior {
 public:
     SnowBehavior(const Vector2f&, const Vector2f&, int, int, int, int);
@@ -203,28 +201,5 @@ private:
     int viewHeight;
     int maxHeight;
     int maxLife;
-};
-
-class ParticleSystem {
-public:
-    ParticleSystem(const Vector2f&, const Vector2f&, int, const std::string&);
-    ParticleSystem(const ParticleSystem&);
-    ParticleSystem& operator=(const ParticleSystem&);
-    ~ParticleSystem();
-
-    void draw() const;
-    void update(Uint32);
-private:
-    Vector2f pos;
-    Vector2f dim;
-
-    int viewWidth;
-    int viewHeight;
-    int maxHeight;
-    int maxLife;
-    unsigned int maxCount;
-    std::list<AbstractParticle *> particles;
-    void spawnParticles(const std::string&);
-    std::string type;
 };
 #endif
