@@ -53,6 +53,13 @@ void Tile::update(Uint32& ticks) const {
     }
 }
 
+void Tile::addParticleSystem(int height, const std::string& type) {
+    if(particleSys) {
+        delete particleSys;
+    }
+    particleSys = new ParticleSystem(getCoord(), getDim(), sprite->Y() + height, type);
+}
+
 bool Tile::pointOn(const Vector2f& coord) const {
     if( !coord[0] >= sprite->getPosition()[0] &&
         !coord[0] <= sprite->getPosition()[0] + sprite->getW() &&

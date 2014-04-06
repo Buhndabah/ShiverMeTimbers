@@ -9,7 +9,6 @@
 #include "vector2f.h"
 #include "gamedata.h"
 #include "mapManager.h"
-#include "particleSystem.h"
 
 MapManager& MapManager::getInstance() {
     static MapManager instance;
@@ -182,7 +181,7 @@ void MapManager::createLayers()
     {
         if(weather.compare("snow")==0)
         {
-            (*weatherIt)->setParticleSystem(new ParticleSystem((*weatherIt)->getCoord(),Vector2f(tileWidth,tileHeight),(*weatherIt)->getCoord()[1]+2*tileHeight,weather));
+            (*weatherIt)->addParticleSystem(2*tileHeight,weather);
             
         }
     }
@@ -357,7 +356,7 @@ void MapManager::drawGridElements(int index) const {
 
         /* If enabled will draw a box around the sprite boundaries */
 #define HITBOX
-        #ifdef HITBOX
+#ifdef HITBOX
         SDL_Rect rect;
         Uint32 color;
                  
@@ -367,7 +366,7 @@ void MapManager::drawGridElements(int index) const {
         rect.h= (*it)->getSprite().getH();
         color = SDL_MapRGB(IOManager::getInstance().getScreen()->format,0,0,0);
         SDL_FillRect(IOManager::getInstance().getScreen(), &rect, color);
-        #endif
+#endif
         
          
         (*it)->draw();
@@ -385,7 +384,6 @@ void MapManager::update(Uint32& ticks) {
             (*layer_it).update(ticks);
         }
     }
-
 
     // This is a temp list used to store GridElements as we sort them by index
     std::vector<std::list<GridElement *> > tempVec;
