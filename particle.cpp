@@ -3,6 +3,11 @@
 #include "viewport.h"
 #include "particle.h"
 
+void AbstractParticle::draw() {
+    SDL_FillRect(IOManager::getInstance().getScreen(), &borderRect, borderColor);
+    SDL_FillRect(IOManager::getInstance().getScreen(), &rect, color);
+}
+
 SnowBehavior::SnowBehavior(const Vector2f& pos, const Vector2f& dim, int viewW, int viewH, int maxH, int maxL) :
     basePos(pos),
     maxDim(dim),
@@ -38,6 +43,9 @@ void SnowBehavior::operator()(Uint32 ticks, Particle<SnowBehavior>* p) const {
         p->setR( (p->getStartPos()[1] + p->getR()) > 255 ? 255 : (p->getStartPos()[1] + p->getR()));
         p->setG( (p->getStartPos()[1] + p->getG()) > 255 ? 255 : (p->getStartPos()[1] + p->getG()));
         p->setB( (p->getStartPos()[1] + p->getB()) > 255 ? 255 : (p->getStartPos()[1] + p->getB()));
+
+        p->setBorderColor(SDL_MapRGB(IOManager::getInstance().getScreen()->format, 0,0,0));
+        p->setColor(SDL_MapRGB(IOManager::getInstance().getScreen()->format, p->getR(), p->getG(), p->getB()));
 
         p->setInit();
     }
@@ -76,6 +84,14 @@ void SnowBehavior::operator()(Uint32 ticks, Particle<SnowBehavior>* p) const {
             p->setZ(p->getZ() - incr[1]);
         }
     }
+    p->setBorderX(p->getX() - Viewport::getInstance().X()-2);
+    p->setBorderY(p->getY()-p->getZ()-Viewport::getInstance().Y()-2);
+    p->setBorderW((int)p->getSize() +4);
+    p->setBorderH((int)p->getSize() +4);
+    p->setRectX(p->getX() - Viewport::getInstance().X());
+    p->setRectY(p->getY()-p->getZ()-Viewport::getInstance().Y());
+    p->setRectW((int)p->getSize());
+    p->setRectH((int)p->getSize());
 }
 
 // Currently these are all values specific to "snow" particles
@@ -123,6 +139,7 @@ ParticleSystem& ParticleSystem::operator=(const ParticleSystem& rhs) {
 
     particles.clear();
     spawnParticles(type);
+    return *this;
 }
 
 ParticleSystem::~ParticleSystem() {
@@ -134,35 +151,11 @@ ParticleSystem::~ParticleSystem() {
 
 // Currently this is snow specific
 void ParticleSystem::draw() const {
-    SDL_Rect rect;
-    Uint32 color;
-    int borderSize;
 
     // Iterate through particles
     for(std::list<AbstractParticle*>::const_iterator it=particles.begin(); it!= particles.end(); ++it)
     {
-
-        /* Draws a grey-white rect surrounded by a black border */
-  
-        borderSize = 2;
-        //borderSize = (*it)->size/4 > 0 ? (*it)->size/3 : 1;
-
-        rect.x = (*it)->getX()-Viewport::getInstance().X()- borderSize;
-        rect.y = (*it)->getY()-(*it)->getZ()-Viewport::getInstance().Y()-borderSize;
-        rect.w = (int)(*it)->getSize() + (borderSize*2);
-        rect.h = (int)(*it)->getSize() + (borderSize*2);
-
-        color = SDL_MapRGB(IOManager::getInstance().getScreen()->format, 0,0,0);
-        SDL_FillRect(IOManager::getInstance().getScreen(), &rect, color);
-
-
-        rect.x = (*it)->getX()-Viewport::getInstance().X();
-        rect.y = (*it)->getY()-(*it)->getZ()-Viewport::getInstance().Y();
-        rect.w = (int)(*it)->getSize();
-        rect.h = (int)(*it)->getSize();
-
-        color = SDL_MapRGB(IOManager::getInstance().getScreen()->format, (*it)->getR(),(*it)->getG(),(*it)->getB());
-        SDL_FillRect(IOManager::getInstance().getScreen(), &rect, color);
+        (*it)->draw();
     }
 }
 

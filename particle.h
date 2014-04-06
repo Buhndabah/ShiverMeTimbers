@@ -22,7 +22,11 @@ public:
             g(),
             b(),
             size(),
-            angle()
+            angle(),
+            rect(),
+            borderRect(),
+            color(),
+            borderColor()
     { }
 
     AbstractParticle(const AbstractParticle& rhs) :
@@ -37,7 +41,11 @@ public:
             g(rhs.g),
             b(rhs.b),
             size(rhs.size),
-            angle(rhs.angle)
+            angle(rhs.angle),
+            rect(rhs.rect),
+            borderRect(rhs.borderRect),
+            color(rhs.color),
+            borderColor(rhs.borderColor)
     { }
 
     AbstractParticle& operator=(const AbstractParticle& rhs) {
@@ -55,12 +63,17 @@ public:
         b = rhs.b;
         size = rhs.size;
         angle = rhs.angle;
+        rect = rhs.rect;
+        borderRect = rhs.borderRect;
+        color=rhs.color;
+        borderColor = rhs.borderColor;
 
         return *this;
     }
     
     virtual ~AbstractParticle() {}
 
+    void draw();
     virtual void update(Uint32 ticks) =0;
 
     /* Getters and Setters */
@@ -99,6 +112,24 @@ public:
     void setSize(float value)    { size = value; }
     void setAngle(float degrees) { angle = degrees; }
 
+    SDL_Rect getRect() const { return rect; }
+    SDL_Rect getBorderRect() const { return borderRect; }
+
+    void setRectX(int x) { rect.x = x; }
+    void setRectY(int y) { rect.y = y; }
+    void setRectW(int w) { rect.w = w; }
+    void setRectH(int h) { rect.h = h; }
+
+    void setBorderX(int x) { borderRect.x = x; }
+    void setBorderY(int y) { borderRect.y = y; }
+    void setBorderW(int w) { borderRect.w = w; }
+    void setBorderH(int h) { borderRect.h = h; }
+
+    Uint32 getColor() const { return color; }
+    Uint32 getBorderColor() const { return borderColor; } 
+
+    void setColor(Uint32 c) { color = c; }
+    void setBorderColor(Uint32 c) { borderColor = c; }
 private:
     /* Data begins here */
    
@@ -122,6 +153,12 @@ private:
 
     float size;
     float angle;
+
+    SDL_Rect rect;
+    SDL_Rect borderRect;
+
+    Uint32 color;
+    Uint32 borderColor;
 };
 
 /* This class stores constants used to create the actual particles, contains no actual methods */
