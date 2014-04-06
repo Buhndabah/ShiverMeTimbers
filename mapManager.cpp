@@ -181,11 +181,12 @@ void MapManager::createLayers()
     {
         if(weather.compare("snow")==0)
         {
-            (*weatherIt)->setParticleSystem(new ParticleSystem((*weatherIt)->getCoord(),Vector2f(tileWidth,tileHeight),(*weatherIt)->getCoord()[1]+2*tileHeight));
+            (*weatherIt)->setParticleSystem(new ParticleSystem((*weatherIt)->getCoord(),Vector2f(tileWidth,tileHeight),(*weatherIt)->getCoord()[1]+2*tileHeight,weather));
             
         }
     }
 }
+
 
 // Returns coordinate of beginning of tile list on bottom layer
 Vector2f MapManager::getOrigin() const {
@@ -247,7 +248,6 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& f
     // JOHN'S SUPER HACKY MOVEMENT CODE XXX TODO I'M SO SORRY
     if((getIndexAt(hypoPos+g.getSprite().getSize())) == -3)
     {
-         std::cerr<< getIndexAt(hypoPos+g.getSprite().getSize()) << std::endl;
          hypoPos =g.getGridPosition();
          fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
          atEdge = true;

@@ -43,7 +43,7 @@ Manager::Manager() :
   int numSnowballs = Gamedata::getInstance().getXmlInt("numSnowballs");
   snowballs.reserve(numSnowballs+4);
 
-  player = new GridElement("coolyeti");
+  player = new GridElement("coolyeti"); // deleted by the mapManager
   map.addGridElement(player);
   hud.setPlayer(player);
 //  snowballs.push_back(new MultiSprite("spinsnowball"));

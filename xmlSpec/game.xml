@@ -152,10 +152,21 @@
   <snowWidth>128</snowWidth>
   <snowHeight>110</snowHeight>
   <snowSrcX>0</snowSrcX>
-  <snowSrcY>0</snow1SrcY>
+  <snowSrcY>0</snowSrcY>
   <snowSpeed snowSpeedX="0" snowSpeedY="0"/>
   <snowTransparency>false</snowTransparency>
 </snow>
+
+<water>
+  <waterFile>images/water.png</waterFile>
+  <waterLoc snowX="30" snowY="10"/>
+  <waterWidth>128</waterWidth>
+  <waterHeight>110</waterHeight>
+  <waterSrcX>0</waterSrcX>
+  <waterSrcY>0</waterSrcY>
+  <waterSpeed waterSpeedX="0" waterSpeedY="0"/>
+  <waterTransparency>false</waterTransparency>
+</water>
 
 <empty>
   <emptyFile>images/empty.png</emptyFile>
