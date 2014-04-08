@@ -7,6 +7,7 @@ EventQueue& EventQueue::getInstance() {
     return instance;
 }
 
+// Return all events matching type field
 std::vector<Event> EventQueue::findEventsByType(int t) {
     std::vector<Event> retEvents;
 
@@ -20,6 +21,7 @@ std::vector<Event> EventQueue::findEventsByType(int t) {
     return retEvents;
 }
 
+// Return all events with matching actor field
 std::vector<Event> EventQueue::findEventsByActor(const std::string& name) {
     std::vector<Event> retEvents;
 

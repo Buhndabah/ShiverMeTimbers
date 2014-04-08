@@ -36,6 +36,8 @@ void HUDHealthBar::draw() const {
 
 void HUDHealthBar::update(Uint32 ticks) {
     (void)ticks;
+
+    // Check to see if there are any events from our gridElement waiting
     std::vector<GameEvents::Event> events = GameEvents::EventQueue::getInstance().findEventsByActor(getName());
     if(events.size() !=0)
     {
@@ -51,5 +53,4 @@ void HUDHealthBar::update(Uint32 ticks) {
             }
         }
     }
-    //healthRatio = (static_cast<double>(player->getCurrentHP())/static_cast<double>(player->getMaxHP()));
 }

@@ -7,6 +7,7 @@
 
 namespace GameEvents {
 
+// Type definitions for Event
 enum types {
     DAMAGE_EVENT,
     MOVE_EVENT,
@@ -14,6 +15,7 @@ enum types {
     DEATH_EVENT
 };
 
+// Structure for holding data about event
 struct Event {
     int type;
     std::string actor;
@@ -31,6 +33,7 @@ struct Event {
     { }
 };
 
+// Maintains list of events, also has search functions
 class EventQueue {
 public:
     static EventQueue& getInstance();
