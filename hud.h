@@ -26,7 +26,7 @@ public:
     void addTextComponent(const std::string&,const Vector2f&,const std::string&, bool);
     void addFPS(const Vector2f&);
     void setComponentText(const std::string&, const std::string&) const;
-
+    void addHealthBar(const std::string&, const Vector2f&);
 
 private:
     HUD(const std::string& fn = "xmlSpec/hud.xml"); 
@@ -41,7 +41,6 @@ private:
     HUDComponent* createComponent(std::map<std::string, std::string>, HUDContainer*);
     bool visible;
     bool fade;
-    GridElement *player;
 
     enum {
         UNPAUSE,

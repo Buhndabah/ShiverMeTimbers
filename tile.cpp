@@ -36,7 +36,6 @@ Tile& Tile::operator=(const Tile& rhs) {
     if(rhs.particleSys) {
         particleSys = new ParticleSystem(*(rhs.particleSys));
     }
-
     return *this;
 }
 

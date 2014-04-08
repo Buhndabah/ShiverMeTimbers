@@ -43,8 +43,11 @@ public:
 
   float getMoveSpeed() const {return moveSpeed;}
  
-  int getCurrentHP() const { return curHP; }
-  int getMaxHP() const { return maxHP; }
+  int   getCurrentHP() const { return curHP; }
+  int   getMaxHP() const { return maxHP; }
+  float getHPRatio() const { return static_cast<float>(curHP)/static_cast<float>(maxHP); }
+
+  const std::string& getName() const { return gridSprite.getName(); }
 
   std::vector<bool> getMoveDir() const { return moveDir;}
 
@@ -65,7 +68,6 @@ public:
 
 private:
   void clearMoveDir();
-
   float moveSpeed;
   MultiSprite gridSprite;
   Vector2f gridPosition;
