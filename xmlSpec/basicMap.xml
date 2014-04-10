@@ -14,7 +14,7 @@
         <tile id="10" name="snow"/>
     </tileset>
     <layer name="ground">
-	<element id="0" collision ="true"/>
+	<element id="2" collision ="true"/>
 	<element id="0" collision ="true"/>
 	<element id="0" collision ="true"/>
 	<element id="0" collision ="true"/>

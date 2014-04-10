@@ -48,6 +48,10 @@ public:
 
   std::vector<bool> getMoveDir() const { return moveDir;}
 
+  std::vector<Vector2f> getMoveboxVertices() const { return moveboxVertices;}
+  Vector2f getMoveboxVertex(int indx) const { return moveboxVertices[indx];}
+  void setMoveboxVertex(int, Vector2f);
+
   void onDamage(int damage);
 
   void draw() const;
@@ -74,6 +78,7 @@ private:
   int curHP;
   const MapManager& map; //the grid the gridElement is attached to
   std::vector<bool> moveDir; //boolean vector telling the gridElement which direction it is moving in
+  std::vector<Vector2f> moveboxVertices; //Vector2f vector of vertices for the movement hitbox
 };
 
 #endif
