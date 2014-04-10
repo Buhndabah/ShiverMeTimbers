@@ -55,6 +55,7 @@ private:
     /* Storage Structures */
 
     std::map<std::string, std::string> tiles;
+    std::list<Tile*> updateTiles;
     std::list<std::vector<Tile> > mapLayers;
     std::vector<std::list<GridElement*> > gridElements; // ordered by relevant tile
 

@@ -40,7 +40,8 @@ Tile& Tile::operator=(const Tile& rhs) {
 }
 
 void Tile::draw() const {
-    sprite->draw();
+    if(id.compare("0"))
+        sprite->draw();
     if(particleSys)
         particleSys->draw();
 }

@@ -20,6 +20,7 @@ MapManager& MapManager::getInstance() {
 MapManager::MapManager(const std::string& fn) :
     parser(XMLParser::getInstance()),
     tiles(),
+    updateTiles(),
     mapLayers(),
     gridElements(),
     tileWidth(),
@@ -217,12 +218,12 @@ void MapManager::createLayers()
     }
 
     // Create particle systems if a weather tag is present
-    for(std::vector<Tile*>::const_iterator weatherIt=topOfStack.begin(); weatherIt!=topOfStack.end();++weatherIt)
+    for(std::vector<Tile*>::iterator weatherIt=topOfStack.begin(); weatherIt!=topOfStack.end();++weatherIt)
     {
         if(weather.compare("snow")==0)
         {
             (*weatherIt)->addParticleSystem(2*tileHeight,weather);
-            
+            updateTiles.push_back((*weatherIt)); 
         }
     }
 }
@@ -398,12 +399,16 @@ void MapManager::drawGridElements(int index) const {
 void MapManager::update(Uint32& ticks) {
 
     // update each tile in each layer
-    for(std::list<std::vector<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
+    /*for(std::list<std::vector<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
     {   
         for(std::vector<Tile>::const_iterator layer_it = (*it).begin(); layer_it != (*it).end(); ++layer_it)
         {
             (*layer_it).update(ticks);
         }
+    }*/
+    for(std::list<Tile*>::const_iterator it=updateTiles.begin(); it!= updateTiles.end(); ++it)
+    {
+        (*it)->update(ticks);
     }
 
     // This is a temp list used to store GridElements as we sort them by index
