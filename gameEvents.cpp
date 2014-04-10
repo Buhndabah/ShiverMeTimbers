@@ -8,17 +8,19 @@ EventQueue& EventQueue::getInstance() {
 }
 
 void EventQueue::prepEvents() {
-    outgoing = std::vector<Event>(incoming);
-    incoming.clear();
-    notify();
-    outgoing.clear();
+    if(!incoming.empty()) {
+        outgoing = std::list<Event>(incoming);
+        incoming.clear();
+        notify();
+        outgoing.clear();
+    }
 }
 
 // Return all events matching type field
-std::vector<Event> EventQueue::findEventsByType(int t) {
-    std::vector<Event> retEvents;
+std::list<Event> EventQueue::findEventsByType(int t) {
+    std::list<Event> retEvents;
 
-    for(std::vector<Event>::const_iterator it=outgoing.begin(); it!=outgoing.end(); ++it)
+    for(std::list<Event>::const_iterator it=outgoing.begin(); it!=outgoing.end(); ++it)
     {
         if((*it).type==t)
         {
@@ -29,10 +31,10 @@ std::vector<Event> EventQueue::findEventsByType(int t) {
 }
 
 // Return all events with matching actor field
-std::vector<Event> EventQueue::findEventsByActor(const std::string& name) {
-    std::vector<Event> retEvents;
+std::list<Event> EventQueue::findEventsByActor(const std::string& name) {
+    std::list<Event> retEvents;
 
-    for(std::vector<Event>::const_iterator it = outgoing.begin(); it!=outgoing.end(); ++it)
+    for(std::list<Event>::const_iterator it = outgoing.begin(); it!=outgoing.end(); ++it)
     {
         if((*it).actor.compare(name) == 0)
         {
@@ -49,7 +51,7 @@ void EventQueue::addListener(types eventType, Listener* l, void(*fn)(Listener*, 
 
 // for each event, notify each listener that cares, calling its callback
 void EventQueue::notify() {
-    for(std::vector<Event>::const_iterator it=outgoing.begin(); it != outgoing.end(); ++it)
+    for(std::list<Event>::const_iterator it=outgoing.begin(); it != outgoing.end(); ++it)
     {
         for(std::list<std::pair<Listener*, void(*)(Listener*, const Event)> >::const_iterator it2 = listeners[(*it).type].begin(); it2 != listeners[(*it).type].end(); ++it2)
         {

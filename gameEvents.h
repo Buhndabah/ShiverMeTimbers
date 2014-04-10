@@ -3,7 +3,6 @@
 #include <string>
 #include <list>
 #include <map>
-#include <vector>
 #include "vector2f.h"
 #include "listener.h"
 
@@ -56,8 +55,8 @@ public:
     /*Event operator[](int i) { return incoming[i]; }
     const Event operator[](int i) const { return incoming[i]; }*/
 
-    std::vector<Event> findEventsByType(int t);
-    std::vector<Event> findEventsByActor(const std::string& name);
+    std::list<Event> findEventsByType(int t);
+    std::list<Event> findEventsByActor(const std::string& name);
     void addListener(types, Listener*, void (*)(Listener*, const Event));
 
 private:
@@ -70,8 +69,8 @@ private:
 
     void notify();
 
-    std::vector<Event> incoming;
-    std::vector<Event> outgoing;
+    std::list<Event> incoming;
+    std::list<Event> outgoing;
     std::map<int, std::list<std::pair<Listener*, void (*)(Listener*, const Event)> > > listeners;
 };
 
