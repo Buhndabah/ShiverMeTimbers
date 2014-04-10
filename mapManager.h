@@ -39,8 +39,8 @@ public:
     Vector2f worldToGrid(Vector2f) const;
 
 private:
-//    MapManager(const std::string& fn = "xmlSpec/testMap.xml");
-    MapManager(const std::string& fn = "xmlSpec/wuh.xml");
+    MapManager(const std::string& fn = "xmlSpec/testMap.xml");
+//    MapManager(const std::string& fn = "xmlSpec/wuh.xml");
     MapManager(const MapManager&);
     MapManager& operator=(const MapManager&);
 

@@ -16,8 +16,7 @@ HUD::HUD(const std::string& fn) :
     parser(XMLParser::getInstance()),
     components(),
     visible(true),
-    fade(false),
-    player(NULL)
+    fade(false)
 { 
     parser.parse(fn);
     parseComponents();
@@ -32,11 +31,9 @@ HUD::~HUD()
     }
 }
 
-// set reference to player and add a health bar
-void HUD::setPlayer(GridElement* pl) {
-    player = pl;
-    // offset is completely arbitrary right now
-    addComponent(new HUDHealthBar("health",Vector2f(0,-10),true,player,"healthBar"));
+// add a health bar to entity with name n
+void HUD::addHealthBar(const std::string& n, const Vector2f& offset) {
+    addComponent(new HUDHealthBar(n, offset, true, "healthBar"));
 }
 
 // toggle each component's visibility based on game state

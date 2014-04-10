@@ -1,12 +1,17 @@
 class E_VARS:
     # environment vars
     FPS=60 # frames per second
-    W_HEIGHT=640# height of window
-    W_WIDTH=1280# width of window
+    W_HEIGHT=900# height of window
+    W_WIDTH=1440# width of window
     CELLWIDTH=128
     CELLHEIGHT=64
-    assert W_WIDTH%CELLWIDTH==0, "Window width must be a multiple of cell size."
-    assert W_HEIGHT%CELLHEIGHT==0, "Window height must be a multiple of cell size."
+    CELLRISE=49
+    MAPWIDTH=8
+    MAPHEIGHT=8
+
+
+    #assert W_WIDTH%CELLWIDTH==0, "Window width must be a multiple of cell size."
+    #assert W_HEIGHT%CELLHEIGHT==0, "Window height must be a multiple of cell size."
     
     #Offset needed to tile current tileset
     PATH = 'isoTiles/'

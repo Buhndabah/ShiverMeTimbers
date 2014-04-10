@@ -3,184 +3,93 @@
 #include "viewport.h"
 #include "particle.h"
 
-// Default constructor creates a system that does nothing, for now
-ParticleSystem::ParticleSystem() :
-    pos(Vector2f(0,0)),
-    dim(Vector2f(0,0)),
-    viewWidth(Gamedata::getInstance().getXmlInt("viewWidth")),
-    viewHeight(Gamedata::getInstance().getXmlInt("viewHeight")),
-    maxHeight(0),
-    maxLifeTime(0),
-    maxCount(0),
-    particles(0,NULL)
+void AbstractParticle::draw() {
+    SDL_FillRect(IOManager::getInstance().getScreen(), &borderRect, borderColor);
+    SDL_FillRect(IOManager::getInstance().getScreen(), &rect, color);
+}
+
+SnowBehavior::SnowBehavior(const Vector2f& pos, const Vector2f& dim, int viewW, int viewH, int maxH, int maxL) :
+    basePos(pos),
+    maxDim(dim),
+    viewWidth(viewW),
+    viewHeight(viewH),
+    maxHeight(maxH),
+    maxLife(maxL)
 { }
 
-// Currently these are all values specific to "snow" particles
-ParticleSystem::ParticleSystem(const Vector2f& p, const Vector2f& d, int h) : 
-    pos(p),
-    dim(d),
-    viewWidth(Gamedata::getInstance().getXmlInt("viewWidth")),
-    viewHeight(Gamedata::getInstance().getXmlInt("viewHeight")),
-    maxHeight(h),
-    maxLifeTime(30),
-    maxCount(10),
-    particles()
-{ 
-    spawnParticles();
-    }
-
-ParticleSystem::ParticleSystem(const ParticleSystem& rhs) :
-    pos(rhs.pos),
-    dim(rhs.dim),
-    viewWidth(rhs.viewWidth),
-    viewHeight(rhs.viewHeight),
-    maxHeight(rhs.maxHeight),
-    maxLifeTime(rhs.maxLifeTime),
-    maxCount(rhs.maxCount),
-    particles()
-{
-    particles.clear();
-    for(std::list<Particle*>::const_iterator it=rhs.particles.begin(); it!=rhs.particles.end(); ++it)
-    {
-        particles.push_back(new Particle(*(*it)));
-    }
-}
-
-ParticleSystem& ParticleSystem::operator=(const ParticleSystem& rhs) {
-    if(this == &rhs)
-        return *this;
-
-    pos = rhs.pos;
-    dim = rhs.dim;
-    viewWidth = rhs.viewWidth;
-    viewHeight = rhs.viewHeight;
-    maxHeight = rhs.maxHeight;
-    maxLifeTime = rhs.maxLifeTime;
-    maxCount = rhs.maxCount;
-
-    particles.clear();
-    particles = std::list<Particle*>(maxCount);
-
-    for(std::list<Particle*>::const_iterator it=rhs.particles.begin(); it!=rhs.particles.end(); ++it)
-    {
-        particles.push_back(new Particle(*(*it)));
-    }
-    return *this;
-}
-
-ParticleSystem::~ParticleSystem() {
-    while(!particles.empty()) {
-        delete particles.front();
-        particles.erase(particles.begin());
-    }
-}
-
-// Currently this is snow specific
-void ParticleSystem::draw() const {
-    SDL_Rect rect;
-    Uint32 color;
-    int borderSize;
-
-    // Iterate through particles
-    for(std::list<Particle*>::const_iterator it=particles.begin(); it!= particles.end(); ++it)
-    {
-
-        /* Draws a grey-white rect surrounded by a black border */
-  
-        borderSize = 2;
-        //borderSize = (*it)->size/4 > 0 ? (*it)->size/3 : 1;
-
-        rect.x = (*it)->x-Viewport::getInstance().X()- borderSize;
-        rect.y = (*it)->y-(*it)->z-Viewport::getInstance().Y()-borderSize;
-        rect.w = (int)(*it)->size+ (borderSize*2);
-        rect.h = (int)(*it)->size+ (borderSize*2);
-
-        color = SDL_MapRGB(IOManager::getInstance().getScreen()->format, 0,0,0);
-        SDL_FillRect(IOManager::getInstance().getScreen(), &rect, color);
-
-
-        rect.x = (*it)->x-Viewport::getInstance().X();
-        rect.y = (*it)->y-(*it)->z-Viewport::getInstance().Y();
-        rect.w = (int)(*it)->size;
-        rect.h = (int)(*it)->size;
-
-        color = SDL_MapRGB(IOManager::getInstance().getScreen()->format, (*it)->r,(*it)->g,(*it)->b);
-        SDL_FillRect(IOManager::getInstance().getScreen(), &rect, color);
-    }
-}
-
-// Currently snow specific
-void ParticleSystem::update(Uint32 ticks) {
+// Update for snow particles
+void SnowBehavior::operator()(Uint32 ticks, Particle<SnowBehavior>* p) const {
     Vector2f incr;
-    std::list<Particle*>::iterator it = particles.begin();
-    Particle* p;
     int startX;
     int startY;
+    float seconds = static_cast<float>(ticks)/1000.0;
 
-    while(it!=particles.end())
+    // check if we're fully initialized yet
+    if(!p->isInit())
     {
-            p=*it;
+        int xOffset = rand() % static_cast<int>(maxDim[0]);
+        int yOffset = rand() % static_cast<int>(maxDim[1]);
+        p->setX(p->getX() + xOffset);
+        p->setY(p->getY() + yOffset);
 
-            // Decrement this particle's life
-            p->lifetime-=static_cast<float>(ticks)/1000.0;
+        p->setLife(rand()%maxLife + 5);
+        p->setSize(rand() % 4 + 3);
+        p->setAngle(1);
+        p->setVel(Vector2f(0,50));
 
-            // Reinitialize particles if they've expired XXX TODO THIS IS BAD READ IN FROM SOMEWHERE ELSE PLEASE
-            if(p->lifetime<=0 
-                || (p->z <= p->startPos[1]))
-            {
-                p->lifetime=rand()%maxLifeTime + 5;
-                startX = rand() % static_cast<int>(dim[0]);
-                startY= rand() % static_cast<int>(dim[1]);
-                p->x=pos[0]+startX;
-                p->y=pos[1] + startY;
-                p->z=rand() % maxHeight + 3*maxHeight/4,
-                p->startPos=Vector2f(startX,startY);
-                p->r= p->startPos[1]+p->r > 255 ?  255 : p-> startPos[1] + p->r; 
-                p->g= p->startPos[1]+p->g > 255 ?  255 : p-> startPos[1] + p->g; 
-                p->b= p->startPos[1]+p->b > 255 ?  255 : p-> startPos[1] + p->b; 
-                 
-            }
-            else
-            {
-                // increment by velocity
-                incr = p->vel*static_cast<float>(ticks)/1000.0;
-                p->x+=incr[0];
-                p->y;
-                p->z-=incr[1];
-            }
-                ++it;
+        p->setR(220);
+        p->setG(220);
+        p->setB(220);
+        p->setR( (p->getStartPos()[1] + p->getR()) > 255 ? 255 : (p->getStartPos()[1] + p->getR()));
+        p->setG( (p->getStartPos()[1] + p->getG()) > 255 ? 255 : (p->getStartPos()[1] + p->getG()));
+        p->setB( (p->getStartPos()[1] + p->getB()) > 255 ? 255 : (p->getStartPos()[1] + p->getB()));
+
+        p->setBorderColor(SDL_MapRGB(IOManager::getInstance().getScreen()->format, 0,0,0));
+        p->setColor(SDL_MapRGB(IOManager::getInstance().getScreen()->format, p->getR(), p->getG(), p->getB()));
+
+        p->setInit();
     }
-}
-
-// fill container with maxCount particles
-void ParticleSystem::spawnParticles() {
-    Particle *p;
-    Vector2f newPos;
-    int xOffset;
-    int yOffset;
-
-    while(particles.size() < maxCount)
+    else 
     {
-        // Random offset
-        xOffset = rand() % static_cast<int>(dim[0]);
-        yOffset = rand() % static_cast<int>(dim[1]);
+        // first decrement life
+        p->setLife(p->getLife() - seconds);
 
-        p = new Particle(rand() % maxLifeTime + 5,
-                         pos[0] + xOffset,
-                         pos[1]  + yOffset,
-                         rand() % maxHeight + maxHeight/4,
-                         220,
-                         220,
-                         220,
-                         rand() % 4 + 3,
-                         1,
-                         Vector2f(0,50)
-                );
-        p->startPos=Vector2f(p->x,p->y);
-        p->r= p->startPos[1]+p->r > 255 ?  255 : p-> startPos[1] + p->r; 
-        p->g= p->startPos[1]+p->g > 255 ?  255 : p-> startPos[1] + p->g; 
-        p->b= p->startPos[1]+p->b > 255 ?  255 : p-> startPos[1] + p->b; 
-        particles.push_back(p);
+        // time to reset
+        if( (p->getLife() <= 0) || (p->getZ() <= p->getStartPos()[1]) ) {
 
+            p->setLife(rand()%maxLife + 5);
+
+            startX = rand() % static_cast<int>(maxDim[0]);
+            startY = rand() % static_cast<int>(maxDim[1]);
+
+            p->setX(basePos[0] + startX);
+            p->setY(basePos[1] + startY);
+            p->setZ(rand() % maxHeight + 3*maxHeight/4);
+
+            p->setStartPos(Vector2f(startX, startY));
+
+            p->setR(220);
+            p->setG(220);
+            p->setB(220);
+
+            p->setR( (p->getStartPos()[1] + p->getR()) > 255 ? 255 : (p->getStartPos()[1] + p->getR()));
+            p->setG( (p->getStartPos()[1] + p->getG()) > 255 ? 255 : (p->getStartPos()[1] + p->getG()));
+            p->setB( (p->getStartPos()[1] + p->getB()) > 255 ? 255 : (p->getStartPos()[1] + p->getB()));
+        }
+        // just move
+        else 
+        {
+            incr = p->getVel()*seconds;
+            p->setX(p->getX() + incr[0]);
+            p->setZ(p->getZ() - incr[1]);
+        }
     }
+    p->setBorderX(p->getX() - Viewport::getInstance().X()-2);
+    p->setBorderY(p->getY()-p->getZ()-Viewport::getInstance().Y()-2);
+    p->setBorderW((int)p->getSize() +4);
+    p->setBorderH((int)p->getSize() +4);
+    p->setRectX(p->getX() - Viewport::getInstance().X());
+    p->setRectY(p->getY()-p->getZ()-Viewport::getInstance().Y());
+    p->setRectW((int)p->getSize());
+    p->setRectH((int)p->getSize());
 }

@@ -2,6 +2,7 @@
 #include "gridElement.h"
 #include "gamedata.h"
 #include "frameFactory.h"
+#include "gameEvents.h"
 
 GridElement::GridElement(const std::string& name) :
   moveSpeed(Gamedata::getInstance().getXmlFloat(name+"MoveSpeed")),
@@ -56,6 +57,13 @@ void GridElement::onDamage(int damage) {
       curHP=maxHP;
   }
 
+    // push new damage event
+    GameEvents::Event e;
+    e.type = GameEvents::DAMAGE_EVENT;
+    e.actor = getName();
+    e.data.push_back(getHPRatio());
+    GameEvents::EventQueue::getInstance().push(e);
+
 }
 
 void GridElement::draw() const {
@@ -82,6 +90,13 @@ void GridElement::update(Uint32 ticks) {
   for(int i=0; i<4; ++i){
     moveboxVertices[i] = moveboxVertices[i] + diff;
   }
+  // send off a move event
+  GameEvents::Event e;
+  e.type = GameEvents::MOVE_EVENT;
+  e.actor = getName();
+  e.location = getPosition();
+  e.direction = incr;
+  GameEvents::EventQueue::getInstance().push(e);
 
   if(atEdge)
     stop();

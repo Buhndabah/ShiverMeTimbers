@@ -136,7 +136,7 @@
 </spinsnowball>
 
 <tile1>
-  <tile1File>images/test_tile1.png</tile1File>
+  <tile1File>images/tile1.png</tile1File>
   <tile1Loc tile1X="30" tile1Y="10"/>
   <tile1Width>128</tile1Width>
   <tile1Height>64</tile1Height>
@@ -147,15 +147,26 @@
 </tile1>
 
 <snow>
-  <snowFile>images/snow_tile.png</snowFile>
+  <snowFile>images/snow.png</snowFile>
   <snowLoc snowX="30" snowY="10"/>
   <snowWidth>128</snowWidth>
   <snowHeight>110</snowHeight>
   <snowSrcX>0</snowSrcX>
-  <snowSrcY>0</snow1SrcY>
+  <snowSrcY>0</snowSrcY>
   <snowSpeed snowSpeedX="0" snowSpeedY="0"/>
   <snowTransparency>false</snowTransparency>
 </snow>
+
+<water>
+  <waterFile>images/water.png</waterFile>
+  <waterLoc snowX="30" snowY="10"/>
+  <waterWidth>128</waterWidth>
+  <waterHeight>110</waterHeight>
+  <waterSrcX>0</waterSrcX>
+  <waterSrcY>0</waterSrcY>
+  <waterSpeed waterSpeedX="0" waterSpeedY="0"/>
+  <waterTransparency>false</waterTransparency>
+</water>
 
 <empty>
   <emptyFile>images/empty.png</emptyFile>
@@ -169,7 +180,7 @@
 </empty>
 
 <tile2>
-  <tile2File>images/test_tile2.png</tile2File>
+  <tile2File>images/tile2.png</tile2File>
   <tile2Loc tile2X="30" tile2Y="10"/>
   <tile2Width>128</tile2Width>
   <tile2Height>80</tile2Height>
@@ -179,7 +190,7 @@
   <tile2Transparency>false</tile2Transparency>
 </tile2>
 <tile3>
-  <tile3File>images/test_tile3.png</tile3File>
+  <tile3File>images/tile3.png</tile3File>
   <tile3Loc tile3X="30" tile3Y="10"/>
   <tile3Width>128</tile3Width>
   <tile3Height>64</tile3Height>
@@ -189,7 +200,7 @@
   <tile3Transparency>false</tile3Transparency>
 </tile3>
 <tile4>
-  <tile4File>images/test_tile4.png</tile4File>
+  <tile4File>images/tile4.png</tile4File>
   <tile4Loc tile4X="30" tile4Y="10"/>
   <tile4Width>128</tile4Width>
   <tile4Height>64</tile4Height>
@@ -199,7 +210,7 @@
   <tile4Transparency>false</tile4Transparency>
 </tile4>
 <tile5>
-  <tile5File>images/test_tile5.png</tile5File>
+  <tile5File>images/tile5.png</tile5File>
   <tile5Loc tile5X="30" tile5Y="10"/>
   <tile5Width>128</tile5Width>
   <tile5Height>64</tile5Height>
@@ -209,7 +220,7 @@
   <tile5Transparency>false</tile5Transparency>
 </tile5>
 <tile6>
-  <tile6File>images/test_tile6.png</tile6File>
+  <tile6File>images/tile6.png</tile6File>
   <tile6Loc tile6X="30" tile6Y="10"/>
   <tile6Width>128</tile6Width>
   <tile6Height>64</tile6Height>
@@ -219,7 +230,7 @@
   <tile6Transparency>false</tile6Transparency>
 </tile6>
 <tile7>
-  <tile7File>images/test_tile7.png</tile7File>
+  <tile7File>images/tile7.png</tile7File>
   <tile7Loc tile7X="30" tile7Y="10"/>
   <tile7Width>128</tile7Width>
   <tile7Height>64</tile7Height>
@@ -229,7 +240,7 @@
   <tile7Transparency>false</tile7Transparency>
 </tile7>
 <tile8>
-  <tile8File>images/test_tile8.png</tile8File>
+  <tile8File>images/tile8.png</tile8File>
   <tile8Loc tile8X="30" tile8Y="10"/>
   <tile8Width>128</tile8Width>
   <tile8Height>64</tile8Height>
@@ -249,7 +260,7 @@
   <hutTransparency>false</hutTransparency>
 </hut>
 <tile9>
-  <tile9File>images/test_tile9.png</tile9File>
+  <tile9File>images/tile9.png</tile9File>
   <tile9Loc tile9X="30" tile9Y="10"/>
   <tile9Width>128</tile9Width>
   <tile9Height>64</tile9Height>

@@ -2,120 +2,204 @@
 #define PARTICLE_H
 #include <SDL.h>
 #include <SDL_image.h>
-#include <vector>
-#include <string>
-#include "gamedata.h"
 #include "vector2f.h"
 
-/* This class stores constants used to create the actual particles, contains no actual methods */
-class Particle {
+// ABC for particles, ParticleSystem stores a list of these
+class AbstractParticle {
 public:
-        Particle() :
+    AbstractParticle(int posX, int posY, int posZ) :
+            init(false),
             lifetime(),
-            x(),
-            y(),
-            z(),
+            x(posX),
+            y(posY),
+            z(posZ),
             startPos(),
+            vel(),
             r(),
             g(),
             b(),
             size(),
             angle(),
-            vel()
-        { } 
+            rect(),
+            borderRect(),
+            color(),
+            borderColor()
+    { }
 
-        Particle(int nl, int nx, int ny, int nz, int nr, int ng, int nb, float s, float a, Vector2f v) :
-            lifetime(nl),
-            x(nx),
-            y(ny),
-            z(nz),
-            startPos(),
-            r(nr),
-            g(ng),
-            b(nb),
-            size(s),
-            angle(a),
-            vel(v)
-        { }
-
-        Particle(const Particle& rhs) : 
+    AbstractParticle(const AbstractParticle& rhs) :
+            init(rhs.init),
             lifetime(rhs.lifetime),
             x(rhs.x),
             y(rhs.y),
             z(rhs.z),
             startPos(rhs.startPos),
+            vel(rhs.vel),
             r(rhs.r),
             g(rhs.g),
             b(rhs.b),
             size(rhs.size),
             angle(rhs.angle),
-            vel(rhs.vel)
+            rect(rhs.rect),
+            borderRect(rhs.borderRect),
+            color(rhs.color),
+            borderColor(rhs.borderColor)
+    { }
+
+    AbstractParticle& operator=(const AbstractParticle& rhs) {
+        if(this == &rhs) return *this;
+
+        init = rhs.init;
+        lifetime = rhs.lifetime;
+        x = rhs.x;
+        y = rhs.y;
+        z = rhs.z;
+        startPos = rhs.startPos;
+        vel = rhs.vel;
+        r = rhs.r;
+        g = rhs.g;
+        b = rhs.b;
+        size = rhs.size;
+        angle = rhs.angle;
+        rect = rhs.rect;
+        borderRect = rhs.borderRect;
+        color=rhs.color;
+        borderColor = rhs.borderColor;
+
+        return *this;
+    }
+    
+    virtual ~AbstractParticle() {}
+
+    void draw();
+    virtual void update(Uint32 ticks) =0;
+
+    /* Getters and Setters */
+
+    bool isInit() const { return init; }
+    void setInit() { init = true; }
+
+    float getLife() const { return lifetime; }
+    void setLife(float seconds) { lifetime = seconds; }
+
+    int getX() const { return x; }
+    int getY() const { return y; }
+    int getZ() const { return z; }
+
+    void setX(int value) { x = value; }
+    void setY(int value) { y = value; }
+    void setZ(int value) { z = value; }
+
+    Vector2f getStartPos() const { return startPos; }
+    Vector2f getVel()      const { return vel; }
+
+    void setStartPos(const Vector2f pos) { startPos = pos; }
+    void setVel(const Vector2f speed) { vel = speed; }
+
+    int getR() const { return r; }
+    int getG() const { return g; }
+    int getB() const { return b; }
+
+    void setR(int red)   { r = red; }
+    void setG(int green) { g = green; }
+    void setB(int blue)  { b = blue; }
+
+    float getSize()  const { return size; }
+    float getAngle() const { return angle; }
+
+    void setSize(float value)    { size = value; }
+    void setAngle(float degrees) { angle = degrees; }
+
+    SDL_Rect getRect() const { return rect; }
+    SDL_Rect getBorderRect() const { return borderRect; }
+
+    void setRectX(int x) { rect.x = x; }
+    void setRectY(int y) { rect.y = y; }
+    void setRectW(int w) { rect.w = w; }
+    void setRectH(int h) { rect.h = h; }
+
+    void setBorderX(int x) { borderRect.x = x; }
+    void setBorderY(int y) { borderRect.y = y; }
+    void setBorderW(int w) { borderRect.w = w; }
+    void setBorderH(int h) { borderRect.h = h; }
+
+    Uint32 getColor() const { return color; }
+    Uint32 getBorderColor() const { return borderColor; } 
+
+    void setColor(Uint32 c) { color = c; }
+    void setBorderColor(Uint32 c) { borderColor = c; }
+private:
+    /* Data begins here */
+   
+    bool init;
+    
+    float lifetime;
+
+    /* Position values */
+
+    int x;
+    int y;
+    int z;
+    Vector2f startPos;
+    Vector2f vel;
+
+    /* Color values */
+
+    int r;
+    int g;
+    int b;
+
+    float size;
+    float angle;
+
+    SDL_Rect rect;
+    SDL_Rect borderRect;
+
+    Uint32 color;
+    Uint32 borderColor;
+};
+
+/* Templated, concrete implementation of AbstractParticle */
+template <class particleT>
+class Particle : public AbstractParticle{
+public:
+        Particle(int posX, int posY, int posZ, particleT behavior) :
+            AbstractParticle(posX,posY,posZ),
+            updateBehavior(behavior)
+        { }
+
+        Particle(const Particle& rhs) : 
+            updateBehavior(rhs.updateBehavior)
         { }
 
         Particle& operator=(const Particle& rhs) {
+
             if(this == &rhs) return *this;
 
-            lifetime = rhs.lifetime;
-            x = rhs.x;
-            y = rhs.y;
-            z = rhs.z;
-            startPos = rhs.startPos;
-            r = rhs.r;
-            g = rhs.g;
-            b = rhs.b;
-            size = rhs.size;
-            angle = rhs.angle;
-            vel = rhs.vel;
+            AbstractParticle::operator=(rhs);
+            updateBehavior = rhs.updateBehavior;
 
             return *this;
         }
 
-        /* Data begins here */
-    
-        float lifetime;
+        void update(Uint32 ticks) { updateBehavior(ticks, this); }
 
-        /* Position values */
-
-        int x;
-        int y;
-        int z;
-        Vector2f startPos;
-
-        /* Color values */
-
-        int r;
-        int g;
-        int b;
-
-        float size;
-        float angle;
-        Vector2f vel;
+private:
+        const particleT updateBehavior;
 };
 
-class ParticleSystem {
+
+// update method for snow particles
+class SnowBehavior {
 public:
-    ParticleSystem();
-    ParticleSystem(const Vector2f&, const Vector2f&, int);
-    ParticleSystem(const ParticleSystem&);
-    ParticleSystem& operator=(const ParticleSystem&);
-    ~ParticleSystem();
+    SnowBehavior(const Vector2f&, const Vector2f&, int, int, int, int);
+    void operator()(Uint32 ticks, Particle<SnowBehavior> * particle) const;
 
-    void draw() const;
-    void update(Uint32);
 private:
-  
-    void spawnParticles();
-   
-    Vector2f pos;
-    Vector2f dim;
-
+    Vector2f basePos;
+    Vector2f maxDim;
     int viewWidth;
     int viewHeight;
-
     int maxHeight;
-    int maxLifeTime;
-    unsigned int maxCount;
-
-    std::list<Particle*> particles;
+    int maxLife;
 };
 #endif

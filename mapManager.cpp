@@ -221,12 +221,11 @@ void MapManager::createLayers()
     {
         if(weather.compare("snow")==0)
         {
-            (*weatherIt)->setParticleSystem(new ParticleSystem((*weatherIt)->getCoord(),Vector2f(tileWidth,tileHeight),(*weatherIt)->getCoord()[1]+2*tileHeight));
+            (*weatherIt)->addParticleSystem(2*tileHeight,weather);
             
         }
     }
 }
-
 
 /* Returns reference to a tile, given grid coordinates
    grid coordinates come in as sqrt(tileWidth^2 + tileHeight^2), 0,0 top, 355,355 bottom */
@@ -354,8 +353,6 @@ void MapManager::drawGridElements(int index) const {
         rect.h= (*it)->getSprite().getH();
         color = SDL_MapRGB(IOManager::getInstance().getScreen()->format,0,0,0);
         SDL_FillRect(IOManager::getInstance().getScreen(), &rect, color);
-                 
-       
 
 	SDL_Rect gp;
         gp.x = (*it)->getPosition()[0] - Viewport::getInstance().X();
@@ -408,7 +405,6 @@ void MapManager::update(Uint32& ticks) {
             (*layer_it).update(ticks);
         }
     }
-
 
     // This is a temp list used to store GridElements as we sort them by index
     std::vector<std::list<GridElement *> > tempVec;

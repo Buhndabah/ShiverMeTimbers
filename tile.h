@@ -3,7 +3,7 @@
 #include <string>
 #include "sprite.h"
 #include "vector2f.h"
-#include "particle.h"
+#include "particleSystem.h"
 
 class Tile {
 public:
@@ -16,8 +16,9 @@ public:
     void draw() const;
     void update(Uint32& ticks) const;
     const Vector2f& getCoord() const { return sprite->getPosition(); } 
+    const Vector2f getDim() const { return sprite->getSize(); }
     bool isCollidable() const { return collidable; }
-    void setParticleSystem(ParticleSystem* ps) { delete particleSys; particleSys = ps; }
+    void addParticleSystem(int, const std::string&);
     const std::string& getId() const { return id; }
     bool pointOn(const Vector2f&) const;
 private:

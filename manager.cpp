@@ -5,6 +5,7 @@
 #include "multisprite.h"
 #include "rotatesprite.h"
 #include "gamedata.h"
+#include "gameEvents.h"
 #include "manager.h"
 
 Manager::~Manager() { 
@@ -43,9 +44,9 @@ Manager::Manager() :
   int numSnowballs = Gamedata::getInstance().getXmlInt("numSnowballs");
   snowballs.reserve(numSnowballs+4);
 
-  player = new GridElement("coolyeti");
+  player = new GridElement("coolyeti"); // deleted by the mapManager
   map.addGridElement(player);
-  hud.setPlayer(player);
+  hud.addHealthBar(player->getName(), Vector2f(0, -10));
 //  snowballs.push_back(new MultiSprite("spinsnowball"));
   //snowballs.push_back(new MultiSprite("coolyeti"));
 //  snowballs.push_back(player);
@@ -100,6 +101,9 @@ void Manager::update() {
   map.update(ticks);
   hud.update(ticks);
   viewport.update();	//update the viewport last
+
+  // After everything's done updating, no need for current set of events
+  GameEvents::EventQueue::getInstance().clear();
 }
 
 void Manager::play() {

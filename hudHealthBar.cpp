@@ -1,19 +1,17 @@
+#include "gameEvents.h"
 #include "hudHealthBar.h"
 
-HUDHealthBar::HUDHealthBar(const std::string& name, const Vector2f& pos, bool vis, GridElement* pl, const std::string& sp) :
+HUDHealthBar::HUDHealthBar(const std::string& name, const Vector2f& pos, bool vis,const std::string& sp) :
     HUDComponent(name, pos, vis),
-    player(pl),
     bar(new HUDImage(name,pos,vis,sp)),
     healthRatio(1),
     offset(pos)
 { 
-    bar->setPosition(pl->getPosition()+offset);
 }
 
 
 HUDHealthBar::HUDHealthBar(const HUDHealthBar& rhs) :
     HUDComponent(rhs),
-    player(rhs.player),
     bar(rhs.bar),
     healthRatio(rhs.healthRatio),
     offset(rhs.offset)
@@ -24,7 +22,6 @@ HUDHealthBar::HUDHealthBar(const HUDHealthBar& rhs) :
 HUDHealthBar& HUDHealthBar::operator=(const HUDHealthBar& rhs) 
 {
     HUDComponent::operator=(rhs);
-    player = rhs.player;
     bar = rhs.bar;
     healthRatio=rhs.healthRatio;
     offset = rhs.offset;
@@ -39,6 +36,21 @@ void HUDHealthBar::draw() const {
 
 void HUDHealthBar::update(Uint32 ticks) {
     (void)ticks;
-    bar->setPosition(player->getPosition()+offset);
-    healthRatio = (static_cast<double>(player->getCurrentHP())/static_cast<double>(player->getMaxHP()));
+
+    // Check to see if there are any events from our gridElement waiting
+    std::vector<GameEvents::Event> events = GameEvents::EventQueue::getInstance().findEventsByActor(getName());
+    if(events.size() !=0)
+    {
+        for(std::vector<GameEvents::Event>::const_iterator it = events.begin(); it!=events.end(); ++it)
+        {
+            if((*it).type == GameEvents::DAMAGE_EVENT)
+            {
+                healthRatio = (*it).data.back();
+            }
+            else if((*it).type == GameEvents::MOVE_EVENT)
+            {
+                bar->setPosition((*it).location + offset);
+            }
+        }
+    }
 }

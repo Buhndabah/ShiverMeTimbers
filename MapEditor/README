@@ -1,0 +1,19 @@
+PACKAGE DEPENDANCIES: Python 2.X, Pygame (both should be available through your package manager)
+
+w / up = up one half tile
+s / down = down one half tile
+a / left = left one half tile
+d / right = right one half tile
+
+x = next tile
+z = previous tile
+t = go up one layer
+y = go down one layer
+
+enter = place tile
+backspace = delete tile
+
+c = toggle collidable on map tile (not the tile tied to the cursor)
+m = print map to file
+
+escape = quit

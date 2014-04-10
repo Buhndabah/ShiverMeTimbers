@@ -6,7 +6,7 @@
 
 class HUDHealthBar : public HUDComponent {
 public:
-    HUDHealthBar(const std::string& name, const Vector2f& pos, bool vis, GridElement* pl, const std::string& sp);
+    HUDHealthBar(const std::string& name, const Vector2f& pos, bool vis, const std::string& sp);
     HUDHealthBar(const HUDHealthBar& rhs);
     HUDHealthBar& operator=(const HUDHealthBar& rhs);
     virtual ~HUDHealthBar() {delete bar;}
@@ -16,7 +16,6 @@ public:
 
 
 private:
-    GridElement* player;
     HUDImage* bar;
     float healthRatio;
     Vector2f offset;

@@ -1,5 +1,5 @@
 <?xml version = "1.0"?>
-<map width="8" height="8" tilewidth="128" tileheight="64" tileRise="49" weather="snow">
+<map width="8" height="8" tilewidth="128" tileheight="64" tileRise="47" weather="snow">
     <tileset>
         <tile id="0" name="empty"/>
         <tile id="1" name="tile1"/>
@@ -12,6 +12,7 @@
         <tile id="8" name="tile8"/>
         <tile id="9" name="tile9"/>
         <tile id="10" name="snow"/>
+        <tile id="11" name="water"/>
     </tileset>
     <layer name="ground">
 	<element id="0" collision ="true"/>
@@ -24,57 +25,57 @@
 	<element id="0" collision ="true"/>
 
 	<element id="0" collision ="true"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
+        <element id="11" collision ="false"/>
+        <element id="11" collision ="false"/>
+        <element id="11" collision ="false"/>
+        <element id="11" collision ="false"/>
+        <element id="11" collision ="false"/>
+        <element id="11" collision ="false"/>
 	<element id="0" collision ="true"/>
 
 	<element id="0" collision ="true"/>
+        <element id="11" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
+        <element id="11" collision ="false"/>
 	<element id="0" collision ="true"/>
 
 	<element id="0" collision ="true"/>
+        <element id="11" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
+        <element id="11" collision ="false"/>
 	<element id="0" collision ="true"/>
 
 	<element id="0" collision ="true"/>
+        <element id="11" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
+        <element id="11" collision ="false"/>
 	<element id="0" collision ="true"/>
 
 	<element id="0" collision ="true"/>
+        <element id="11" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
+        <element id="11" collision ="false"/>
 	<element id="0" collision ="true"/>
 
 	<element id="0" collision ="true"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
+        <element id="11" collision ="false"/>
+        <element id="11" collision ="false"/>
+        <element id="11" collision ="false"/>
+        <element id="11" collision ="false"/>
+        <element id="11" collision ="false"/>
+        <element id="11" collision ="false"/>
 	<element id="0" collision ="true"/>
 
 	<element id="0" collision ="true"/>
