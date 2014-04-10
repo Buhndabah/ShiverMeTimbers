@@ -82,6 +82,7 @@ void Manager::update() {
   ++clock;
   Uint32 ticks = clock.getElapsedTicks();
   //player->update(ticks);
+  GameEvents::EventQueue::getInstance().prepEvents();
   std::vector<Drawable*>::iterator it = snowballs.begin();
   while(it != snowballs.end()){
 	(*it)->update(ticks);
@@ -101,9 +102,6 @@ void Manager::update() {
   map.update(ticks);
   hud.update(ticks);
   viewport.update();	//update the viewport last
-
-  // After everything's done updating, no need for current set of events
-  GameEvents::EventQueue::getInstance().clear();
 }
 
 void Manager::play() {

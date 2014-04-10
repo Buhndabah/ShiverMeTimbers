@@ -1,12 +1,14 @@
 #ifndef HUDCOMPONENT_H
 #define HUDCOMPONENT_H
 #include <string>
+#include "listener.h"
 #include "sprite.h"
 #include "vector2f.h"
 
-class HUDComponent {
+class HUDComponent : public Listener{
 public:
     HUDComponent(const std::string& n, const Vector2f& p,bool v) : 
+        Listener(),
         name(n),
         position(p), 
         visible(v),
@@ -17,6 +19,7 @@ public:
         elapsedTicks(0)
     {}
     HUDComponent(const HUDComponent& rhs) :
+        Listener(rhs),
         name(rhs.name),
         position(rhs.position),
         visible(rhs.visible),

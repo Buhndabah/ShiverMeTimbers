@@ -5,6 +5,7 @@
 #include "gameEvents.h"
 
 GridElement::GridElement(const std::string& name) :
+  Listener(),
   moveSpeed(Gamedata::getInstance().getXmlFloat(name+"MoveSpeed")),
   gridSprite(name),
   gridPosition(0,0),
@@ -24,6 +25,7 @@ GridElement::GridElement(const std::string& name) :
 }
 
 GridElement::GridElement(const GridElement& g) :
+  Listener(g),
   moveSpeed(g.moveSpeed),
   gridSprite(g.gridSprite),
   gridPosition(g.gridPosition),
@@ -38,6 +40,11 @@ void GridElement::onDamage(int damage) {
     curHP-=damage;
     if(curHP < 0)
     {
+        GameEvents::Event d;
+        d.type = GameEvents::DEATH_EVENT;
+        d.actor = getName();
+        d.location = getPosition();
+        GameEvents::EventQueue::getInstance().push(d);
         curHP=maxHP;
     }
 

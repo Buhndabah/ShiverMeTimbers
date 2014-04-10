@@ -3,12 +3,13 @@
 #include <string>
 #include <vector>
 #include "vector2f.h"
+#include "listener.h"
 #include "multisprite.h"
 #include "mapManager.h"
 
 class MapManager;
 
-class GridElement {
+class GridElement : public Listener{
 public:
   GridElement(const std::string&);
   GridElement(const GridElement&);

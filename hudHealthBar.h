@@ -14,10 +14,15 @@ public:
     virtual void draw() const;
     virtual void update(Uint32);
 
+    void onDamage(const GameEvents::Event);
+    void onMove(const GameEvents::Event);
 
 private:
     HUDImage* bar;
     float healthRatio;
     Vector2f offset;
 };
+
+void HUDHPDamageForwarder(Listener*, const GameEvents::Event);
+void HUDHPMoveForwarder(Listener*, const GameEvents::Event);
 #endif
