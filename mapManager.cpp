@@ -329,7 +329,8 @@ void MapManager::draw() const {
                     index = i+ ((i+1)%mapWidth)*(mapWidth-1) +(j*(mapWidth-1));
                  }
                 (*it)[index].draw();
-                drawGridElements(index);
+                if(it==(mapLayers.begin()))
+                    drawGridElements(index);
              }
          }
     }
