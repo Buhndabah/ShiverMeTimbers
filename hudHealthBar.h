@@ -18,6 +18,8 @@ public:
     void onMove(const GameEvents::Event);
 
 private:
+    virtual void registerListeners();
+
     HUDImage* bar;
     float healthRatio;
     Vector2f offset;

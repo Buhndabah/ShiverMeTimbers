@@ -9,6 +9,7 @@ public:
 
     Listener& operator=(const Listener&);
 private:
+    virtual void registerListeners()=0;
     GameEvents::EventQueue& eq;
 };
 #endif

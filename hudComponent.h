@@ -57,6 +57,8 @@ public:
     Uint32 getElapsedTicks() const { return elapsedTicks; }
     void resetTicks() { elapsedTicks =0; }
 private:
+    virtual void registerListeners() {}
+
     std::string name;
     Vector2f position;
     bool visible;

@@ -72,6 +72,7 @@ public:
 
 
 private:
+  virtual void registerListeners();
   void clearMoveDir();
   float moveSpeed;
   MultiSprite gridSprite;

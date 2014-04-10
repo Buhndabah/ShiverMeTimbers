@@ -213,3 +213,4 @@ void GridElement::stop() {
   gridVelocityY(0.);
 }
 
+void GridElement::registerListeners() {}

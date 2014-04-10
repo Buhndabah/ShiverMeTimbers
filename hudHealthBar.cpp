@@ -1,5 +1,9 @@
 #include "hudHealthBar.h"
 
+void HUDHealthBar::registerListeners() {
+    GameEvents::EventQueue::getInstance().addListener(GameEvents::DAMAGE_EVENT, static_cast<Listener*>(this), &HUDHPDamageForwarder); 
+    GameEvents::EventQueue::getInstance().addListener(GameEvents::MOVE_EVENT, static_cast<Listener*>(this), &HUDHPMoveForwarder); 
+}
 
 HUDHealthBar::HUDHealthBar(const std::string& name, const Vector2f& pos, bool vis,const std::string& sp) :
     HUDComponent(name, pos, vis),
@@ -7,8 +11,7 @@ HUDHealthBar::HUDHealthBar(const std::string& name, const Vector2f& pos, bool vi
     healthRatio(1),
     offset(pos)
 {
-    GameEvents::EventQueue::getInstance().addListener(GameEvents::DAMAGE_EVENT, static_cast<Listener*>(this), &HUDHPDamageForwarder); 
-    GameEvents::EventQueue::getInstance().addListener(GameEvents::MOVE_EVENT, static_cast<Listener*>(this), &HUDHPMoveForwarder); 
+    registerListeners();
 }
 
 HUDHealthBar::HUDHealthBar(const HUDHealthBar& rhs) :
@@ -16,17 +19,10 @@ HUDHealthBar::HUDHealthBar(const HUDHealthBar& rhs) :
     bar(rhs.bar),
     healthRatio(rhs.healthRatio),
     offset(rhs.offset)
-{ }
-
-// forwarding function for damage events
-void HUDHPDamageForwarder(Listener* context, const GameEvents::Event e) {
-    static_cast<HUDHealthBar*>(context)->onDamage(e);
+{ 
+    registerListeners();
 }
 
-// forwarding function for move events
-void HUDHPMoveForwarder(Listener* context, const GameEvents::Event e) {
-    static_cast<HUDHealthBar*>(context)->onMove(e);
-}
 
 // I think this should be ok, why would we ever want to make multiple health bars anyway?
 // might want to make into a singleton
@@ -36,6 +32,7 @@ HUDHealthBar& HUDHealthBar::operator=(const HUDHealthBar& rhs)
     bar = rhs.bar;
     healthRatio=rhs.healthRatio;
     offset = rhs.offset;
+    registerListeners();
     return *this;
 }
 
@@ -61,4 +58,14 @@ void HUDHealthBar::onMove(const GameEvents::Event e) {
 
 void HUDHealthBar::update(Uint32 ticks) {
     (void)ticks;
+}
+
+// forwarding function for damage events
+void HUDHPDamageForwarder(Listener* context, const GameEvents::Event e) {
+    dynamic_cast<HUDHealthBar*>(context)->onDamage(e);
+}
+
+// forwarding function for move events
+void HUDHPMoveForwarder(Listener* context, const GameEvents::Event e) {
+    dynamic_cast<HUDHealthBar*>(context)->onMove(e);
 }
