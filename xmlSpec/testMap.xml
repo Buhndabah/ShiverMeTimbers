@@ -29,8 +29,17 @@
         <element id="11" collision ="false"/>
         <element id="11" collision ="false"/>
         <element id="11" collision ="false"/>
+        <element id="11" collision ="true"/>
+        <element id="11" collision ="true"/>
+	<element id="0" collision ="true"/>
+
+	<element id="0" collision ="true"/>
         <element id="11" collision ="false"/>
-        <element id="11" collision ="false"/>
+        <element id="10" collision ="false"/>
+        <element id="10" collision ="false"/>
+        <element id="10" collision ="false"/>
+        <element id="10" collision ="false"/>
+        <element id="11" collision ="true"/>
 	<element id="0" collision ="true"/>
 
 	<element id="0" collision ="true"/>
@@ -52,30 +61,21 @@
 	<element id="0" collision ="true"/>
 
 	<element id="0" collision ="true"/>
-        <element id="11" collision ="false"/>
+        <element id="11" collision ="true"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
-        <element id="11" collision ="false"/>
+        <element id="11" collision ="true"/>
 	<element id="0" collision ="true"/>
 
 	<element id="0" collision ="true"/>
-        <element id="11" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="11" collision ="false"/>
-	<element id="0" collision ="true"/>
-
-	<element id="0" collision ="true"/>
+        <element id="11" collision ="true"/>
+        <element id="11" collision ="true"/>
         <element id="11" collision ="false"/>
         <element id="11" collision ="false"/>
-        <element id="11" collision ="false"/>
-        <element id="11" collision ="false"/>
-        <element id="11" collision ="false"/>
-        <element id="11" collision ="false"/>
+        <element id="11" collision ="true"/>
+        <element id="11" collision ="true"/>
 	<element id="0" collision ="true"/>
 
 	<element id="0" collision ="true"/>

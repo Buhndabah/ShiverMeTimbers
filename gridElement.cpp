@@ -99,7 +99,6 @@ void GridElement::update(Uint32 ticks) {
   }
   // send off a move event
   if(incr[0] != 0.0 && incr[1] != 0.0) {
-      std::cerr << "yo " <<std::endl;
     GameEvents::Event e;
     e.type = GameEvents::MOVE_EVENT;
     e.actor = getName();
