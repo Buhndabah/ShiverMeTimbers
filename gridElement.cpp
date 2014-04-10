@@ -98,13 +98,15 @@ void GridElement::update(Uint32 ticks) {
     moveboxVertices[i] = moveboxVertices[i] + diff;
   }
   // send off a move event
-  GameEvents::Event e;
-  e.type = GameEvents::MOVE_EVENT;
-  e.actor = getName();
-  e.location = getPosition();
-  e.direction = incr;
-  GameEvents::EventQueue::getInstance().push(e);
-
+  if(incr[0] != 0.0 && incr[1] != 0.0) {
+      std::cerr << "yo " <<std::endl;
+    GameEvents::Event e;
+    e.type = GameEvents::MOVE_EVENT;
+    e.actor = getName();
+    e.location = getPosition();
+    e.direction = incr;
+    GameEvents::EventQueue::getInstance().push(e);
+    }
   if(atEdge)
     stop();
 }
