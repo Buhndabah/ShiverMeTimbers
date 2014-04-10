@@ -25,8 +25,7 @@ public:
     void addGridElement(GridElement*);
     const Tile& findTileAt(const Vector2f&) const;
 
-    //Vector2f validateMovement(Vector2f, Vector2f, int, float&, float, bool&) const;
-    Vector2f validateMovement(GridElement&,  Vector2f, float&, bool&) const;
+   Vector2f validateMovement(GridElement&,  Vector2f, float&, bool&) const;
 
     int getW() const { return mapWidth;}
     int getH() const { return mapHeight;}
@@ -37,10 +36,11 @@ public:
     int getGridTileHeight() const { return  sqrt(pow(tileWidth/2.0,2) + pow(tileHeight/2.0,2)) ;}
     Vector2f getOrigin() const;
     Vector2f gridToWorld(Vector2f) const;
+    Vector2f worldToGrid(Vector2f) const;
 
 private:
-//    MapManager(const std::string& fn = "xmlSpec/testMap.xml");
     MapManager(const std::string& fn = "xmlSpec/testMap.xml");
+//    MapManager(const std::string& fn = "xmlSpec/wuh.xml");
     MapManager(const MapManager&);
     MapManager& operator=(const MapManager&);
 

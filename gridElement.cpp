@@ -8,20 +8,31 @@ GridElement::GridElement(const std::string& name) :
   Listener(),
   moveSpeed(Gamedata::getInstance().getXmlFloat(name+"MoveSpeed")),
   gridSprite(name),
-  gridPosition(0,0),
+  gridPosition(100,100),
   gridVelocity(0,0),
   maxHP(100),
   curHP(100),
   map(MapManager::getInstance()),
-  moveDir()
+  moveDir(),
+  moveboxVertices()
 {
-    std::cerr<< "Map size: " << map.getW() << " " << map.getH() << std::endl;
-    std::cerr<< "Tile size: " << map.getGridTileWidth() << " " << map.getGridTileHeight() << std::endl;
-  // numbers below obtained through science
-  gridSprite.setPosition(map.getOrigin()-Vector2f(0,gridSprite.getH())+Vector2f(-5,40));
+  //gridSprite.setPosition(map.getOrigin());//+Vector2f(-5,40));//-Vector2f(0,gridSprite.getH())+Vector2f(-5,40));
+  gridSprite.setPosition(map.gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
   moveDir.reserve(8);
   for(int i=0; i<8; ++i)
     moveDir.push_back(false);
+
+  //fill in the hitbox vertices
+  moveboxVertices.reserve(4);
+  Vector2f offset(gridSprite.getW() * 0.5, gridSprite.getH() * (2./3.));
+  offset += map.getOrigin();
+
+  Vector2f topcorner(gridPosition);
+  moveboxVertices.push_back(topcorner);
+  moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(-gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
+  moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
+  moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(0,gridSprite.getH() * .5)));
+
 }
 
 GridElement::GridElement(const GridElement& g) :
@@ -33,8 +44,13 @@ GridElement::GridElement(const GridElement& g) :
   maxHP(g.maxHP),
   curHP(g.curHP),
   map(MapManager::getInstance()),
-  moveDir(g.moveDir)
+  moveDir(g.moveDir),
+  moveboxVertices(g.moveboxVertices)
 {}
+
+void GridElement::setMoveboxVertex(int indx, Vector2f vert){
+ moveboxVertices[indx] = vert;
+}
 
 void GridElement::onDamage(int damage) {
     curHP-=damage;
@@ -58,7 +74,7 @@ void GridElement::onDamage(int damage) {
 }
 
 void GridElement::draw() const {
-    gridSprite.draw();
+  gridSprite.draw();
 }
 
 void GridElement::update(Uint32 ticks) {
@@ -69,17 +85,18 @@ void GridElement::update(Uint32 ticks) {
   Vector2f incr = gridVelocity * static_cast<float>(ticks) * 0.001;
   float fticks = static_cast<float>(ticks);
 
-  int moveDirIndx = 0;
-  for(int i=0; i<8; ++i)
-    if(moveDir[i]) moveDirIndx = i;
-
+  //recieve validated movement from the map
+  Vector2f oldgridPos = gridPosition;
   bool atEdge = false;
-  //gridPosition = map.validateMovement(gridPosition, gridPosition + incr, moveDirIndx, fticks, moveSpeed, atEdge);
-  gridPosition = map.validateMovement(*this, gridPosition + incr, fticks, atEdge);
+  gridPosition = map.validateMovement(*this, incr, fticks, atEdge);
 
   incr = getSprite().getVelocity() * fticks * 0.001;
   getSprite().setPosition(getSprite().getPosition() + incr);
 
+  Vector2f diff = gridPosition - oldgridPos;
+  for(int i=0; i<4; ++i){
+    moveboxVertices[i] = moveboxVertices[i] + diff;
+  }
   // send off a move event
   GameEvents::Event e;
   e.type = GameEvents::MOVE_EVENT;

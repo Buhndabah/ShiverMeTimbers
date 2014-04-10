@@ -4,11 +4,13 @@
 #include <iostream>
 #include <math.h>
 #include <stdexcept>
+#include <algorithm>
 #include "viewport.h"
 #include "ioManager.h"
 #include "vector2f.h"
 #include "gamedata.h"
 #include "mapManager.h"
+
 
 MapManager& MapManager::getInstance() {
     static MapManager instance;
@@ -85,8 +87,46 @@ void MapManager::debug() const{
     std::cerr << "Map height is " << mapHeight << std::endl;
 }
 
+// Returns coordinate of beginning of tile list on bottom layer
+Vector2f MapManager::getOrigin() const {
+    return ( (*(*mapLayers.begin()).begin()).getCoord()) + Vector2f(tileWidth/2,0);
+}
+
+// Translates a position on the grid to a position in the world
+Vector2f MapManager::gridToWorld(Vector2f gridPos) const {
+    Vector2f ret = getOrigin();
+    ret[0] -= gridPos[0] * cos(26.565*M_PI/180);
+    ret[0] += gridPos[1] * cos(26.565*M_PI/180);
+    ret[1] += (gridPos[0] * sin(26.565*M_PI/180)) + (gridPos[1] * sin(26.565*3.141592653589/180));
+    return ret;
+}
+
+//Translates a position in the world to a position on the grid
+Vector2f MapManager::worldToGrid(Vector2f worldPos) const {
+    Vector2f diff = worldPos - getOrigin();
+    Vector2f ret(0,0);
+
+    ret[0] -= diff[0] / cos(26.565 * M_PI/180) * 0.5;
+    ret[1] += diff[0] / cos(26.565 * M_PI/180) * 0.5;
+
+    ret[0] += diff[1] / cos(26.565 * M_PI/180);
+    ret[1] += diff[1] / cos(26.565 * M_PI/180);
+
+    return ret;
+}
+
+// XXX THE EXCEPTION IN THIS FUNCTION ISN'T CATCHING WHEN YOU TRY TO ADD TO AN INVALID INDEX
 void MapManager::addGridElement(GridElement* gridE) {
-    try { gridElements[getIndexAt(gridE->getGridPosition()+gridE->getSprite().getSize())].push_back(gridE); }
+
+    //Find the max index between the bottom corner of the movebox and the bottom right corner of the gridSprite
+    float diffX = gridToWorld(gridE->getMoveboxVertices()[2])[0] - gridToWorld(gridE->getMoveboxVertices()[3])[0];
+    int index = std::max(getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]))),
+					getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(diffX,0))));
+    index = std::max(index,getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(diffX/2.,0))));
+    index = std::max(index,getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(-diffX/2.,0))));
+
+
+    try{ gridElements[index].push_back(gridE); }
     catch(const std::out_of_range& e) {
         std::cerr << "Tried to add GridElement with name " << gridE->getSprite().getName() << " to map at invalid grid position " << gridE->gridX() << ", " << gridE->gridY() << std::endl;
     }
@@ -187,20 +227,17 @@ void MapManager::createLayers()
     }
 }
 
-
-// Returns coordinate of beginning of tile list on bottom layer
-Vector2f MapManager::getOrigin() const {
-    return ( (*(*mapLayers.begin()).begin()).getCoord()); //- Vector2f(0,tileHeight/2) );
-}
-
 /* Returns reference to a tile, given grid coordinates
    grid coordinates come in as sqrt(tileWidth^2 + tileHeight^2), 0,0 top, 355,355 bottom */
 const Tile& MapManager::findTileAt(const Vector2f& coord) const {
 
     std::string errMess;
     std::stringstream strm;
-    unsigned int indexX = coord[0]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)-1);
-    unsigned int indexY = coord[1]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)-1);
+  //  unsigned int indexX = coord[0]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)-1);
+  //  unsigned int indexY = coord[1]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)-1);
+    unsigned int indexX = coord[0]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2));
+    unsigned int indexY = coord[1]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2));
+ 
     unsigned int i =0;
 
     for(std::vector<Tile>::const_iterator it = (*mapLayers.begin()).begin(); it != (*mapLayers.end()).end(); ++it)
@@ -221,92 +258,42 @@ const Tile& MapManager::findTileAt(const Vector2f& coord) const {
     throw errMess;
 }
 
-/* Checks if a hypothetical position is within the grid
+
+/* Checks if a position after the passed in hypothetical increase is within the grid
    If valid, return hypothetical position
-   If invalid, return position at the edge of the grid
+   If invalid, return the valid movement
    The time measure, fticks, is passed by reference to allow it to be adjusted if the movement is cut short
    The boolean, atEdge, is passed by reference to let the caller know if the movement was cut short
 */
-Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoPos, float& fticks, bool& atEdge) const{
-    float dist = 0.;
-    //Check max X border
-   /* if((hypoPos[0] > mapWidth * getGridTileWidth()))
-       {
-      hypoPos[0] = mapWidth * getGridTileWidth();
-      dist = hypoPos[0] - g.getGridPosition()[0];
+Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& fticks, bool& atEdge) const{
 
-      if(g.getMoveDir()[3]) //if moving down on the screen
-        hypoPos[1] = g.getGridPosition()[1] + dist;
-      if(g.getMoveDir()[6]) //if moving left on the screen
-        hypoPos[1] = g.getGridPosition()[1] - dist;
+    Vector2f validPos = g.getGridPosition() + hypoIncr;
 
-      dist = sqrt( pow(hypoPos[0] - g.getGridPosition()[0],2) + pow(hypoPos[1] - g.getGridPosition()[1],2));
-      fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
-      atEdge = true;
-    }*/
-
-    // JOHN'S SUPER HACKY MOVEMENT CODE XXX TODO I'M SO SORRY
-    if((getIndexAt(hypoPos+g.getSprite().getSize())) == -3)
-    {
-         hypoPos =g.getGridPosition();
-         fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
-         atEdge = true;
-    }
-    //Check min X border
-    else if(hypoPos[0] < 0){
-      hypoPos[0] = 0;
-      dist = 0.-g.getGridPosition()[0];
-
-      if(g.getMoveDir()[0]) //if moving up on the screen
-        hypoPos[1] = g.getGridPosition()[1] + dist;
-      if(g.getMoveDir()[7]) //if moving right on the screen
-        hypoPos[1] = g.getGridPosition()[1] - dist;
-
-      dist = sqrt( pow(hypoPos[0] - g.getGridPosition()[0],2) + pow(hypoPos[1] - g.getGridPosition()[1],2));
-      fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
-      atEdge = true;
-    }
- 
-    //Check max Y border
-    /*else if(getIndexAt(hypoPos+g.getSprite().getSize())==-4 ){
-         std::cerr<< getIndexAt(hypoPos+g.getSprite().getSize()) << std::endl;
-      hypoPos[1] = mapHeight * getGridTileHeight();
-      dist = hypoPos[1] - g.getGridPosition()[1];
-
-      if(g.getMoveDir()[3]) //if moving down on the screen
-        hypoPos[0] = g.getGridPosition()[0] + dist;
-      if(g.getMoveDir()[7]) //if moving right on the screen
-        hypoPos[0] = g.getGridPosition()[0] - dist;
-
-      dist = sqrt( pow(hypoPos[0] - g.getGridPosition()[0],2) + pow(hypoPos[1] - g.getGridPosition()[1],2));
-      fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
-      atEdge = true;
-    }*/
-
-    // JOHN'S SUPER HACKY MOVEMENT CODE XXX TODO I'M SO SORRY
-    else if(getIndexAt(hypoPos+g.getSprite().getSize()) ==-4)
-     {
-         hypoPos =g.getGridPosition();
-         fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
-         atEdge = true;
-     }
-
-    //Check min Y border
-    else if(hypoPos[1] < 0){
-      hypoPos[1] = 0;
-      dist = 0.-g.getGridPosition()[1];
-
-      if(g.getMoveDir()[0]) //if moving down on the screen
-        hypoPos[0] = g.getGridPosition()[0] + dist;
-      if(g.getMoveDir()[6]) //if moving right on the screen
-        hypoPos[0] = g.getGridPosition()[0] - dist;
-
-      dist = sqrt( pow(hypoPos[0] - g.getGridPosition()[0],2) + pow(hypoPos[1] - g.getGridPosition()[1],2));
-      fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
-      atEdge = true;
+    std::vector<Vector2f> movebox = g.getMoveboxVertices();
+    //check each corner of the movebox
+    for(int i=0; i<4; ++i){
+    	if(!findTileAt(movebox[i] + hypoIncr).isCollidable()){
+	    validPos = g.getGridPosition();
+	    atEdge = true;
+	}
     }
 
-    return hypoPos;
+    //check midpoints between corners
+    float diffX = movebox[1][0] - movebox[0][0];  
+    float diffY = movebox[2][1] - movebox[0][1];  
+    if(!findTileAt(movebox[0] + Vector2f(diffX/2.,0) + hypoIncr).isCollidable()
+		||!findTileAt(movebox[0] + Vector2f(0,diffY/2.) + hypoIncr).isCollidable()
+		||!findTileAt(movebox[0] + Vector2f(diffX,diffY/2.) + hypoIncr).isCollidable()
+		||!findTileAt(movebox[0] + Vector2f(diffX/2.,diffY) + hypoIncr).isCollidable()){
+        validPos = g.getGridPosition();
+        atEdge = true;
+    }
+
+    float dist = sqrt( pow(validPos[0] - g.getGridPosition()[0],2) + pow(validPos[1] - g.getGridPosition()[1],2));
+    fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
+
+
+    return validPos;
 }
 
 
@@ -355,8 +342,8 @@ void MapManager::drawGridElements(int index) const {
     {
 
         /* If enabled will draw a box around the sprite boundaries */
-#define HITBOX
-#ifdef HITBOX
+	#define HITBOX
+        #ifdef HITBOX
         SDL_Rect rect;
         Uint32 color;
                  
@@ -366,10 +353,44 @@ void MapManager::drawGridElements(int index) const {
         rect.h= (*it)->getSprite().getH();
         color = SDL_MapRGB(IOManager::getInstance().getScreen()->format,0,0,0);
         SDL_FillRect(IOManager::getInstance().getScreen(), &rect, color);
-#endif
-        
-         
+
+	SDL_Rect gp;
+        gp.x = (*it)->getPosition()[0] - Viewport::getInstance().X();
+        gp.y = (*it)->getPosition()[1]- Viewport::getInstance().Y();
+        gp.w = 10;
+        gp.h= 10;
+        Uint32 color2 = SDL_MapRGB(IOManager::getInstance().getScreen()->format,255,0,0);
+        SDL_FillRect(IOManager::getInstance().getScreen(), &gp, color2);
+ 
+	SDL_Rect c;
+        c.x = (*it)->getPosition()[0] + (*it)->getSprite().getW()/2 - Viewport::getInstance().X();
+        c.y = (*it)->getPosition()[1]- Viewport::getInstance().Y();
+        c.w = 10;
+        c.h= 10;
+        color2 = SDL_MapRGB(IOManager::getInstance().getScreen()->format,255,255,0);
+        SDL_FillRect(IOManager::getInstance().getScreen(), &c, color2);
+ 
+	SDL_Rect e;
+        e.x = (*it)->getPosition()[0] + (*it)->getSprite().getW() - Viewport::getInstance().X();
+        e.y = (*it)->getPosition()[1]- Viewport::getInstance().Y();
+        e.w = 10;
+        e.h= 10;
+        color2 = SDL_MapRGB(IOManager::getInstance().getScreen()->format,0,0,255);
+        SDL_FillRect(IOManager::getInstance().getScreen(), &e, color2);
+
         (*it)->draw();
+
+	for(int i=0; i<4; ++i){
+	    SDL_Rect mb;
+            mb.x = gridToWorld((*it)->getMoveboxVertex(i))[0] - Viewport::getInstance().X();
+            mb.y = gridToWorld((*it)->getMoveboxVertex(i))[1] - Viewport::getInstance().Y();
+	    mb.w = 10;
+	    mb.h= 10;
+	    Uint32 color2 = SDL_MapRGB(IOManager::getInstance().getScreen()->format,0,255,0);
+            SDL_FillRect(IOManager::getInstance().getScreen(), &mb, color2);
+	} 
+         
+        #endif
 
     }
 }
@@ -406,9 +427,19 @@ void MapManager::update(Uint32& ticks) {
                    element->update(ticks);
   
                     
-                   try {tempVec[getIndexAt(element->getGridPosition()+element->getSprite().getSize())].push_back(element); }
+                   //try {tempVec[getIndexAt(element->getGridPosition()+element->getSprite().getSize())].push_back(element); }
+
+		   //Find the max index between the bottom corner of the movebox and the bottom right corner of the gridSprite
+    		   float diffX = gridToWorld(element->getMoveboxVertices()[2])[0] - gridToWorld(element->getMoveboxVertices()[3])[0];
+		   int index = std::max(getIndexAt(worldToGrid(gridToWorld(element->getMoveboxVertices()[3]))),
+					getIndexAt(worldToGrid(gridToWorld(element->getMoveboxVertices()[3]) + Vector2f(diffX,0))));
+
+		   index = std::max(index,getIndexAt(worldToGrid(gridToWorld(element->getMoveboxVertices()[3]) + Vector2f(diffX/2.,0))));
+		   index = std::max(index,getIndexAt(worldToGrid(gridToWorld(element->getMoveboxVertices()[3]) + Vector2f(-diffX/2.,0))));
+
+                   try {tempVec[index].push_back(element); }
                    catch(const std::out_of_range& e) {
-                       std::cerr << "Tried to access GridElement at index " << getIndexAt(element->getGridPosition()+element->getSprite().getSize()) << std::endl;
+                       std::cerr << "Tried to access GridElement at index " << index << std::endl;
                    }
                }
            }
@@ -424,15 +455,14 @@ void MapManager::update(Uint32& ticks) {
 // -3 = maxX
 // -4 = maxY
 int MapManager::getIndexAt(const Vector2f& coord) const {
-    int indexX = floor(coord[0]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)))-1;
-    int indexY = floor(coord[1]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)))-1;
-
+    int indexX = floor(coord[0]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)));
+    int indexY = floor(coord[1]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)));
 
     // Check for out of bounds index
-    if(indexX < 0) {std::cerr<<"1" << std::endl;return -1; } 
-    if(indexY < 0) {std::cerr<< "2" << std::endl;return -2; }
-    if(indexX >= mapWidth)  { std::cerr << "3" << std::endl; return -3; }
-    if(indexY >= mapHeight) { std::cerr << "4" << std::endl; return -4; }
+    if(indexX < 0) { return -1; } 
+    if(indexY < 0) { return -2; }
+    if(indexX >= mapWidth)  { return -3; }
+    if(indexY >= mapHeight) { return -4; }
 
     return indexX+(indexY*mapHeight);
 }
