@@ -42,6 +42,19 @@ MultiSprite::MultiSprite(const MultiSprite& s) :
   frameHeight( s.frameHeight )
   { }
 
+MultiSprite& MultiSprite::operator=(const MultiSprite& rhs) {
+    Drawable::operator=(rhs);
+    frames = std::vector<Frame*>(rhs.frames);
+    worldWidth = rhs.worldWidth;
+    worldHeight = rhs.worldHeight;
+    currentFrame = rhs.currentFrame;
+    numberOfFrames = rhs.numberOfFrames;
+    frameInterval = rhs.frameInterval;
+    timeSinceLastFrame = rhs.timeSinceLastFrame;
+    frameWidth = rhs.frameWidth;
+    frameHeight = rhs.frameHeight;
+}
+
 void MultiSprite::draw() const { 
   Uint32 x = static_cast<Uint32>(X());
   Uint32 y = static_cast<Uint32>(Y());

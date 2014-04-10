@@ -1,9 +1,5 @@
 #include "hudHealthBar.h"
 
-void HUDHealthBar::registerListeners() {
-    GameEvents::EventQueue::getInstance().addListener(GameEvents::DAMAGE_EVENT, static_cast<Listener*>(this), &HUDHPDamageForwarder); 
-    GameEvents::EventQueue::getInstance().addListener(GameEvents::MOVE_EVENT, static_cast<Listener*>(this), &HUDHPMoveForwarder); 
-}
 
 HUDHealthBar::HUDHealthBar(const std::string& name, const Vector2f& pos, bool vis,const std::string& sp) :
     HUDComponent(name, pos, vis),
@@ -42,6 +38,13 @@ void HUDHealthBar::draw() const {
     }
 }
 
+
+void HUDHealthBar::update(Uint32 ticks) {
+    (void)ticks;
+}
+
+/********** Event Handlers *************/
+
 void HUDHealthBar::onDamage(const GameEvents::Event e) {
     if(e.actor.compare(getName())==0)
     {
@@ -56,9 +59,9 @@ void HUDHealthBar::onMove(const GameEvents::Event e) {
     }
 }
 
-void HUDHealthBar::update(Uint32 ticks) {
-    (void)ticks;
-}
+/**********************************************************/
+
+/***** Forwarding functions for event handlers ******/
 
 // forwarding function for damage events
 void HUDHPDamageForwarder(Listener* context, const GameEvents::Event e) {
@@ -69,3 +72,12 @@ void HUDHPDamageForwarder(Listener* context, const GameEvents::Event e) {
 void HUDHPMoveForwarder(Listener* context, const GameEvents::Event e) {
     dynamic_cast<HUDHealthBar*>(context)->onMove(e);
 }
+
+/****************************************************/
+
+// Register a damage listener and a move listener
+void HUDHealthBar::registerListeners() {
+    GameEvents::EventQueue::getInstance().addListener(GameEvents::DAMAGE_EVENT, static_cast<Listener*>(this), &HUDHPDamageForwarder); 
+    GameEvents::EventQueue::getInstance().addListener(GameEvents::MOVE_EVENT, static_cast<Listener*>(this), &HUDHPMoveForwarder); 
+}
+
