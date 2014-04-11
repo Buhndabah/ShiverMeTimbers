@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include "hudClock.h"
+#include "gameEvents.h"
 
 HUDClock::HUDClock(const std::string& n, const Vector2f& p, bool v, int i) :
     HUDComponent(n,p,v),
@@ -66,6 +67,10 @@ void HUDClock::update(Uint32 ticks) {
         {
             if((startTime-totalTime/1000)==0)
             {
+                GameEvents::Event e;
+                e.type = GameEvents::ROUNDOVER_EVENT;
+                e.actor = getName();
+                GameEvents::EventQueue::getInstance().push(e);
                 pause();
             }
             strm << std::setfill('0') << std::setw(2) << (startTime - (totalTime/1000))/60 << ":"

@@ -25,7 +25,7 @@ public:
   }
 
 protected:
-  const std::vector<Frame *> frames;
+  std::vector<Frame *> frames;
   int worldWidth;
   int worldHeight;
 

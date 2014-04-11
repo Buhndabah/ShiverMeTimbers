@@ -18,8 +18,10 @@ MapManager& MapManager::getInstance() {
 }
 
 MapManager::MapManager(const std::string& fn) :
+    Listener(),
     parser(XMLParser::getInstance()),
     tiles(),
+    updateTiles(),
     mapLayers(),
     gridElements(),
     tileWidth(),
@@ -151,6 +153,7 @@ void MapManager::createLayers()
     std::vector<Tile> newLayer;
     std::string id;
     std::stringstream strm;
+    std::stringstream nameStrm;
     unsigned int tileIndex=0;
     std::string collision;
     unsigned int layerIndex=0;
@@ -193,8 +196,13 @@ void MapManager::createLayers()
             int offsetZ = layerIndex*tileRise;
             int tileLocX=  ((tileIndex/mapWidth)*tileWidth/2)-((tileIndex%mapWidth)*tileWidth/2)+offsetX;
             int tileLocY= ((tileIndex/mapHeight)*tileHeight/2)+((tileIndex%mapHeight)*tileHeight/2)+offsetY-offsetZ;
-
-            newLayer.push_back(Tile(id,tiles[id],Vector2f(tileLocX,tileLocY),collision.compare("true") ? true : false));
+            std::string strName;
+            nameStrm << tileLocX;
+            nameStrm >> strName;
+            nameStrm.clear();
+            nameStrm << tileLocY;
+            strName = strName + nameStrm.str(); 
+            newLayer.push_back(Tile(strName, id,tiles[id],Vector2f(tileLocX,tileLocY),collision.compare("true") ? true : false));
             tileIndex++;
         }
         mapLayers.push_back(newLayer);
@@ -217,12 +225,12 @@ void MapManager::createLayers()
     }
 
     // Create particle systems if a weather tag is present
-    for(std::vector<Tile*>::const_iterator weatherIt=topOfStack.begin(); weatherIt!=topOfStack.end();++weatherIt)
+    for(std::vector<Tile*>::iterator weatherIt=topOfStack.begin(); weatherIt!=topOfStack.end();++weatherIt)
     {
         if(weather.compare("snow")==0)
         {
             (*weatherIt)->addParticleSystem(2*tileHeight,weather);
-            
+            updateTiles.push_back((*weatherIt)); 
         }
     }
 }
@@ -278,15 +286,25 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
 	}
     }
 
+    Tile tile;
     //check midpoints between corners
     float diffX = movebox[1][0] - movebox[0][0];  
     float diffY = movebox[2][1] - movebox[0][1];  
-    if(!findTileAt(movebox[0] + Vector2f(diffX/2.,0) + hypoIncr).isCollidable()
-		||!findTileAt(movebox[0] + Vector2f(0,diffY/2.) + hypoIncr).isCollidable()
-		||!findTileAt(movebox[0] + Vector2f(diffX,diffY/2.) + hypoIncr).isCollidable()
-		||!findTileAt(movebox[0] + Vector2f(diffX/2.,diffY) + hypoIncr).isCollidable()){
+    if(!(tile = Tile(findTileAt(movebox[0] + Vector2f(diffX/2.,0) + hypoIncr))).isCollidable()
+		||!(tile = Tile(findTileAt(movebox[0] + Vector2f(0,diffY/2.) + hypoIncr))).isCollidable()
+		||!(tile = Tile(findTileAt(movebox[0] + Vector2f(diffX,diffY/2.) + hypoIncr))).isCollidable()
+		||!(tile = Tile(findTileAt(movebox[0] + Vector2f(diffX/2.,diffY) + hypoIncr))).isCollidable()){
         validPos = g.getGridPosition();
         atEdge = true;
+    }
+    else
+    {
+        GameEvents::Event e;
+        e.type = GameEvents::COLLIDE_EVENT;
+        e.actor = g.getName();
+        e.subject = tile.getName();
+        e.location = g.getPosition();
+        GameEvents::EventQueue::getInstance().push(e);
     }
 
     float dist = sqrt( pow(validPos[0] - g.getGridPosition()[0],2) + pow(validPos[1] - g.getGridPosition()[1],2));
@@ -328,7 +346,8 @@ void MapManager::draw() const {
                     index = i+ ((i+1)%mapWidth)*(mapWidth-1) +(j*(mapWidth-1));
                  }
                 (*it)[index].draw();
-                drawGridElements(index);
+                if(it==(mapLayers.begin()))
+                    drawGridElements(index);
              }
          }
     }
@@ -398,12 +417,16 @@ void MapManager::drawGridElements(int index) const {
 void MapManager::update(Uint32& ticks) {
 
     // update each tile in each layer
-    for(std::list<std::vector<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
+    /*for(std::list<std::vector<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
     {   
         for(std::vector<Tile>::const_iterator layer_it = (*it).begin(); layer_it != (*it).end(); ++layer_it)
         {
             (*layer_it).update(ticks);
         }
+    }*/
+    for(std::list<Tile*>::const_iterator it=updateTiles.begin(); it!= updateTiles.end(); ++it)
+    {
+        (*it)->update(ticks);
     }
 
     // This is a temp list used to store GridElements as we sort them by index
@@ -473,3 +496,4 @@ void MapManager::displayData() const {
     parser.displayData();
 }
 
+void MapManager::registerListeners() {}

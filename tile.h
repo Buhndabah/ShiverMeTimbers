@@ -7,8 +7,9 @@
 
 class Tile {
 public:
+    Tile();
     Tile(const std::string&, const Vector2f&);
-    Tile(const std::string&, const std::string&, const Vector2f&, const bool);
+    Tile(const std::string&, const std::string&, const std::string&, const Vector2f&, const bool);
     Tile(const Tile& t);
     ~Tile(){ delete sprite; delete particleSys;} ;  
     Tile& operator=(const Tile&);
@@ -20,8 +21,10 @@ public:
     bool isCollidable() const { return collidable; }
     void addParticleSystem(int, const std::string&);
     const std::string& getId() const { return id; }
+    const std::string& getName() const { return name; }
     bool pointOn(const Vector2f&) const;
 private:
+    std::string name;
     std::string id;
     Sprite *sprite;
     bool collidable;

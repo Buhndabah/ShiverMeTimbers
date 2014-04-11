@@ -4,7 +4,8 @@
 #include "frameFactory.h"
 #include "gameEvents.h"
 
-GridElement::GridElement(const std::string& name) :
+GridElement::GridElement(const std::string& name, int stratNum) :
+  Listener(),
   moveSpeed(Gamedata::getInstance().getXmlFloat(name+"MoveSpeed")),
   gridSprite(name),
   gridPosition(100,100),
@@ -13,7 +14,8 @@ GridElement::GridElement(const std::string& name) :
   curHP(100),
   map(MapManager::getInstance()),
   moveDir(),
-  moveboxVertices()
+  moveboxVertices(),
+  myStrat(NULL)
 {
   //gridSprite.setPosition(map.getOrigin());//+Vector2f(-5,40));//-Vector2f(0,gridSprite.getH())+Vector2f(-5,40));
   gridSprite.setPosition(map.gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
@@ -32,9 +34,20 @@ GridElement::GridElement(const std::string& name) :
   moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
   moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(0,gridSprite.getH() * .5)));
 
+  switch(stratNum) {
+      case(CHASE_STRAT):
+          myStrat = new ChaseStrategy(this);
+          break;
+      default:
+          myStrat = NULL;
+          break;
+  }
+  if(myStrat) 
+      myStrat->init();
 }
 
 GridElement::GridElement(const GridElement& g) :
+  Listener(g),
   moveSpeed(g.moveSpeed),
   gridSprite(g.gridSprite),
   gridPosition(g.gridPosition),
@@ -43,19 +56,42 @@ GridElement::GridElement(const GridElement& g) :
   curHP(g.curHP),
   map(MapManager::getInstance()),
   moveDir(g.moveDir),
-  moveboxVertices(g.moveboxVertices)
-{}
+  moveboxVertices(g.moveboxVertices),
+  myStrat(g.myStrat)
+{
+    if(myStrat) myStrat->init();
+}
+
+GridElement& GridElement::operator=(const GridElement& g) {
+    if(this == &g) return *this;
+    Listener::operator=(g);
+    moveSpeed = g.moveSpeed;
+    gridSprite = MultiSprite(g.gridSprite);
+    gridPosition = g.gridPosition;
+    gridVelocity = g.gridVelocity;
+    maxHP = g.maxHP;
+    curHP = g.curHP;
+    moveDir = g.moveDir;
+    moveboxVertices = g.moveboxVertices;
+    myStrat = g.myStrat->clone();
+    return *this;
+}
 
 void GridElement::setMoveboxVertex(int indx, Vector2f vert){
  moveboxVertices[indx] = vert;
 }
 
 void GridElement::onDamage(int damage) {
-  curHP-=damage;
-  if(curHP < 0)
-  {
-      curHP=maxHP;
-  }
+    curHP-=damage;
+    if(curHP < 0)
+    {
+        GameEvents::Event d;
+        d.type = GameEvents::DEATH_EVENT;
+        d.actor = getName();
+        d.location = getPosition();
+        GameEvents::EventQueue::getInstance().push(d);
+        curHP=maxHP;
+    }
 
     // push new damage event
     GameEvents::Event e;
@@ -91,13 +127,14 @@ void GridElement::update(Uint32 ticks) {
     moveboxVertices[i] = moveboxVertices[i] + diff;
   }
   // send off a move event
-  GameEvents::Event e;
-  e.type = GameEvents::MOVE_EVENT;
-  e.actor = getName();
-  e.location = getPosition();
-  e.direction = incr;
-  GameEvents::EventQueue::getInstance().push(e);
-
+  //if(incr[0] != 0.0 && incr[1] != 0.0) {
+    GameEvents::Event e;
+    e.type = GameEvents::MOVE_EVENT;
+    e.actor = getName();
+    e.location = getPosition();
+    e.direction = incr;
+    GameEvents::EventQueue::getInstance().push(e);
+    //}
   if(atEdge)
     stop();
 }
@@ -204,3 +241,4 @@ void GridElement::stop() {
   gridVelocityY(0.);
 }
 
+void GridElement::registerListeners() {}

@@ -46,6 +46,7 @@ Manager::Manager() :
 
   player = new GridElement("coolyeti"); // deleted by the mapManager
   map.addGridElement(player);
+  map.addGridElement(new GridElement("snowball",CHASE_STRAT));
   hud.addHealthBar(player->getName(), Vector2f(0, -10));
 //  snowballs.push_back(new MultiSprite("spinsnowball"));
   //snowballs.push_back(new MultiSprite("coolyeti"));
@@ -55,8 +56,7 @@ Manager::Manager() :
   //snowballs.push_back(new RotateSprite("penguin"));
   for(int i=0; i<numSnowballs; ++i)
 	snowballs.push_back(new Sprite("snowball"));
-//  viewport.setObjectToTrack(snowballs[currentSprite]);
-  viewport.setObjectToTrack(&player->getSprite());
+  viewport.setObjectToTrack(&(player->getSprite()));
 //  viewport.setObjectToTrack(snowballs[1]);
 }
 
@@ -82,6 +82,7 @@ void Manager::update() {
   ++clock;
   Uint32 ticks = clock.getElapsedTicks();
   //player->update(ticks);
+  GameEvents::EventQueue::getInstance().prepEvents();
   std::vector<Drawable*>::iterator it = snowballs.begin();
   while(it != snowballs.end()){
 	(*it)->update(ticks);
@@ -101,9 +102,6 @@ void Manager::update() {
   map.update(ticks);
   hud.update(ticks);
   viewport.update();	//update the viewport last
-
-  // After everything's done updating, no need for current set of events
-  GameEvents::EventQueue::getInstance().clear();
 }
 
 void Manager::play() {

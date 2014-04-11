@@ -3,16 +3,19 @@
 #include <string>
 #include <vector>
 #include "vector2f.h"
+#include "listener.h"
 #include "multisprite.h"
 #include "mapManager.h"
+#include "strategy.h"
 
 class MapManager;
 
-class GridElement {
+class GridElement : public Listener{
 public:
-  GridElement(const std::string&);
+  GridElement(const std::string&, int strat = NONE);
   GridElement(const GridElement&);
-  virtual ~GridElement() {}
+  GridElement& operator=(const GridElement&);
+  virtual ~GridElement() { delete myStrat; }
 
 //  GridElement& operator=(const GridElement&);
   MultiSprite& getSprite(){
@@ -71,7 +74,9 @@ public:
 
 
 private:
+  virtual void registerListeners();
   void clearMoveDir();
+
   float moveSpeed;
   MultiSprite gridSprite;
   Vector2f gridPosition;
@@ -81,6 +86,7 @@ private:
   const MapManager& map; //the grid the gridElement is attached to
   std::vector<bool> moveDir; //boolean vector telling the gridElement which direction it is moving in
   std::vector<Vector2f> moveboxVertices; //Vector2f vector of vertices for the movement hitbox
+  Strategy* myStrat;
 };
 
 #endif
