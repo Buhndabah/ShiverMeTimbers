@@ -18,6 +18,7 @@ MapManager& MapManager::getInstance() {
 }
 
 MapManager::MapManager(const std::string& fn) :
+    Listener(),
     parser(XMLParser::getInstance()),
     tiles(),
     updateTiles(),
@@ -152,6 +153,7 @@ void MapManager::createLayers()
     std::vector<Tile> newLayer;
     std::string id;
     std::stringstream strm;
+    std::stringstream nameStrm;
     unsigned int tileIndex=0;
     std::string collision;
     unsigned int layerIndex=0;
@@ -194,8 +196,13 @@ void MapManager::createLayers()
             int offsetZ = layerIndex*tileRise;
             int tileLocX=  ((tileIndex/mapWidth)*tileWidth/2)-((tileIndex%mapWidth)*tileWidth/2)+offsetX;
             int tileLocY= ((tileIndex/mapHeight)*tileHeight/2)+((tileIndex%mapHeight)*tileHeight/2)+offsetY-offsetZ;
-
-            newLayer.push_back(Tile(id,tiles[id],Vector2f(tileLocX,tileLocY),collision.compare("true") ? true : false));
+            std::string strName;
+            nameStrm << tileLocX;
+            nameStrm >> strName;
+            nameStrm.clear();
+            nameStrm << tileLocY;
+            strName = strName + nameStrm.str(); 
+            newLayer.push_back(Tile(strName, id,tiles[id],Vector2f(tileLocX,tileLocY),collision.compare("true") ? true : false));
             tileIndex++;
         }
         mapLayers.push_back(newLayer);
@@ -279,15 +286,25 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
 	}
     }
 
+    Tile tile;
     //check midpoints between corners
     float diffX = movebox[1][0] - movebox[0][0];  
     float diffY = movebox[2][1] - movebox[0][1];  
-    if(!findTileAt(movebox[0] + Vector2f(diffX/2.,0) + hypoIncr).isCollidable()
-		||!findTileAt(movebox[0] + Vector2f(0,diffY/2.) + hypoIncr).isCollidable()
-		||!findTileAt(movebox[0] + Vector2f(diffX,diffY/2.) + hypoIncr).isCollidable()
-		||!findTileAt(movebox[0] + Vector2f(diffX/2.,diffY) + hypoIncr).isCollidable()){
+    if(!(tile = Tile(findTileAt(movebox[0] + Vector2f(diffX/2.,0) + hypoIncr))).isCollidable()
+		||!(tile = Tile(findTileAt(movebox[0] + Vector2f(0,diffY/2.) + hypoIncr))).isCollidable()
+		||!(tile = Tile(findTileAt(movebox[0] + Vector2f(diffX,diffY/2.) + hypoIncr))).isCollidable()
+		||!(tile = Tile(findTileAt(movebox[0] + Vector2f(diffX/2.,diffY) + hypoIncr))).isCollidable()){
         validPos = g.getGridPosition();
         atEdge = true;
+    }
+    else
+    {
+        GameEvents::Event e;
+        e.type = GameEvents::COLLIDE_EVENT;
+        e.actor = g.getName();
+        e.subject = tile.getName();
+        e.location = g.getPosition();
+        GameEvents::EventQueue::getInstance().push(e);
     }
 
     float dist = sqrt( pow(validPos[0] - g.getGridPosition()[0],2) + pow(validPos[1] - g.getGridPosition()[1],2));
@@ -479,3 +496,4 @@ void MapManager::displayData() const {
     parser.displayData();
 }
 
+void MapManager::registerListeners() {}

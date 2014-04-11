@@ -1,13 +1,23 @@
 #include "tile.h"
 
+Tile::Tile() :
+    name("uninitialized tile"),
+    id(),
+    sprite(NULL),
+    collidable(false),
+    particleSys(NULL)
+{ }
+
 Tile::Tile(const std::string& s, const Vector2f& v) :
+    name("uninitialized tile"),
     id("0"),
     sprite(new Sprite(s,v, Vector2f(0,0))),
     collidable(false),
     particleSys(NULL)
 { }
 
-Tile::Tile(const std::string& i, const std::string& s, const Vector2f&v, const bool b) :
+Tile::Tile(const std::string& n, const std::string& i, const std::string& s, const Vector2f&v, const bool b) :
+    name(n),
     id(i),
     sprite(new Sprite(s,v, Vector2f(0,0))),
     collidable(b),
@@ -15,6 +25,7 @@ Tile::Tile(const std::string& i, const std::string& s, const Vector2f&v, const b
 { }
 
 Tile::Tile(const Tile& t) :
+    name(t.name),
     id(t.id),
     sprite(new Sprite(*(t.sprite))),
     collidable(t.collidable),
@@ -31,6 +42,7 @@ Tile& Tile::operator=(const Tile& rhs) {
     id=rhs.id;
 
     delete sprite;
+    name = rhs.name;
     sprite = new Sprite(*(rhs.sprite));
     collidable = rhs.collidable;
     if(rhs.particleSys) {

@@ -8,7 +8,7 @@
 
 class GridElement;
 
-class MapManager {
+class MapManager : public Listener {
 public:
     static MapManager& getInstance();
     void displayData() const;
@@ -37,6 +37,7 @@ public:
     Vector2f getOrigin() const;
     Vector2f gridToWorld(Vector2f) const;
     Vector2f worldToGrid(Vector2f) const;
+
 
 private:
     MapManager(const std::string& fn = "xmlSpec/testMap.xml");
@@ -67,6 +68,6 @@ private:
     int mapWidth;
     int mapHeight;
     std::string weather;
-
+    virtual void registerListeners();
 };
 #endif

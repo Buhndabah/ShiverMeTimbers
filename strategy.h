@@ -4,7 +4,8 @@
 
 enum strats {
     NONE,
-    CHASE_STRAT
+    CHASE_STRAT,
+    BULLET_STRAT
 };
 
 class GridElement;

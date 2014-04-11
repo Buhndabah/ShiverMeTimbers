@@ -16,14 +16,15 @@ enum types {
     COLLIDE_EVENT,
     DEATH_EVENT,
     ROUNDOVER_EVENT,
-    TYPES_MAX = 5
+    CREATEGRIDELEMENT_EVENT,
+    TYPES_MAX = 6
 };
 
 // Structure for holding data about event
 struct Event {
     int type;
     std::string actor;
-
+    std::string subject;
     std::list<float> data;
     Vector2f location;
     Vector2f direction;
@@ -31,6 +32,7 @@ struct Event {
     Event() : 
         type(),
         actor(),
+        subject(),
         data(),
         location(),
         direction()
