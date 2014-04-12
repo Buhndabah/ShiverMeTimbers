@@ -62,6 +62,8 @@ Manager::Manager() :
 
 
 void Manager::draw() const {
+  Uint32 backColor = SDL_MapRGB(screen->format, 100,100,100);
+  SDL_FillRect(screen, NULL, backColor);
   world.draw();
   map.draw();
   //player->draw();
