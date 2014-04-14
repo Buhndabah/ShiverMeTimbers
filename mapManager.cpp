@@ -66,6 +66,7 @@ MapManager::MapManager(const std::string& fn) :
 
     createTiles();
     createLayers();
+    registerListeners();
 }
 
 MapManager::~MapManager() {
@@ -126,7 +127,6 @@ void MapManager::addGridElement(GridElement* gridE) {
 					getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(diffX,0))));
     index = std::max(index,getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(diffX/2.,0))));
     index = std::max(index,getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(-diffX/2.,0))));
-
 
     try{ gridElements[index].push_back(gridE); }
     catch(const std::out_of_range& e) {
@@ -299,12 +299,7 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
     }
     else
     {
-        GameEvents::Event e;
-        e.type = GameEvents::COLLIDE_EVENT;
-        e.actor = g.getName();
-        e.subject = tile.getName();
-        e.location = g.getPosition();
-        GameEvents::EventQueue::getInstance().push(e);
+        GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), tile.getName(), g.getPosition()));
     }
 
     float dist = sqrt( pow(validPos[0] - g.getGridPosition()[0],2) + pow(validPos[1] - g.getGridPosition()[1],2));
@@ -424,6 +419,7 @@ void MapManager::update(Uint32& ticks) {
             (*layer_it).update(ticks);
         }
     }*/
+    // Update only important tiles
     for(std::list<Tile*>::const_iterator it=updateTiles.begin(); it!= updateTiles.end(); ++it)
     {
         (*it)->update(ticks);
@@ -496,4 +492,19 @@ void MapManager::displayData() const {
     parser.displayData();
 }
 
-void MapManager::registerListeners() {}
+// Forwarding function creation events
+void MapCreateForwarder(Listener* context, const GameEvents::Event *e) {
+    const GameEvents::CreateEvent *c = dynamic_cast<const GameEvents::CreateEvent*>(e);
+    if(e->getSource().compare("map") ==0) 
+        return;   // don't respond to events we generate
+    else {
+        // Add a new grid element
+        dynamic_cast<MapManager*>(context)->addGridElement(new GridElement(c->getSprite(), dynamic_cast<MapManager*>(context)->worldToGrid(e->getPosition()), Vector2f(10,0), c->getStrat()));
+        // And then alert everyone it's been created
+    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent("map", c->getSprite(), e->getPosition(), c->getDir(), c->getStrat()));
+    }
+}
+
+void MapManager::registerListeners() {
+    GameEvents::EventQueue::getInstance().addListener(GameEvents::CREATE_EVENT, static_cast<Listener*>(this), &MapCreateForwarder);
+}

@@ -62,6 +62,8 @@ Manager::Manager() :
 
 
 void Manager::draw() const {
+  Uint32 backColor = SDL_MapRGB(screen->format, 100,100,100);
+  SDL_FillRect(screen, NULL, backColor);
   world.draw();
   map.draw();
   //player->draw();
@@ -110,13 +112,14 @@ void Manager::play() {
   bool done = false;
   bool keyCatch = false;
 
-  bool w,a,s,d;
-  w = a = s = d = false;
+  bool w,a,s,d,space,shot;
+  w = a = s = d = space = shot = false;
 
   while ( not done ) {
 
 //std::cout << "display: " << player->getSprite().getPosition() << std::endl;
 //std::cout << "grid: " << player->getGridPosition() << std::endl;
+
 
     //adjust the player's velocity according to the key(s) being held down
     if(w){
@@ -147,6 +150,12 @@ void Manager::play() {
     SDL_PollEvent(&event);
     Uint8 *keystate = SDL_GetKeyState(NULL);
 
+    // check for shots fired
+    if(space&&!shot){
+        player->shoot();
+        shot = true;
+    }
+
     if (event.type ==  SDL_QUIT) { done = true; break; }
     if(event.type == SDL_KEYUP) {
       //when a key is lifted, check to see if it was a movement button
@@ -154,7 +163,7 @@ void Manager::play() {
       if(!keystate[SDLK_a]&&!keystate[SDLK_LEFT]) a = false;
       if(!keystate[SDLK_s]&&!keystate[SDLK_DOWN]) s = false;
       if(!keystate[SDLK_d]&&!keystate[SDLK_RIGHT]) d = false;
-
+      if(!keystate[SDLK_SPACE]) { space = false; shot = false; }
       keyCatch = false;
     }
     if(event.type == SDL_KEYDOWN) {
@@ -189,7 +198,7 @@ void Manager::play() {
       // XXX damage testing
       if(keystate[SDLK_r] && !keyCatch) {
           keyCatch= true;
-          player->onDamage(10);
+          //player->onDamage(10);
       }
       //change tracking sprite
       if (keystate[SDLK_t] && !keyCatch) {
@@ -204,28 +213,26 @@ void Manager::play() {
 
       //rotate RotateSprite's
       if (keystate[SDLK_r] && !keyCatch) {
-	keyCatch = true;
-	Gamedata::getInstance().setRoto(!Gamedata::getInstance().getRoto());
+	    keyCatch = true;
+	    Gamedata::getInstance().setRoto(!Gamedata::getInstance().getRoto());
       }
 
       //check for player movement input
       if (keystate[SDLK_w]||keystate[SDLK_UP]){
-        keyCatch = true;
         w = true;
       }
       if (keystate[SDLK_a]||keystate[SDLK_LEFT]){
-        keyCatch = true;
         a = true;
       }
       if (keystate[SDLK_s]||keystate[SDLK_DOWN]){
-        keyCatch = true;
         s = true;
       }
       if (keystate[SDLK_d]||keystate[SDLK_RIGHT]){
-        keyCatch = true;
         d = true;
       }
-
+      if (keystate[SDLK_SPACE]){
+          space = true;
+      }
     }
 
     draw();
