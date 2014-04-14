@@ -34,9 +34,60 @@ GridElement::GridElement(const std::string& name, int stratNum) :
   moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
   moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(0,gridSprite.getH() * .5)));
 
+
+
   switch(stratNum) {
       case(CHASE_STRAT):
           myStrat = new ChaseStrategy(this);
+          break;
+      case(BULLET_STRAT):
+          myStrat = new BulletStrategy(this);
+          break;
+      default:
+          myStrat = NULL;
+          break;
+  }
+  if(myStrat) 
+      myStrat->init();
+}
+
+GridElement::GridElement(const std::string& name, const Vector2f& pos, const Vector2f& dir, int stratNum) :
+    Listener(),
+    moveSpeed(Gamedata::getInstance().getXmlFloat(name+"MoveSpeed")),
+    gridSprite(name),
+    gridPosition(pos),
+    gridVelocity(0,0),
+    maxHP(100),
+    curHP(100),
+    map(MapManager::getInstance()),
+    moveDir(),
+    moveboxVertices(),
+    myStrat(NULL)
+{
+    gridSprite.setPosition(map.gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
+    moveDir.reserve(8);
+    for(int i=0; i<8; i++)
+    {
+        moveDir.push_back(false);
+    }
+
+    // fill in hitbox vertices
+  moveboxVertices.reserve(4);
+  Vector2f offset(gridSprite.getW() * 0.5, gridSprite.getH() * (2./3.));
+  offset += map.getOrigin();
+
+  Vector2f topcorner(gridPosition);
+  moveboxVertices.push_back(topcorner);
+  moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(-gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
+  moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
+  moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(0,gridSprite.getH() * .5)));
+
+  switch(stratNum) {
+      case(CHASE_STRAT):
+          myStrat = new ChaseStrategy(this);
+          break;
+      case(BULLET_STRAT):
+          myStrat = new BulletStrategy(this);
           break;
       default:
           myStrat = NULL;
@@ -81,26 +132,6 @@ void GridElement::setMoveboxVertex(int indx, Vector2f vert){
  moveboxVertices[indx] = vert;
 }
 
-void GridElement::onDamage(int damage) {
-    curHP-=damage;
-    if(curHP < 0)
-    {
-        GameEvents::Event d;
-        d.type = GameEvents::DEATH_EVENT;
-        d.actor = getName();
-        d.location = getPosition();
-        GameEvents::EventQueue::getInstance().push(d);
-        curHP=maxHP;
-    }
-
-    // push new damage event
-    GameEvents::Event e;
-    e.type = GameEvents::DAMAGE_EVENT;
-    e.actor = getName();
-    e.data.push_back(getHPRatio());
-    GameEvents::EventQueue::getInstance().push(e);
-
-}
 
 void GridElement::draw() const {
   gridSprite.draw();
@@ -128,12 +159,7 @@ void GridElement::update(Uint32 ticks) {
   }
   // send off a move event
   //if(incr[0] != 0.0 && incr[1] != 0.0) {
-    GameEvents::Event e;
-    e.type = GameEvents::MOVE_EVENT;
-    e.actor = getName();
-    e.location = getPosition();
-    e.direction = incr;
-    GameEvents::EventQueue::getInstance().push(e);
+    GameEvents::EventQueue::getInstance().push(new GameEvents::MoveEvent(getName(), getPosition(), incr));
     //}
   if(atEdge)
     stop();
@@ -241,4 +267,29 @@ void GridElement::stop() {
   gridVelocityY(0.);
 }
 
-void GridElement::registerListeners() {}
+void GridElement::shoot() {
+    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", getPosition(), getGridVelocity(), BULLET_STRAT));
+}
+
+void GridElement::onDamage(const GameEvents::DamageEvent *e) {
+    if(e->getSource().compare(getName()) ==0) return;   // don't respond to ourself
+    curHP-=e->getDamage();
+    if(curHP < 0)
+    {
+        GameEvents::EventQueue::getInstance().push(new GameEvents::DeathEvent(getName(), getPosition()));
+        curHP=maxHP;
+    }
+
+    // push new damage event
+    GameEvents::EventQueue::getInstance().push(new GameEvents::DamageEvent(getName(), getPosition(), getHPRatio()));
+
+}
+
+// Forwarding function for damage events
+void GridElementDamageForwarder(Listener* context, const GameEvents::Event *e) {
+    dynamic_cast<GridElement*>(context)->onDamage(dynamic_cast<const GameEvents::DamageEvent *>(e));
+}
+
+void GridElement::registerListeners() { 
+    GameEvents::EventQueue::getInstance().addListener(GameEvents::DAMAGE_EVENT, static_cast<Listener*>(this), &GridElementDamageForwarder);
+}

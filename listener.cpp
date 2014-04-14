@@ -10,8 +10,8 @@ Listener& Listener::operator=(const Listener& rhs)
     return *this;
 }
 
-void Listener::onDamage(GameEvents::Event e) {(void)e;}
-void Listener::onMove(GameEvents::Event e) {(void)e;}
-void Listener::onCollide(GameEvents::Event e) {(void)e;}
-void Listener::onDeath(GameEvents::Event e) {(void)e;}
-void Listener::onRoundOver(GameEvents::Event e) {(void)e;}
+void Listener::onDamage(GameEvents::DamageEvent *e) {(void)e;}
+void Listener::onMove(GameEvents::Event *e) {(void)e;}
+void Listener::onCollide(GameEvents::Event *e) {(void)e;}
+void Listener::onDeath(GameEvents::Event *e) {(void)e;}
+void Listener::onRoundOver(GameEvents::Event *e) {(void)e;}

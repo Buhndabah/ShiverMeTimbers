@@ -67,10 +67,7 @@ void HUDClock::update(Uint32 ticks) {
         {
             if((startTime-totalTime/1000)==0)
             {
-                GameEvents::Event e;
-                e.type = GameEvents::ROUNDOVER_EVENT;
-                e.actor = getName();
-                GameEvents::EventQueue::getInstance().push(e);
+                GameEvents::EventQueue::getInstance().push(new GameEvents::RoundOverEvent(getName()));
                 pause();
             }
             strm << std::setfill('0') << std::setw(2) << (startTime - (totalTime/1000))/60 << ":"

@@ -13,6 +13,7 @@ class MapManager;
 class GridElement : public Listener{
 public:
   GridElement(const std::string&, int strat = NONE);
+  GridElement(const std::string&, const Vector2f&, const Vector2f&, int strat = NONE);
   GridElement(const GridElement&);
   GridElement& operator=(const GridElement&);
   virtual ~GridElement() { delete myStrat; }
@@ -58,8 +59,6 @@ public:
   Vector2f getMoveboxVertex(int indx) const { return moveboxVertices[indx];}
   void setMoveboxVertex(int, Vector2f);
 
-  void onDamage(int damage);
-
   void draw() const;
   void update(Uint32 ticks);
   void moveUp();
@@ -71,7 +70,9 @@ public:
   void moveLeft();
   void moveRight();
   void stop();
+  void shoot();
 
+  virtual void onDamage(const GameEvents::DamageEvent *);
 
 private:
   virtual void registerListeners();
@@ -89,4 +90,5 @@ private:
   Strategy* myStrat;
 };
 
+void GridElementDamageForwarder(Listener*, const GameEvents::Event*);
 #endif
