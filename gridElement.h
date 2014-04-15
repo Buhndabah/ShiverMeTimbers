@@ -13,10 +13,10 @@ class MapManager;
 class GridElement : public Listener{
 public:
   GridElement(const std::string&, int strat = NONE);
-  GridElement(const std::string&, const Vector2f&, const Vector2f&, int strat = NONE);
+  GridElement(const std::string&, const Vector2f&, int dir, int strat = NONE);
   GridElement(const GridElement&);
   GridElement& operator=(const GridElement&);
-  virtual ~GridElement() { delete myStrat; }
+  virtual ~GridElement() { if(myStrat) delete myStrat; }
 
 //  GridElement& operator=(const GridElement&);
   MultiSprite& getSprite(){

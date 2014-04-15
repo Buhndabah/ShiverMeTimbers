@@ -7,12 +7,25 @@ EventQueue& EventQueue::getInstance() {
     return instance;
 }
 
+EventQueue::~EventQueue() {
+    while(!incoming.empty())
+    {
+    std::cerr<< " sorry" << std::endl;
+        delete incoming.front();
+        incoming.erase(incoming.begin());
+    }
+    while(!outgoing.empty())
+    {
+        delete outgoing.front();
+        outgoing.erase(outgoing.begin());
+    }
+}
+
 void EventQueue::prepEvents() {
     if(!incoming.empty()) {
         outgoing = std::list<Event*>(incoming);
         incoming.clear();
         notify();
-        outgoing.clear();
     }
 }
 
@@ -57,6 +70,10 @@ void EventQueue::notify() {
         {
             (*it2).second((*it2).first, (*it));
         }
+    }
+    while(!outgoing.empty()) {
+        delete outgoing.front();
+        outgoing.erase(outgoing.begin());
     }
 }
 }

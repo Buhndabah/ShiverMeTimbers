@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "strategy.h"
 #include "gridElement.h"
 
@@ -86,10 +87,40 @@ void ChaseStrategy::registerListeners() {
 
 /*********** Bullet Strategy ****************/
 
-BulletStrategy::BulletStrategy(GridElement* g) :
+BulletStrategy::BulletStrategy(GridElement* g, int dir) :
     Strategy(g)
 {
     init();
+    switch(dir) {
+        case 0:
+            g->moveUp();
+            break;
+        case 1:
+            g->moveUpLeft();
+            break;
+        case 2:
+            g->moveUpRight();
+            break;
+        case 3:
+            g->moveDown();
+            break;
+        case 4: 
+            g->moveDownLeft();
+            break;
+        case 5:
+            g->moveDownRight();
+            break;
+        case 6:
+            g->moveLeft();
+            break;
+        case 7:
+            g->moveRight();
+            break;
+        default:
+            std::cerr<< "Dir " << dir << std::endl;
+            throw std::string("Tried to create bullet with invalid direction ");
+            break;
+    }
 }
 
 void BulletStrategy::init() {

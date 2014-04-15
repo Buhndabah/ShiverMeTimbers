@@ -37,6 +37,7 @@ public:
     Vector2f getOrigin() const;
     Vector2f gridToWorld(Vector2f) const;
     Vector2f worldToGrid(Vector2f) const;
+    int getIndexAt(const Vector2f&) const;
 
 
 private:
@@ -48,7 +49,6 @@ private:
     void createTiles();
     void createLayers();
 
-    int getIndexAt(const Vector2f&) const;
 
 
     XMLParser& parser;

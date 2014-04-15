@@ -95,18 +95,18 @@ public:
 
 class CreateEvent : public Event {
 public:
-    CreateEvent(const std::string& from, const std::string& n, const Vector2f& pos, const Vector2f& dir, int st) :
+    CreateEvent(const std::string& from, const std::string& n, const Vector2f& pos, int dir, int st) :
         Event(CREATE_EVENT, from, pos),
         sprite(n),
         direction(dir),
         strat(st)
         { }
     std::string getSprite() const { return sprite; }
-    Vector2f getDir() const { return direction; }
+    int getDir() const { return direction; }
     int getStrat() const { return strat; }
 private:
     std::string sprite;
-    Vector2f direction;
+    int direction;
     int strat;
 };
 
@@ -116,6 +116,7 @@ private:
 class EventQueue {
 public:
     static EventQueue& getInstance();
+    ~EventQueue();
 
     void prepEvents();
     void push(Event* e) { incoming.push_back(e); }
