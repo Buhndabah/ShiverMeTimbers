@@ -41,7 +41,7 @@ public:
 
 
 private:
-    MapManager(const std::string& fn = "xmlSpec/basicMap.xml");
+    MapManager(const std::string& fn = "xmlSpec/test.xml");
 //    MapManager(const std::string& fn = "xmlSpec/wuh.xml");
     MapManager(const MapManager&);
     MapManager& operator=(const MapManager&);

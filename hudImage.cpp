@@ -1,3 +1,4 @@
+#include "viewport.h"
 #include "hudImage.h"
 
 HUDImage::HUDImage(const std::string& n, const Vector2f& p, bool v) :
@@ -50,6 +51,7 @@ void HUDImage::update(Uint32 ticks) {
         }
     }
     sprite->update(ticks);
+    sprite->setPosition(Vector2f(Viewport::getInstance().X()+getPosition()[0], Viewport::getInstance().Y()+getPosition()[1]));
 }
 
 Vector2f HUDImage::getSize() const{ 
