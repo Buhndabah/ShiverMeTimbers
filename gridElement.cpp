@@ -151,6 +151,7 @@ void GridElement::update(Uint32 ticks) {
   //recieve validated movement from the map
   Vector2f oldgridPos = gridPosition;
   bool atEdge = false;
+//  if(incr == Vector2f(0,0) && getName() == "snowball") std::cerr<< "WUHHHHHH?! WHY?!" << std::endl;
   gridPosition = map.validateMovement(*this, incr, fticks, atEdge);
 
   incr = getSprite().getVelocity() * fticks * 0.001;
@@ -272,7 +273,7 @@ void GridElement::stop() {
 void GridElement::shoot() {
     int i=0;
     for(i; i<moveDir.size(); ++i) { if(moveDir[i]) break; }
-    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", getPosition(), i, BULLET_STRAT));
+    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", getPosition() + Vector2f(-50,0), i, BULLET_STRAT));
     SoundManager::getInstance()[1];
 }
 

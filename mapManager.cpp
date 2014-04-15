@@ -271,6 +271,7 @@ const Tile& MapManager::findTileAt(const Vector2f& coord) const {
 /*Helper function*/
 void MapManager::collideGridEles(int tile, GridElement& g, Vector2f hypoIncr, Vector2f& validPos, bool& atEdge) const{
 		static bool print = true;
+		static int uh = -1;
     std::list<GridElement *>::const_iterator iter;
     for(iter = (gridElements[tile]).begin(); iter != (gridElements[tile]).end(); ++iter){
 	if(!(*iter)){
@@ -278,17 +279,69 @@ void MapManager::collideGridEles(int tile, GridElement& g, Vector2f hypoIncr, Ve
 	    break;
 	}
 	GridElement* test = *iter;
-	std::vector<Vector2f> movebox = g.getMoveboxVertices();
+	Vector2f tp = test->getSprite().getPosition();
+	float tw = test->getSprite().getW();
+	float th = test->getSprite().getH();
+
+	Vector2f gp = g.getSprite().getPosition();
+	float gw = g.getSprite().getW();
+	float gh = g.getSprite().getH();
+
+	if(((gp[0] > tp[0]) && (gp[0] < tp[0] + tw))
+		&& ((gp[1] > tp[1]) && (gp[1] < tp[1] + th))){
+			validPos = g.getGridPosition();
+			atEdge = true;
+			break;
+	}
+
+
+
+	if(((gp[0] + gw > tp[0]) && (gp[0] + gw < tp[0] + tw))
+		&& ((gp[1] > tp[1]) && (gp[1] < tp[1] + th))){
+	validPos = g.getGridPosition();
+	atEdge = true;
+	break;
+	}
+
+
+	if(((gp[0] > tp[0]) && (gp[0] < tp[0] + tw))
+		&& ((gp[1] + gh > tp[1]) && (gp[1] + gh < tp[1] + th))){
+			validPos = g.getGridPosition();
+			atEdge = true;
+			break;
+	}
+
+	if(((gp[0] + gw > tp[0]) && (gp[0] + gw < tp[0] + tw))
+		&& ((gp[1] + gh > tp[1]) && (gp[1] + gh < tp[1] + th))){
+			validPos = g.getGridPosition();
+			atEdge = true;
+			break;
+	}
+
+
+
+/*	std::vector<Vector2f> movebox = g.getMoveboxVertices();
 	std::vector<Vector2f> testmovebox = test->getMoveboxVertices();
 	for(int j=0; j<4; ++j){
 	    bool minX = (movebox[j] + hypoIncr)[0] >= (testmovebox[0])[0];
 	    bool minY = (movebox[j] + hypoIncr)[1] >= (testmovebox[0])[1];
 	    bool maxX = (movebox[j] + hypoIncr)[0] <= (testmovebox[1])[0];
 	    bool maxY = (movebox[j] + hypoIncr)[1] <= (testmovebox[2])[1];
+
 	    if(minX && minY && maxX && maxY){
 //		if(print){
+		if(j != uh){
+		uh = j;
 		std::cerr << " GRID ELE COLLISION!  " << j << std::endl;
+		for(int k=0; k<4; ++k) std::cerr << testmovebox[k] + hypoIncr << std::endl << std::endl;
+		std::cerr << std::endl;
+		for(int k=0; k<4; ++k) std::cerr << movebox[k] + hypoIncr << std::endl << std::endl;
 		print = false;
+		std::cerr << ";;;;;;;;;;;;;;;;;;;;;;;;" << std::endl;
+		std::cerr << "hypo: " << hypoIncr << std::endl;
+		std::cerr << movebox[j] << std::endl << std::endl;
+		std::cerr << movebox[j] - hypoIncr << std::endl << std::endl;
+		}
 //		}
 		validPos = g.getGridPosition();
 		atEdge = true;
@@ -296,6 +349,7 @@ void MapManager::collideGridEles(int tile, GridElement& g, Vector2f hypoIncr, Ve
             if(atEdge) break;
 	} 
         if(atEdge) break;
+*/
     }
 }
 
@@ -333,7 +387,11 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
     int homeIndex = getIndexAt(g.getMoveboxVertices()[0]);
     //int homeIndex = getIndexAt(g.getGridPosition());
     int i;
-
+for(i = 0; i < mapWidth * mapHeight; ++i){
+collideGridEles(i,g,hypoIncr,validPos,atEdge);
+//if(atEdge) break;
+}
+/*
    //check gridElements on 3 tiles in previous row
     for(i = homeIndex - mapWidth - 1; i <= homeIndex - mapWidth + 1; i++){
 	//if accessing an invalid index of the map,break
@@ -368,7 +426,7 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
 	if(atEdge) break;
     }
     }
-
+*/
 //    if(atEdge){
   //      Tile tile = Tile(findTileAt(validPos));
     //    GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), tile.getName(), g.getPosition()));
