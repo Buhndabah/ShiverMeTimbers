@@ -128,7 +128,9 @@ void MapManager::addGridElement(GridElement* gridE) {
     index = std::max(index,getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(diffX/2.,0))));
     index = std::max(index,getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(-diffX/2.,0))));
 
-    try{ gridElements[index].push_back(gridE); }
+
+
+    try{ gridElements.at(index).push_back(gridE); }
     catch(const std::out_of_range& e) {
         std::cerr << "Tried to add GridElement with name " << gridE->getSprite().getName() << " to map at invalid grid position " << gridE->gridX() << ", " << gridE->gridY() << std::endl;
     }
@@ -547,9 +549,10 @@ void MapCreateForwarder(Listener* context, const GameEvents::Event *e) {
     const GameEvents::CreateEvent *c = dynamic_cast<const GameEvents::CreateEvent*>(e);
     if(e->getSource().compare("map") ==0) 
         return;   // don't respond to events we generate
-    else {
+    else if(dynamic_cast<MapManager*>(context)->getIndexAt(dynamic_cast<MapManager*>(context)->worldToGrid(e->getPosition()))>0)
+    {
         // Add a new grid element
-        dynamic_cast<MapManager*>(context)->addGridElement(new GridElement(c->getSprite(), dynamic_cast<MapManager*>(context)->worldToGrid(e->getPosition()), Vector2f(10,0), c->getStrat()));
+        dynamic_cast<MapManager*>(context)->addGridElement(new GridElement(c->getSprite(), dynamic_cast<MapManager*>(context)->worldToGrid(e->getPosition()), c->getDir(), c->getStrat()));
         // And then alert everyone it's been created
     GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent("map", c->getSprite(), e->getPosition(), c->getDir(), c->getStrat()));
     }

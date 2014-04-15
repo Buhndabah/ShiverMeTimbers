@@ -41,7 +41,7 @@ GridElement::GridElement(const std::string& name, int stratNum) :
           myStrat = new ChaseStrategy(this);
           break;
       case(BULLET_STRAT):
-          myStrat = new BulletStrategy(this);
+          myStrat = new BulletStrategy(this,0);
           break;
       default:
           myStrat = NULL;
@@ -51,12 +51,12 @@ GridElement::GridElement(const std::string& name, int stratNum) :
       myStrat->init();
 }
 
-GridElement::GridElement(const std::string& name, const Vector2f& pos, const Vector2f& dir, int stratNum) :
+GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, int stratNum) :
     Listener(),
     moveSpeed(Gamedata::getInstance().getXmlFloat(name+"MoveSpeed")),
     gridSprite(name),
     gridPosition(pos),
-    gridVelocity(0,0),
+    gridVelocity(),
     maxHP(100),
     curHP(100),
     map(MapManager::getInstance()),
@@ -65,6 +65,7 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, const Vec
     myStrat(NULL)
 {
     gridSprite.setPosition(map.gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
+
     moveDir.reserve(8);
     for(int i=0; i<8; i++)
     {
@@ -75,7 +76,6 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, const Vec
   moveboxVertices.reserve(4);
   Vector2f offset(gridSprite.getW() * 0.5, gridSprite.getH() * (2./3.));
   offset += map.getOrigin();
-
   Vector2f topcorner(gridPosition);
   moveboxVertices.push_back(topcorner);
   moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(-gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
@@ -87,7 +87,7 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, const Vec
           myStrat = new ChaseStrategy(this);
           break;
       case(BULLET_STRAT):
-          myStrat = new BulletStrategy(this);
+          myStrat = new BulletStrategy(this,dir);
           break;
       default:
           myStrat = NULL;
@@ -259,7 +259,6 @@ void GridElement::moveRight() {
 }
 
 void GridElement::stop() {
-  clearMoveDir();
   getSprite().velocityX(0.);
   getSprite().velocityY(0.);
 
@@ -268,7 +267,9 @@ void GridElement::stop() {
 }
 
 void GridElement::shoot() {
-    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", getPosition(), getGridVelocity(), BULLET_STRAT));
+    int i=0;
+    for(i; i<moveDir.size(); ++i) { if(moveDir[i]) break; }
+    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", getPosition(), i, BULLET_STRAT));
 }
 
 void GridElement::onDamage(const GameEvents::DamageEvent *e) {

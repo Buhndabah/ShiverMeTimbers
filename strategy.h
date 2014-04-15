@@ -45,7 +45,7 @@ void chaseStratMoveForwarder(Listener*, const GameEvents::Event*);
 
 class BulletStrategy : public Strategy {
 public:
-      BulletStrategy(GridElement*);
+      BulletStrategy(GridElement*, int dir);
       virtual void init();
       virtual void registerListeners();
       //virtual void update(Uint32 ticks);

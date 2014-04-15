@@ -45,6 +45,8 @@ Tile& Tile::operator=(const Tile& rhs) {
     name = rhs.name;
     sprite = new Sprite(*(rhs.sprite));
     collidable = rhs.collidable;
+    if(particleSys)
+        delete particleSys;
     if(rhs.particleSys) {
         particleSys = new ParticleSystem(*(rhs.particleSys));
     }
