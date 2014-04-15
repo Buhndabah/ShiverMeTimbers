@@ -35,8 +35,8 @@
 	<element id="0" collision ="true"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
+        <element id="2" collision ="true"/>
+        <element id="2" collision ="true"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
 	<element id="0" collision ="true"/>
@@ -44,8 +44,8 @@
 	<element id="0" collision ="true"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
-        <element id="10" collision ="false"/>
+        <element id="2" collision ="true"/>
+        <element id="2" collision ="true"/>
         <element id="10" collision ="false"/>
         <element id="10" collision ="false"/>
 	<element id="0" collision ="true"/>

@@ -269,22 +269,33 @@ const Tile& MapManager::findTileAt(const Vector2f& coord) const {
 }
 
 /*Helper function*/
-void MapManager::collideGridEles(int i, GridElement& g, Vector2f& validPos, bool& atEdge) const{
+void MapManager::collideGridEles(int tile, GridElement& g, Vector2f hypoIncr, Vector2f& validPos, bool& atEdge) const{
+		static bool print = true;
     std::list<GridElement *>::const_iterator iter;
-    for(iter = (gridElements[i]).begin(); iter != (gridElements[i]).end(); ++iter){
-	GridElement test = *(*iter);
+    for(iter = (gridElements[tile]).begin(); iter != (gridElements[tile]).end(); ++iter){
+	if(!(*iter)){
+	    std::cerr << "that happened" << std::endl;
+	    break;
+	}
+	GridElement* test = *iter;
+	std::vector<Vector2f> movebox = g.getMoveboxVertices();
+	std::vector<Vector2f> testmovebox = test->getMoveboxVertices();
 	for(int j=0; j<4; ++j){
-	    std::vector<Vector2f> movebox = g.getMoveboxVertices();
-	    std::vector<Vector2f> testmovebox = test.getMoveboxVertices();
-	    if(movebox[j][0] > testmovebox[0][0]
-		&& movebox[j][0] < testmovebox[1][0]
-		&& movebox[j][1] > testmovebox[1][1]
-		&& movebox[j][1] < testmovebox[2][1]
-	    ){
+	    bool minX = (movebox[j] + hypoIncr)[0] >= (testmovebox[0])[0];
+	    bool minY = (movebox[j] + hypoIncr)[1] >= (testmovebox[0])[1];
+	    bool maxX = (movebox[j] + hypoIncr)[0] <= (testmovebox[1])[0];
+	    bool maxY = (movebox[j] + hypoIncr)[1] <= (testmovebox[2])[1];
+	    if(minX && minY && maxX && maxY){
+//		if(print){
+		std::cerr << " GRID ELE COLLISION!  " << j << std::endl;
+		print = false;
+//		}
 		validPos = g.getGridPosition();
 		atEdge = true;
 	    }
+            if(atEdge) break;
 	} 
+        if(atEdge) break;
     }
 }
 
@@ -317,42 +328,51 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
         validPos = g.getGridPosition();
         atEdge = true;
     }
-/*
+
     //check for collision with gridElements on neighboring tiles
-    int homeIndex = getIndexAt(g.getGridPosition());
+    int homeIndex = getIndexAt(g.getMoveboxVertices()[0]);
+    //int homeIndex = getIndexAt(g.getGridPosition());
     int i;
 
-    //check gridElements on 3 tiles in previous row
-    for(i = homeIndex - mapWidth - 1; i < homeIndex - mapWidth + 1; i++){
+   //check gridElements on 3 tiles in previous row
+    for(i = homeIndex - mapWidth - 1; i <= homeIndex - mapWidth + 1; i++){
 	//if accessing an invalid index of the map,break
 	if(i < 0 || i > mapWidth * mapHeight)
 	    continue;
 
-	collideGridEles(i,g,validPos,atEdge);
+	collideGridEles(i,g,hypoIncr,validPos,atEdge);
+	if(atEdge) break;
     }
 
     //check gridElements on 3 tiles in current row
-    for(i = homeIndex - 1; i < homeIndex + 1; i++){
+    if(!atEdge){
+    for(i = homeIndex - 1; i <= homeIndex + 1; i++){
 	//if accessing an invalid index of the map,break
 	if(i < 0 || i > mapWidth * mapHeight)
 	    continue;
 
-	collideGridEles(i,g,validPos,atEdge);
+	collideGridEles(i,g,hypoIncr,validPos,atEdge);
+	if(atEdge) break;
     }
+    }
+
 
     //check gridElements on 3 tiles in next row
-    for(i = homeIndex + mapWidth - 1; i < homeIndex + mapWidth + 1; i++){
+    if(!atEdge){
+    for(i = homeIndex + mapWidth - 1; i <= homeIndex + mapWidth + 1; i++){
 	//if accessing an invalid index of the map,break
 	if(i < 0 || i > mapWidth * mapHeight)
 	    continue;
 
-	collideGridEles(i,g,validPos,atEdge);
+	collideGridEles(i,g,hypoIncr,validPos,atEdge);
+	if(atEdge) break;
     }
-*/
-    if(atEdge){
-        Tile tile = Tile(findTileAt(validPos));
-        GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), tile.getName(), g.getPosition()));
     }
+
+//    if(atEdge){
+  //      Tile tile = Tile(findTileAt(validPos));
+    //    GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), tile.getName(), g.getPosition()));
+    //}
 
     float dist = sqrt( pow(validPos[0] - g.getGridPosition()[0],2) + pow(validPos[1] - g.getGridPosition()[1],2));
     fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
