@@ -3,6 +3,7 @@
 #include "gamedata.h"
 #include "frameFactory.h"
 #include "gameEvents.h"
+#include "soundManager.h"
 
 GridElement::GridElement(const std::string& name, int stratNum) :
   Listener(),
@@ -272,6 +273,7 @@ void GridElement::shoot() {
     int i=0;
     for(i; i<moveDir.size(); ++i) { if(moveDir[i]) break; }
     GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", getPosition(), i, BULLET_STRAT));
+    SoundManager::getInstance()[1];
 }
 
 void GridElement::onDamage(const GameEvents::DamageEvent *e) {

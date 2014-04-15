@@ -112,7 +112,7 @@
   <snowballSrcY>0</snowballSrcY>
   <snowballWidth>60</snowballWidth>
   <snowballHeight>60</snowballHeight>
-  <snowballMoveSpeed>200</snowballMoveSpeed>
+  <snowballMoveSpeed>20</snowballMoveSpeed>
   <snowballFrames>1</snowballFrames>
   <snowballFrameInterval>160</snowballFrameInterval>
   <snowballChunks>25</snowballChunks>

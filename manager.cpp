@@ -2,6 +2,7 @@
 #include <string>
 #include <iomanip>
 #include <math.h>
+#include "soundManager.h"
 #include "multisprite.h"
 #include "rotatesprite.h"
 #include "gamedata.h"
@@ -48,6 +49,7 @@ Manager::Manager() :
   map.addGridElement(player);
 //  map.addGridElement(new GridElement("snowball",CHASE_STRAT));
   hud.addHealthBar(player->getName(), Vector2f(0, -10));
+  SoundManager::getInstance();
 //  snowballs.push_back(new MultiSprite("spinsnowball"));
   //snowballs.push_back(new MultiSprite("coolyeti"));
 //  snowballs.push_back(player);
@@ -102,8 +104,8 @@ void Manager::update() {
   }
   world.update();
   map.update(ticks);
-  hud.update(ticks);
   viewport.update();	//update the viewport last
+  hud.update(ticks);
 }
 
 void Manager::play() {
@@ -219,15 +221,19 @@ void Manager::play() {
 
       //check for player movement input
       if (keystate[SDLK_w]||keystate[SDLK_UP]){
+        SoundManager::getInstance()[0];
         w = true;
       }
       if (keystate[SDLK_a]||keystate[SDLK_LEFT]){
+        SoundManager::getInstance()[0];
         a = true;
       }
       if (keystate[SDLK_s]||keystate[SDLK_DOWN]){
+        SoundManager::getInstance()[0];
         s = true;
       }
       if (keystate[SDLK_d]||keystate[SDLK_RIGHT]){
+        SoundManager::getInstance()[0];
         d = true;
       }
       if (keystate[SDLK_SPACE]){
