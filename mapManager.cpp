@@ -266,6 +266,25 @@ const Tile& MapManager::findTileAt(const Vector2f& coord) const {
     throw errMess;
 }
 
+/*Helper function*/
+void MapManager::collideGridEles(int i, GridElement& g, Vector2f& validPos, bool& atEdge) const{
+    std::list<GridElement *>::const_iterator iter;
+    for(iter = (gridElements[i]).begin(); iter != (gridElements[i]).end(); ++iter){
+	GridElement test = *(*iter);
+	for(int j=0; j<4; ++j){
+	    std::vector<Vector2f> movebox = g.getMoveboxVertices();
+	    std::vector<Vector2f> testmovebox = test.getMoveboxVertices();
+	    if(movebox[j][0] > testmovebox[0][0]
+		&& movebox[j][0] < testmovebox[1][0]
+		&& movebox[j][1] > testmovebox[1][1]
+		&& movebox[j][1] < testmovebox[2][1]
+	    ){
+		validPos = g.getGridPosition();
+		atEdge = true;
+	    }
+	} 
+    }
+}
 
 /* Checks if a position after the passed in hypothetical increase is within the grid
    If valid, return hypothetical position
@@ -286,19 +305,50 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
 	}
     }
 
-    Tile tile;
     //check midpoints between corners
     float diffX = movebox[1][0] - movebox[0][0];  
     float diffY = movebox[2][1] - movebox[0][1];  
-    if(!(tile = Tile(findTileAt(movebox[0] + Vector2f(diffX/2.,0) + hypoIncr))).isCollidable()
-		||!(tile = Tile(findTileAt(movebox[0] + Vector2f(0,diffY/2.) + hypoIncr))).isCollidable()
-		||!(tile = Tile(findTileAt(movebox[0] + Vector2f(diffX,diffY/2.) + hypoIncr))).isCollidable()
-		||!(tile = Tile(findTileAt(movebox[0] + Vector2f(diffX/2.,diffY) + hypoIncr))).isCollidable()){
+    if(!(findTileAt(movebox[0] + Vector2f(diffX/2.,0) + hypoIncr).isCollidable())
+		||!(findTileAt(movebox[0] + Vector2f(0,diffY/2.) + hypoIncr).isCollidable())
+		||!(findTileAt(movebox[0] + Vector2f(diffX,diffY/2.) + hypoIncr).isCollidable())
+		||!(findTileAt(movebox[0] + Vector2f(diffX/2.,diffY) + hypoIncr).isCollidable())){
         validPos = g.getGridPosition();
         atEdge = true;
     }
-    else
-    {
+/*
+    //check for collision with gridElements on neighboring tiles
+    int homeIndex = getIndexAt(g.getGridPosition());
+    int i;
+
+    //check gridElements on 3 tiles in previous row
+    for(i = homeIndex - mapWidth - 1; i < homeIndex - mapWidth + 1; i++){
+	//if accessing an invalid index of the map,break
+	if(i < 0 || i > mapWidth * mapHeight)
+	    continue;
+
+	collideGridEles(i,g,validPos,atEdge);
+    }
+
+    //check gridElements on 3 tiles in current row
+    for(i = homeIndex - 1; i < homeIndex + 1; i++){
+	//if accessing an invalid index of the map,break
+	if(i < 0 || i > mapWidth * mapHeight)
+	    continue;
+
+	collideGridEles(i,g,validPos,atEdge);
+    }
+
+    //check gridElements on 3 tiles in next row
+    for(i = homeIndex + mapWidth - 1; i < homeIndex + mapWidth + 1; i++){
+	//if accessing an invalid index of the map,break
+	if(i < 0 || i > mapWidth * mapHeight)
+	    continue;
+
+	collideGridEles(i,g,validPos,atEdge);
+    }
+*/
+    if(atEdge){
+        Tile tile = Tile(findTileAt(validPos));
         GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), tile.getName(), g.getPosition()));
     }
 
