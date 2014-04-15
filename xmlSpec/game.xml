@@ -15,8 +15,8 @@
 </view>
 
 <world>
-  <worldWidth>12800</worldWidth>
-  <worldHeight>6400</worldHeight>
+  <worldWidth>1400</worldWidth>
+  <worldHeight>900</worldHeight>
 </world>
 
 <defaultFont>dyslexic</defaultFont>
@@ -40,12 +40,12 @@
 </grid>
 
 <back>
-  <backFile>images/testgrid2.png</backFile>
+  <backFile>images/icecave.png</backFile>
   <backFactor>1</backFactor>
   <backSrcX>0</backSrcX>
   <backSrcY>0</backSrcY>
-  <backWidth>1000</backWidth>
-  <backHeight>666</backHeight>
+  <backWidth>2116</backWidth>
+  <backHeight>960</backHeight>
   <backLoc backX="0" backY="0"/>
   <backSpeed backSpeedX="0" backSpeedY="0"/>
   <backTransparency>false</backTransparency>
@@ -290,6 +290,24 @@
   <coolyetiSpeed coolyetiSpeedX="0" coolyetiSpeedY="0"/>
   <coolyetiTransparency>true</coolyetiTransparency>
 </coolyeti>
+
+<icecream>
+    <icecreamFile>images/icecream.png</icecreamFile>
+    <icecreamLoc icecreamX="0" icecreamY="0"/>
+
+  <icecreamFrames>1</icecreamFrames>
+  <icecreamFrameInterval>160</icecreamFrameInterval>
+  <icecreamChunks>25</icecreamChunks>
+
+  <icecreamMoveSpeed>300</icecreamMoveSpeed>
+
+  <icecreamSrcX>0</icecreamSrcX>
+  <icecreamSrcY>0</icecreamSrcY>
+  <icecreamWidth>100</icecreamWidth>
+  <icecreamHeight>91</icecreamHeight>
+  <icecreamSpeed icecreamSpeedX="0" icecreamSpeedY="0"/>
+  <icecreamTransparency>true</icecreamTransparency>
+</icecream>
 
 <yeti>
   <yetiFile>images/yeti2.png</yetiFile>

@@ -11,7 +11,7 @@
         <item type="image" name= "controls" x= "10" y="500" visible="true" file="controls" flicker="true" flickerTime="2"/>
        <item type="image" name= "controls" x= "10" y="500" visible="false" file="controls2" flicker="true" flickerTime="2"/>
         <item type="text" name= "help text" x="10" y="470" visible="true" text="Use WASD or the Arrow Keys to move" visible="false"/>
-        <item type="text" name =" damage help" x="300" y="490" visible="true" centered="false" text="Press 'R' to damage the yeti!" font="freebooter_medium" color="purple"/>
+        <item type="text" name =" damage help" x="300" y="490" visible="true" centered="false" text="Press 'Space' to shoot!" font="freebooter_medium" color="purple"/>
         <item type="fps" name="fps clock" x="940" y="650" visible="true"/>
     </container>
 </hud>

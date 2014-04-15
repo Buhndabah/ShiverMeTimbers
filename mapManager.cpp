@@ -428,7 +428,7 @@ void MapManager::drawGridElements(int index) const {
     {
 
         /* If enabled will draw a box around the sprite boundaries */
-	#define HITBOX
+	//#define HITBOX
         #ifdef HITBOX
         SDL_Rect rect;
         Uint32 color;
@@ -463,9 +463,11 @@ void MapManager::drawGridElements(int index) const {
         e.h= 10;
         color2 = SDL_MapRGB(IOManager::getInstance().getScreen()->format,0,0,255);
         SDL_FillRect(IOManager::getInstance().getScreen(), &e, color2);
+#endif
 
         (*it)->draw();
 
+#ifdef HITBOX
 	for(int i=0; i<4; ++i){
 	    SDL_Rect mb;
             mb.x = gridToWorld((*it)->getMoveboxVertex(i))[0] - Viewport::getInstance().X();

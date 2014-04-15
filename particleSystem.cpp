@@ -10,7 +10,7 @@ ParticleSystem::ParticleSystem(const Vector2f& p, const Vector2f& d, int h, cons
     viewHeight(Gamedata::getInstance().getXmlInt("viewHeight")),
     maxHeight(h),
     maxLife(30),
-    maxCount(),
+    maxCount(7),
     particles(),
     type(t)
 {
@@ -100,7 +100,7 @@ void ParticleSystem::spawnParticles(const std::string& type) {
         {
             throw std::string("Unrecognized type for particle \"")+type+std::string("\"");
         }
-
+        std::cerr << "guh" << std::endl;
         p->setStartPos(Vector2f(p->getX(),p->getY()));
         particles.push_back(p);
     }

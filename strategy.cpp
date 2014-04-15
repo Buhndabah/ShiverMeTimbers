@@ -38,7 +38,7 @@ void ChaseStrategy::onMove(const GameEvents::Event *e) {
     if(e->getSource().compare("coolyeti")==0)
     {
         // Within tolerance of destination
-        if(dist <= radius)
+        if(dist <= radius-2)
             getMyGE()->stop();
         else if(inW)
         {

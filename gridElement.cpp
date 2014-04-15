@@ -9,7 +9,7 @@ GridElement::GridElement(const std::string& name, int stratNum) :
   Listener(),
   moveSpeed(Gamedata::getInstance().getXmlFloat(name+"MoveSpeed")),
   gridSprite(name),
-  gridPosition(100,100),
+  gridPosition(95,105),
   gridVelocity(0,0),
   maxHP(100),
   curHP(100),

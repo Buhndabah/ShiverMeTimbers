@@ -47,7 +47,7 @@ Manager::Manager() :
 
   player = new GridElement("coolyeti"); // deleted by the mapManager
   map.addGridElement(player);
-//  map.addGridElement(new GridElement("snowball",CHASE_STRAT));
+  map.addGridElement(new GridElement("icecream",CHASE_STRAT));
   hud.addHealthBar(player->getName(), Vector2f(0, -10));
   SoundManager::getInstance();
 //  snowballs.push_back(new MultiSprite("spinsnowball"));
@@ -56,8 +56,8 @@ Manager::Manager() :
   //snowballs.push_back(new RotateSprite("yeti"));
   //snowballs.push_back(new MultiSprite("spinsnowball"));
   //snowballs.push_back(new RotateSprite("penguin"));
-  for(int i=0; i<numSnowballs; ++i)
-	snowballs.push_back(new Sprite("snowball"));
+  //for(int i=0; i<numSnowballs; ++i)
+	//snowballs.push_back(new Sprite("snowball"));
   viewport.setObjectToTrack(&(player->getSprite()));
 //  viewport.setObjectToTrack(snowballs[1]);
 }
