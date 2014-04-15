@@ -10,7 +10,6 @@ EventQueue& EventQueue::getInstance() {
 EventQueue::~EventQueue() {
     while(!incoming.empty())
     {
-    std::cerr<< " sorry" << std::endl;
         delete incoming.front();
         incoming.erase(incoming.begin());
     }

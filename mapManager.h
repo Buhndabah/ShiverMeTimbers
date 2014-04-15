@@ -26,7 +26,7 @@ public:
     const Tile& findTileAt(const Vector2f&) const;
 
 
-    void collideGridEles(int, GridElement&, Vector2f&, bool&) const;
+    void collideGridEles(int, GridElement&, Vector2f, Vector2f&, bool&) const;
     Vector2f validateMovement(GridElement&,  Vector2f, float&, bool&) const;
 
     int getW() const { return mapWidth;}

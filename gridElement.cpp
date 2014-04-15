@@ -82,6 +82,8 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, 
   moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
   moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(0,gridSprite.getH() * .5)));
 
+
+
   switch(stratNum) {
       case(CHASE_STRAT):
           myStrat = new ChaseStrategy(this);
@@ -108,7 +110,7 @@ GridElement::GridElement(const GridElement& g) :
   map(MapManager::getInstance()),
   moveDir(g.moveDir),
   moveboxVertices(g.moveboxVertices),
-  myStrat(g.myStrat)
+  myStrat((g.myStrat->clone()))
 {
     if(myStrat) myStrat->init();
 }

@@ -46,7 +46,7 @@ Manager::Manager() :
 
   player = new GridElement("coolyeti"); // deleted by the mapManager
   map.addGridElement(player);
-  map.addGridElement(new GridElement("snowball",CHASE_STRAT));
+//  map.addGridElement(new GridElement("snowball",CHASE_STRAT));
   hud.addHealthBar(player->getName(), Vector2f(0, -10));
 //  snowballs.push_back(new MultiSprite("spinsnowball"));
   //snowballs.push_back(new MultiSprite("coolyeti"));
