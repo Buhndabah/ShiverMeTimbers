@@ -74,7 +74,7 @@ public:
         Event(COLLIDE_EVENT, from, pos),
         subject(to)
     { }
-    std::string getSubject() { return subject; }
+    std::string getSubject() const { return subject; }
 private: 
     std::string subject;
 };
