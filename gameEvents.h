@@ -12,6 +12,7 @@ namespace GameEvents {
 // Type definitions for Event
 enum types {
     DAMAGE_EVENT,
+    DAMAGERECEIVED_EVENT,
     MOVE_EVENT,
     COLLIDE_EVENT,
     DEATH_EVENT,
@@ -53,6 +54,17 @@ public:
         damage(amount)
     { }
     float getDamage() const { return damage; }
+private:
+    float damage;
+};
+
+class DamageReceivedEvent : public Event {
+public:
+    DamageReceivedEvent(const std::string& name, const Vector2f& pos, float amount) :
+        Event(DAMAGERECEIVED_EVENT, name, pos),
+        damage(amount)
+    { }
+    float getDamage() const {return damage;}
 private:
     float damage;
 };
@@ -119,7 +131,7 @@ public:
     ~EventQueue();
 
     void prepEvents();
-    void push(Event* e) { incoming.push_back(e); }
+    void push(Event* e) {incoming.push_back(e); }
 
     int sizeIn() const { return incoming.size(); }
     int sizeOut() const { return outgoing.size(); }

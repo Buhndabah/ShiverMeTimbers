@@ -11,6 +11,7 @@ Listener& Listener::operator=(const Listener& rhs)
 }
 
 void Listener::onDamage(GameEvents::DamageEvent *e) {(void)e;}
+void Listener::onDamageReceived(GameEvents::DamageReceivedEvent *e) {(void)e;};
 void Listener::onMove(GameEvents::Event *e) {(void)e;}
 void Listener::onCollide(GameEvents::Event *e) {(void)e;}
 void Listener::onDeath(GameEvents::Event *e) {(void)e;}

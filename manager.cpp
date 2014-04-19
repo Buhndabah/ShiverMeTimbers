@@ -47,6 +47,7 @@ Manager::Manager() :
 
   player = new GridElement("coolyeti"); // deleted by the mapManager
   map.addGridElement(player);
+  map.setPlayer(player);
   map.addGridElement(new GridElement("icecream",CHASE_STRAT));
   hud.addHealthBar(player->getName(), Vector2f(0, -10));
   SoundManager::getInstance();

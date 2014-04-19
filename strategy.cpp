@@ -2,10 +2,27 @@
 #include "strategy.h"
 #include "gridElement.h"
 
-ChaseStrategy::ChaseStrategy(GridElement* g) :
-    Strategy(g)
+ChaseStrategy::ChaseStrategy(GridElement* g, GridElement* c) :
+    Strategy(g),
+    chaseTarget(c)
 { 
     init();    
+}
+
+ChaseStrategy::ChaseStrategy(const ChaseStrategy& rhs) :
+    Strategy(rhs),
+    chaseTarget(rhs.chaseTarget)
+{
+    init();
+}
+
+ChaseStrategy& ChaseStrategy::operator=(const ChaseStrategy& rhs) {
+    Strategy::operator=(rhs);
+    // don't delete gridelement since it lives in mapmanager
+    if(this == &rhs) return *this;
+
+    chaseTarget = rhs.chaseTarget;
+    return *this;
 }
 
 void ChaseStrategy::init() {
@@ -35,7 +52,8 @@ void ChaseStrategy::onMove(const GameEvents::Event *e) {
     // Their location is within the sprite's bottom and top edges
     bool inH    = (e->getPosition()[1] > getMyGE()->getPosition()[1]) && 
                   (e->getPosition()[1] < (getMyGE()->getPosition()[1]  + getMyGE()->getSprite().getH()));
-    if(e->getSource().compare("coolyeti")==0)
+    //std::cerr<< "source is " << e->getSource() << " my name is " << getMyGE()->getName() << std::endl;
+    if(e->getSource().compare(chaseTarget->getName())==0)
     {
         // Within tolerance of destination
         if(dist <= radius-2)
@@ -129,18 +147,23 @@ void BulletStrategy::init() {
 
 void BulletStrategy::onCollide(const GameEvents::Event* e)
 {
-    std::cerr<< "my name is " << getMyGE()->getName() << std::endl;
     const GameEvents::CollideEvent *c = dynamic_cast<const GameEvents::CollideEvent*>(e);
     std::string to;
-    if(c->getSubject().compare(getMyGE()->getName())&&e->getSource().compare(getMyGE()->getName())) return; // Ignore collisions with our creator
 
+
+    /* Get name of what we hit */
+    /* Account for both them hitting us and us hitting them */
     if(e->getSource().compare(getMyGE()->getName()))
         to = c->getSubject();
     else
         to = c->getSource();
+
+    /* Push both a collide event and a death notification for ourself */
     GameEvents::EventQueue::getInstance().push(new GameEvents::DamageEvent(to, getMyGE()->getPosition(), 10));
     GameEvents::EventQueue::getInstance().push(new GameEvents::DeathEvent(getMyGE()->getName(), getMyGE()->getPosition()));
 }
+
+/****** Listener registration stuff ******/
 
 void bulletStratCollideForwarder(Listener* context, const GameEvents::Event *e) {
     dynamic_cast<BulletStrategy*>(context)->onCollide(e);

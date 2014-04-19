@@ -20,6 +20,7 @@ public:
         myGE = rhs.myGE;  
         return *this;
     }
+    virtual ~Strategy() {}
     virtual void init()=0;
     virtual void registerListeners()=0;
     virtual Strategy* clone() const=0;
@@ -33,13 +34,18 @@ private:
 
 class ChaseStrategy : public Strategy {
 public:
-       ChaseStrategy(GridElement*);
+       ChaseStrategy(GridElement*,GridElement*);
+       ChaseStrategy(const ChaseStrategy&);
+       ChaseStrategy& operator=(const ChaseStrategy& rhs);
+       virtual ~ChaseStrategy() {}
        virtual void init();
        virtual void registerListeners();
        ChaseStrategy* clone() const {
            return new ChaseStrategy(*this);
        }
        virtual void onMove(const GameEvents::Event*);
+private:
+    GridElement* chaseTarget;
 };
 void chaseStratMoveForwarder(Listener*, const GameEvents::Event*);
 

@@ -100,7 +100,6 @@ void ParticleSystem::spawnParticles(const std::string& type) {
         {
             throw std::string("Unrecognized type for particle \"")+type+std::string("\"");
         }
-        std::cerr << "guh" << std::endl;
         p->setStartPos(Vector2f(p->getX(),p->getY()));
         particles.push_back(p);
     }

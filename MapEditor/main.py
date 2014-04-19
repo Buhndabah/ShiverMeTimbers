@@ -1,4 +1,5 @@
 import pygame, sys, os, math, Tkinter
+from Tkinter import Entry,Button
 import tkMessageBox 
 from pygame.locals import *
 from globals import E_VARS
@@ -17,6 +18,7 @@ MAP =[]
 
 #window for handling pop up dialogs
 WINDOW = Tkinter.Tk()
+WINDOW.geometry('+'+str(E_VARS.W_WIDTH/2)+'+'+str(E_VARS.W_HEIGHT/2))
 WINDOW.wm_withdraw()
 
 
@@ -82,7 +84,6 @@ def handleEvents(player,tiles):
             if event.key == K_ESCAPE:   # exit program
                 if tkMessageBox.askyesno(title="Greetings", message="Do you want to save your changes before exiting?"):
                     printMap(tiles)
-                WINDOW.destroy()
                 terminate()
                 pygame.event.clear()
 
@@ -116,6 +117,16 @@ def handleEvents(player,tiles):
 
 # Write out to xml
 def printMap(tiles):
+
+   nameChoice = Entry(WINDOW)
+   nameChoice.pack()
+   nameChoice.focus_set()
+
+   b= Button(WINDOW,text="test",width=10,command=None)
+   b.pack()
+
+   WINDOW.wm_deiconify()
+   Tkinter.mainloop()
 
    print("\nPrinting map to file\n")
 

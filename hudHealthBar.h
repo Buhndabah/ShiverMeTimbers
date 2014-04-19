@@ -14,7 +14,7 @@ public:
     virtual void draw() const;
     virtual void update(Uint32);
 
-    virtual void onDamage(const GameEvents::DamageEvent *);
+    virtual void onDamageReceived(const GameEvents::DamageReceivedEvent *);
     virtual void onMove(const GameEvents::Event *);
 
 private:

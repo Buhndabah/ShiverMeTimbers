@@ -36,11 +36,16 @@ public:
     int getTileRise() const { return tileRise; }
     int getGridTileWidth() const { return  sqrt(pow(tileWidth/2.0,2) + pow(tileHeight/2.0,2)) ;}
     int getGridTileHeight() const { return  sqrt(pow(tileWidth/2.0,2) + pow(tileHeight/2.0,2)) ;}
+    int getNumGridElements() const {
+        return numGridElements;
+    }
     Vector2f getOrigin() const;
     Vector2f gridToWorld(Vector2f) const;
     Vector2f worldToGrid(Vector2f) const;
     int getIndexAt(const Vector2f&) const;
 
+    GridElement* getPlayer() const { return player; }
+    void setPlayer(GridElement* p) { player = p; }
 
 private:
 //    MapManager(const std::string& fn = "xmlSpec/basicMap.xml");
@@ -53,11 +58,13 @@ private:
     void createTiles();
     void createLayers();
 
-
-
     XMLParser& parser;
 
+    int numGridElements;
+    GridElement* player;
+
     /* Storage Structures */
+
 
     std::map<std::string, std::string> tiles;
     std::list<Tile*> updateTiles;

@@ -1,4 +1,5 @@
 #include <math.h>
+#include <sstream>
 #include "gridElement.h"
 #include "gamedata.h"
 #include "frameFactory.h"
@@ -7,6 +8,7 @@
 
 GridElement::GridElement(const std::string& name, int stratNum) :
   Listener(),
+  name(),
   moveSpeed(Gamedata::getInstance().getXmlFloat(name+"MoveSpeed")),
   gridSprite(name),
   gridPosition(95,105),
@@ -18,6 +20,10 @@ GridElement::GridElement(const std::string& name, int stratNum) :
   moveboxVertices(),
   myStrat(NULL)
 {
+  std::ostringstream sstream;
+  sstream << map.getNumGridElements();
+  std::string tempname = sstream.str();
+  setName(tempname);
   //gridSprite.setPosition(map.getOrigin());//+Vector2f(-5,40));//-Vector2f(0,gridSprite.getH())+Vector2f(-5,40));
   gridSprite.setPosition(map.gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
   moveDir.reserve(8);
@@ -39,7 +45,7 @@ GridElement::GridElement(const std::string& name, int stratNum) :
 
   switch(stratNum) {
       case(CHASE_STRAT):
-          myStrat = new ChaseStrategy(this);
+          myStrat = new ChaseStrategy(this,map.getPlayer());
           break;
       case(BULLET_STRAT):
           myStrat = new BulletStrategy(this,0);
@@ -50,6 +56,7 @@ GridElement::GridElement(const std::string& name, int stratNum) :
   }
   if(myStrat) 
       myStrat->init();
+  registerListeners();
 }
 
 GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, int stratNum) :
@@ -65,6 +72,10 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, 
     moveboxVertices(),
     myStrat(NULL)
 {
+  std::ostringstream sstream;
+  sstream << map.getNumGridElements();
+  std::string tempname = sstream.str();
+  setName(tempname);
     gridSprite.setPosition(map.gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
 
     moveDir.reserve(8);
@@ -87,7 +98,7 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, 
 
   switch(stratNum) {
       case(CHASE_STRAT):
-          myStrat = new ChaseStrategy(this);
+          myStrat = new ChaseStrategy(this,map.getPlayer());
           break;
       case(BULLET_STRAT):
           myStrat = new BulletStrategy(this,dir);
@@ -98,10 +109,12 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, 
   }
   if(myStrat) 
       myStrat->init();
+  registerListeners();
 }
 
 GridElement::GridElement(const GridElement& g) :
   Listener(g),
+  name(),
   moveSpeed(g.moveSpeed),
   gridSprite(g.gridSprite),
   gridPosition(g.gridPosition),
@@ -113,11 +126,21 @@ GridElement::GridElement(const GridElement& g) :
   moveboxVertices(g.moveboxVertices),
   myStrat((g.myStrat->clone()))
 {
+  std::ostringstream sstream;
+  sstream << map.getNumGridElements();
+  std::string tempname = sstream.str();
+  setName(tempname);
+
     if(myStrat) myStrat->init();
+    registerListeners();
 }
 
 GridElement& GridElement::operator=(const GridElement& g) {
     if(this == &g) return *this;
+  std::ostringstream sstream;
+  sstream << map.getNumGridElements();
+  std::string tempname = sstream.str();
+  setName(tempname);
     Listener::operator=(g);
     moveSpeed = g.moveSpeed;
     gridSprite = MultiSprite(g.gridSprite);
@@ -128,6 +151,7 @@ GridElement& GridElement::operator=(const GridElement& g) {
     moveDir = g.moveDir;
     moveboxVertices = g.moveboxVertices;
     myStrat = g.myStrat->clone();
+    registerListeners();
     return *this;
 }
 
@@ -277,9 +301,17 @@ void GridElement::shoot() {
     SoundManager::getInstance()[1];
 }
 
+
+/*********** Stuff for handling events ***************/
+
 void GridElement::onDamage(const GameEvents::DamageEvent *e) {
-    if(e->getSource().compare(getName()) !=0) return;   // only respond if our name
+
+    // Check if event is from self
+    if(e->getSource().compare(getName()) ==0) {  return; }
+
     curHP-=e->getDamage();
+
+    // What to do if we die
     if(curHP < 0)
     {
         GameEvents::EventQueue::getInstance().push(new GameEvents::DeathEvent(getName(), getPosition()));
@@ -287,7 +319,7 @@ void GridElement::onDamage(const GameEvents::DamageEvent *e) {
     }
 
     // push new damage event
-    GameEvents::EventQueue::getInstance().push(new GameEvents::DamageEvent(getName(), getPosition(), getHPRatio()));
+    GameEvents::EventQueue::getInstance().push(new GameEvents::DamageReceivedEvent(getName(), getPosition(), getHPRatio()));
 
 }
 

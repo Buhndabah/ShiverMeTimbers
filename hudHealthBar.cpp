@@ -45,7 +45,7 @@ void HUDHealthBar::update(Uint32 ticks) {
 
 /********** Event Handlers *************/
 
-void HUDHealthBar::onDamage(const GameEvents::DamageEvent *e) {
+void HUDHealthBar::onDamageReceived(const GameEvents::DamageReceivedEvent *e) {
     if(e->getSource().compare(getName())==0)
     {
         healthRatio = e->getDamage();
@@ -65,7 +65,7 @@ void HUDHealthBar::onMove(const GameEvents::Event *e) {
 
 // forwarding function for damage events
 void HUDHPDamageForwarder(Listener* context, const GameEvents::Event *e) {
-    dynamic_cast<HUDHealthBar*>(context)->onDamage(dynamic_cast<const GameEvents::DamageEvent*>(e));
+    dynamic_cast<HUDHealthBar*>(context)->onDamageReceived(dynamic_cast<const GameEvents::DamageReceivedEvent*>(e));
 }
 
 // forwarding function for move events
@@ -77,7 +77,7 @@ void HUDHPMoveForwarder(Listener* context, const GameEvents::Event *e) {
 
 // Register a damage listener and a move listener
 void HUDHealthBar::registerListeners() {
-    GameEvents::EventQueue::getInstance().addListener(GameEvents::DAMAGE_EVENT, static_cast<Listener*>(this), &HUDHPDamageForwarder); 
+    GameEvents::EventQueue::getInstance().addListener(GameEvents::DAMAGERECEIVED_EVENT, static_cast<Listener*>(this), &HUDHPDamageForwarder); 
     GameEvents::EventQueue::getInstance().addListener(GameEvents::MOVE_EVENT, static_cast<Listener*>(this), &HUDHPMoveForwarder); 
 }
 

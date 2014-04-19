@@ -20,6 +20,8 @@ MapManager& MapManager::getInstance() {
 MapManager::MapManager(const std::string& fn) :
     Listener(),
     parser(XMLParser::getInstance()),
+    numGridElements(0),
+    player(NULL),
     tiles(),
     updateTiles(),
     mapLayers(),
@@ -121,6 +123,7 @@ Vector2f MapManager::worldToGrid(Vector2f worldPos) const {
 // XXX THE EXCEPTION IN THIS FUNCTION ISN'T CATCHING WHEN YOU TRY TO ADD TO AN INVALID INDEX
 void MapManager::addGridElement(GridElement* gridE) {
 
+    numGridElements++;
     //Find the max index between the bottom corner of the movebox and the bottom right corner of the gridSprite
     float diffX = gridToWorld(gridE->getMoveboxVertices()[2])[0] - gridToWorld(gridE->getMoveboxVertices()[3])[0];
     int index = std::max(getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]))),
@@ -291,7 +294,7 @@ void MapManager::collideGridEles(int tileIndx, GridElement& g, Vector2f hypoIncr
 	    if(inBounds){
 		validPos = g.getGridPosition();
 		hitGE = true;
-		if(test) std::cerr << "\tidk"  << j << std::endl;
+		//if(test) std::cerr << "\tidk"  << j << std::endl;
 		subject = test;
 	    }
 	} 
@@ -342,9 +345,9 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
         Tile tile = Tile(findTileAt(validPos));
         GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), tile.getName(), g.getPosition()));
     }
-    if(hitGE && !subject) std::cerr << "no subj?" << std::endl;
+    //if(hitGE && !subject) std::cerr << "no subj?" << std::endl;
     if(hitGE && subject){
-	std::cerr << "heyoooo" << std::endl;
+	//std::cerr << "heyoooo" << std::endl;
 	GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), subject->getName(), g.getPosition()));
     }
 
@@ -536,11 +539,17 @@ void MapManager::displayData() const {
     parser.displayData();
 }
 
+/*********** Listener set up and forwarder ************/
+
 // Forwarding function creation events
 void MapCreateForwarder(Listener* context, const GameEvents::Event *e) {
     const GameEvents::CreateEvent *c = dynamic_cast<const GameEvents::CreateEvent*>(e);
+
+    // Ignore creation events we pushed
     if(e->getSource().compare("map") ==0) 
-        return;   // don't respond to events we generate
+        return; 
+    
+    // If the requested location is legal
     else if(dynamic_cast<MapManager*>(context)->getIndexAt(dynamic_cast<MapManager*>(context)->worldToGrid(e->getPosition()))>0)
     {
         // Add a new grid element
