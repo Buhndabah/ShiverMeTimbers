@@ -26,8 +26,7 @@ public:
     const Tile& findTileAt(const Vector2f&) const;
 
 
-    //void collideGridEles(int, GridElement&, Vector2f, Vector2f&, bool&, GridElement* ) const;
-    void collideGridEles(int, GridElement&, Vector2f, Vector2f&, bool&, GridElement& ) const;
+    void collideGridEles(int, GridElement&, Vector2f, Vector2f&, bool&, GridElement*& ) const;
     Vector2f validateMovement(GridElement&,  Vector2f, float&, bool&) const;
 
     int getW() const { return mapWidth;}
@@ -44,9 +43,9 @@ public:
 
 
 private:
-    MapManager(const std::string& fn = "xmlSpec/basicMap.xml");
+//    MapManager(const std::string& fn = "xmlSpec/basicMap.xml");
 //    MapManager(const std::string& fn = "xmlSpec/testMap.xml");
-//    MapManager(const std::string& fn = "xmlSpec/test.xml");
+    MapManager(const std::string& fn = "xmlSpec/test.xml");
 //    MapManager(const std::string& fn = "xmlSpec/wuh.xml");
     MapManager(const MapManager&);
     MapManager& operator=(const MapManager&);

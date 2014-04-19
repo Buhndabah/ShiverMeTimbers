@@ -269,7 +269,7 @@ const Tile& MapManager::findTileAt(const Vector2f& coord) const {
 }
 
 /*Helper function*/
-void MapManager::collideGridEles(int tileIndx, GridElement& g, Vector2f hypoIncr, Vector2f& validPos, bool& hitGE, GridElement& subject) const{
+void MapManager::collideGridEles(int tileIndx, GridElement& g, Vector2f hypoIncr, Vector2f& validPos, bool& hitGE, GridElement*& subject) const{
     std::list<GridElement *>::const_iterator iter;
     for(iter = (gridElements[tileIndx]).begin(); iter != (gridElements[tileIndx]).end(); ++iter){
 	if(!(*iter)){
@@ -291,7 +291,8 @@ void MapManager::collideGridEles(int tileIndx, GridElement& g, Vector2f hypoIncr
 	    if(inBounds){
 		validPos = g.getGridPosition();
 		hitGE = true;
-		subject = *test;
+		if(test) std::cerr << "\tidk"  << j << std::endl;
+		subject = test;
 	    }
 	} 
     }
@@ -331,7 +332,7 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
     int homeIndex = getIndexAt(g.getMoveboxVertices()[0]);
     int i;
     bool hitGE = false;
-    GridElement subject("snowball");
+    GridElement *subject = NULL;
 
     for(i=0; i < mapWidth * mapHeight; ++i){
 	collideGridEles(i,g,hypoIncr,validPos,hitGE,subject);
@@ -341,8 +342,10 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
         Tile tile = Tile(findTileAt(validPos));
         GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), tile.getName(), g.getPosition()));
     }
-    if(hitGE){
-	GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), subject.getName(), g.getPosition()));
+    if(hitGE && !subject) std::cerr << "no subj?" << std::endl;
+    if(hitGE && subject){
+	std::cerr << "heyoooo" << std::endl;
+	GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), subject->getName(), g.getPosition()));
     }
 
     float dist = sqrt( pow(validPos[0] - g.getGridPosition()[0],2) + pow(validPos[1] - g.getGridPosition()[1],2));
