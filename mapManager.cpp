@@ -269,58 +269,16 @@ const Tile& MapManager::findTileAt(const Vector2f& coord) const {
 }
 
 /*Helper function*/
-void MapManager::collideGridEles(int tile, GridElement& g, Vector2f hypoIncr, Vector2f& validPos, bool& atEdge) const{
-		static bool print = true;
-		static int uh = -1;
+void MapManager::collideGridEles(int tileIndx, GridElement& g, Vector2f hypoIncr, Vector2f& validPos, bool& hitGE, GridElement& subject) const{
     std::list<GridElement *>::const_iterator iter;
-    for(iter = (gridElements[tile]).begin(); iter != (gridElements[tile]).end(); ++iter){
+    for(iter = (gridElements[tileIndx]).begin(); iter != (gridElements[tileIndx]).end(); ++iter){
 	if(!(*iter)){
 	    std::cerr << "that happened" << std::endl;
 	    break;
 	}
 	GridElement* test = *iter;
-	Vector2f tp = test->getSprite().getPosition();
-	float tw = test->getSprite().getW();
-	float th = test->getSprite().getH();
-
-	Vector2f gp = g.getSprite().getPosition();
-	float gw = g.getSprite().getW();
-	float gh = g.getSprite().getH();
-
-	if(((gp[0] > tp[0]) && (gp[0] < tp[0] + tw))
-		&& ((gp[1] > tp[1]) && (gp[1] < tp[1] + th))){
-			validPos = g.getGridPosition();
-			atEdge = true;
-			break;
-	}
-
-
-
-	if(((gp[0] + gw > tp[0]) && (gp[0] + gw < tp[0] + tw))
-		&& ((gp[1] > tp[1]) && (gp[1] < tp[1] + th))){
-	validPos = g.getGridPosition();
-	atEdge = true;
-	break;
-	}
-
-
-	if(((gp[0] > tp[0]) && (gp[0] < tp[0] + tw))
-		&& ((gp[1] + gh > tp[1]) && (gp[1] + gh < tp[1] + th))){
-			validPos = g.getGridPosition();
-			atEdge = true;
-			break;
-	}
-
-	if(((gp[0] + gw > tp[0]) && (gp[0] + gw < tp[0] + tw))
-		&& ((gp[1] + gh > tp[1]) && (gp[1] + gh < tp[1] + th))){
-			validPos = g.getGridPosition();
-			atEdge = true;
-			break;
-	}
-
-
-
-/*	std::vector<Vector2f> movebox = g.getMoveboxVertices();
+	if(&g == test) break;
+	std::vector<Vector2f> movebox = g.getMoveboxVertices();
 	std::vector<Vector2f> testmovebox = test->getMoveboxVertices();
 	for(int j=0; j<4; ++j){
 	    bool minX = (movebox[j] + hypoIncr)[0] >= (testmovebox[0])[0];
@@ -328,28 +286,14 @@ void MapManager::collideGridEles(int tile, GridElement& g, Vector2f hypoIncr, Ve
 	    bool maxX = (movebox[j] + hypoIncr)[0] <= (testmovebox[1])[0];
 	    bool maxY = (movebox[j] + hypoIncr)[1] <= (testmovebox[2])[1];
 
-	    if(minX && minY && maxX && maxY){
-//		if(print){
-		if(j != uh){
-		uh = j;
-		std::cerr << " GRID ELE COLLISION!  " << j << std::endl;
-		for(int k=0; k<4; ++k) std::cerr << testmovebox[k] + hypoIncr << std::endl << std::endl;
-		std::cerr << std::endl;
-		for(int k=0; k<4; ++k) std::cerr << movebox[k] + hypoIncr << std::endl << std::endl;
-		print = false;
-		std::cerr << ";;;;;;;;;;;;;;;;;;;;;;;;" << std::endl;
-		std::cerr << "hypo: " << hypoIncr << std::endl;
-		std::cerr << movebox[j] << std::endl << std::endl;
-		std::cerr << movebox[j] - hypoIncr << std::endl << std::endl;
-		}
-//		}
+	    bool inBounds = (minX && maxX && minY && maxY);
+
+	    if(inBounds){
 		validPos = g.getGridPosition();
-		atEdge = true;
+		hitGE = true;
+		subject = *test;
 	    }
-            if(atEdge) break;
 	} 
-        if(atEdge) break;
-*/
     }
 }
 
@@ -385,57 +329,26 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
 
     //check for collision with gridElements on neighboring tiles
     int homeIndex = getIndexAt(g.getMoveboxVertices()[0]);
-    //int homeIndex = getIndexAt(g.getGridPosition());
     int i;
-for(i = 0; i < mapWidth * mapHeight; ++i){
-collideGridEles(i,g,hypoIncr,validPos,atEdge);
-//if(atEdge) break;
-}
-/*
-   //check gridElements on 3 tiles in previous row
-    for(i = homeIndex - mapWidth - 1; i <= homeIndex - mapWidth + 1; i++){
-	//if accessing an invalid index of the map,break
-	if(i < 0 || i > mapWidth * mapHeight)
-	    continue;
+    bool hitGE = false;
+    GridElement subject("snowball");
 
-	collideGridEles(i,g,hypoIncr,validPos,atEdge);
-	if(atEdge) break;
+    for(i=0; i < mapWidth * mapHeight; ++i){
+	collideGridEles(i,g,hypoIncr,validPos,hitGE,subject);
     }
 
-    //check gridElements on 3 tiles in current row
-    if(!atEdge){
-    for(i = homeIndex - 1; i <= homeIndex + 1; i++){
-	//if accessing an invalid index of the map,break
-	if(i < 0 || i > mapWidth * mapHeight)
-	    continue;
-
-	collideGridEles(i,g,hypoIncr,validPos,atEdge);
-	if(atEdge) break;
+    if(atEdge){
+        Tile tile = Tile(findTileAt(validPos));
+        GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), tile.getName(), g.getPosition()));
     }
+    if(hitGE){
+	GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), subject.getName(), g.getPosition()));
     }
-
-
-    //check gridElements on 3 tiles in next row
-    if(!atEdge){
-    for(i = homeIndex + mapWidth - 1; i <= homeIndex + mapWidth + 1; i++){
-	//if accessing an invalid index of the map,break
-	if(i < 0 || i > mapWidth * mapHeight)
-	    continue;
-
-	collideGridEles(i,g,hypoIncr,validPos,atEdge);
-	if(atEdge) break;
-    }
-    }
-*/
-//    if(atEdge){
-  //      Tile tile = Tile(findTileAt(validPos));
-    //    GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), tile.getName(), g.getPosition()));
-    //}
 
     float dist = sqrt( pow(validPos[0] - g.getGridPosition()[0],2) + pow(validPos[1] - g.getGridPosition()[1],2));
     fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
 
-
+    if(hitGE) atEdge = true;
     return validPos;
 }
 
@@ -563,38 +476,34 @@ void MapManager::update(Uint32& ticks) {
         tempVec.push_back(std::list<GridElement*>());
     }
 
-    // Walk through Grid elements, remove them from the list, update, and then find their new position
+    // Walk through Grid elements, update and then find their new position, add to tempVec
     GridElement* element;
-    for(std::vector<std::list<GridElement*> >::iterator it=gridElements.begin(); it!=gridElements.end(); ++it)
-       {
-           if(!(*it).empty())
-           {
-               while(!(*it).empty())
-               {
-                   element = (*it).front();
-                   (*it).pop_front();
-                   element->update(ticks);
-  
-                    
-                   //try {tempVec[getIndexAt(element->getGridPosition()+element->getSprite().getSize())].push_back(element); }
+    for(std::vector<std::list<GridElement*> >::iterator it=gridElements.begin(); it!=gridElements.end(); ++it){
+        for(std::list<GridElement*>::iterator l_it = (*it).begin(); l_it != (*it).end(); ++l_it){
+	    element = (*l_it);
+	    element->update(ticks);
 
-		   //Find the max index between the bottom corner of the movebox and the bottom right corner of the gridSprite
-    		   float diffX = gridToWorld(element->getMoveboxVertices()[2])[0] - gridToWorld(element->getMoveboxVertices()[3])[0];
-		   int index = std::max(getIndexAt(worldToGrid(gridToWorld(element->getMoveboxVertices()[3]))),
+	    //Find the max index between the bottom corner of the movebox and the bottom right corner of the gridSprite
+    	    float diffX = gridToWorld(element->getMoveboxVertices()[2])[0] - gridToWorld(element->getMoveboxVertices()[3])[0];
+ 	    int index = std::max(getIndexAt(worldToGrid(gridToWorld(element->getMoveboxVertices()[3]))),
 					getIndexAt(worldToGrid(gridToWorld(element->getMoveboxVertices()[3]) + Vector2f(diffX,0))));
 
-		   index = std::max(index,getIndexAt(worldToGrid(gridToWorld(element->getMoveboxVertices()[3]) + Vector2f(diffX/2.,0))));
-		   index = std::max(index,getIndexAt(worldToGrid(gridToWorld(element->getMoveboxVertices()[3]) + Vector2f(-diffX/2.,0))));
+	    index = std::max(index,getIndexAt(worldToGrid(gridToWorld(element->getMoveboxVertices()[3]) + Vector2f(diffX/2.,0))));
+	    index = std::max(index,getIndexAt(worldToGrid(gridToWorld(element->getMoveboxVertices()[3]) + Vector2f(-diffX/2.,0))));
 
-                   try {tempVec[index].push_back(element); }
-                   catch(const std::out_of_range& e) {
-                       std::cerr << "Tried to access GridElement at index " << index << std::endl;
-                   }
-               }
-           }
-       }
-       // copy temp list into permanent list
-       gridElements = std::vector<std::list<GridElement*> >(tempVec);
+            try {tempVec[index].push_back(element); }
+            catch(const std::out_of_range& e) {
+                std::cerr << "Tried to access GridElement at index " << index << std::endl;
+            }
+	}
+    }
+    //After updating all gridElements and adding them to the tempVec, delete gridElements before reassigning it from tempVec
+    for(std::vector<std::list<GridElement*> >::iterator it=gridElements.begin(); it!=gridElements.end(); ++it){
+	(*it).clear();
+    }
+
+    // copy temp list into permanent list
+    gridElements = std::vector<std::list<GridElement*> >(tempVec);
 }
 
 /* Give a grid coordinate, will return the index of the tile underneath that coordinate, if any. */
