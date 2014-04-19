@@ -1,4 +1,5 @@
-import pygame, sys, os, math 
+import pygame, sys, os, math, Tkinter
+import tkMessageBox 
 from pygame.locals import *
 from globals import E_VARS
 from globals import STRINGS
@@ -6,11 +7,17 @@ from globals import COLORS
 from player import Player
 from tile import Tile
 
+# index of tile we're currently drawing
 TODRAW = 1
 COLLIDABLE=True
 NONCOLLIDABLE=False
+
+#array storing tile info
 MAP =[]
 
+#window for handling pop up dialogs
+WINDOW = Tkinter.Tk()
+WINDOW.wm_withdraw()
 
 
 def main():
@@ -30,6 +37,11 @@ def main():
 
     runGame(tiles)
 
+
+#----------------------------------
+
+
+# Main game loop
 def runGame(tiles):
 
     global TODRAW 
@@ -54,6 +66,11 @@ def runGame(tiles):
         pygame.display.update()
         FPSCLOCK.tick(E_VARS.FPS)
 
+
+#-------------------------------------------
+
+
+# Handle keyboard input
 def handleEvents(player,tiles):
     global TODRAW
     for event in pygame.event.get():
@@ -63,7 +80,11 @@ def handleEvents(player,tiles):
             pygame.key.set_repeat(1,100)
         elif event.type == KEYDOWN:
             if event.key == K_ESCAPE:   # exit program
+                if tkMessageBox.askyesno(title="Greetings", message="Do you want to save your changes before exiting?"):
+                    printMap(tiles)
+                WINDOW.destroy()
                 terminate()
+                pygame.event.clear()
 
             # Map Editing functions
             elif event.key == K_RETURN: # edit map to new item (currently defaults to starpad
@@ -81,7 +102,6 @@ def handleEvents(player,tiles):
                     TODRAW = TODRAW + 1
             elif event.key == K_m:
                 printMap(tiles)
-
             # Here be movement handling
             elif event.key == K_t:
                 player.goUp()
@@ -91,6 +111,10 @@ def handleEvents(player,tiles):
             else:                       # tell player to move in dir
                 player.setDir(event.key)
 
+
+#-------------------------------------------
+
+# Write out to xml
 def printMap(tiles):
 
    print("\nPrinting map to file\n")
@@ -147,6 +171,10 @@ def printMap(tiles):
 
    print "Finished writing map\n"
 
+
+#-------------------------------------------------------------------
+
+
 # Add a new layer full of empty tiles to the map
 def createLayer():
     newLayer = []
@@ -155,6 +183,10 @@ def createLayer():
         for j in range(0,E_VARS.MAPWIDTH):
             newLayer[i].append({"id": 0, "coord": {STRINGS.X:0, STRINGS.Y:0}, "collidable":NONCOLLIDABLE})
     return newLayer
+
+
+#-------------------------------------------------------------
+
 
 # Place tile at cursor position
 def insertItem(player):
@@ -169,7 +201,6 @@ def insertItem(player):
     nMinY = not (pos[1] < 0)
     nHalfY = not (pos[1] % 1.0 > 0)
 
-
     # check boundaries
     if nMaxX and nMinX and nHalfX and nMaxY and nMinY and nHalfY:
         if player.getLevel() > len(MAP)-1:
@@ -177,6 +208,8 @@ def insertItem(player):
                 MAP.append(createLayer())
         MAP[player.getLevel()][int(pos[1])][int(pos[0])]["id"] = TODRAW
         MAP[player.getLevel()][int(pos[1])][int(pos[0])]["coord"] = drawPos
+
+
 
 # Remove tile at cursor position
 def removeItem(player):
@@ -199,6 +232,7 @@ def removeItem(player):
         MAP[player.getLevel()][int(pos[1])][int(pos[0])]["collidale"] = NONCOLLIDABLE
 
 
+
 # Toggle collidable property at cursor position
 def setCollide(player):
 
@@ -219,6 +253,9 @@ def setCollide(player):
         MAP[player.getLevel()][int(pos[1])][int(pos[0])]["collidable"] = not MAP[player.getLevel()][int(pos[1])][int(pos[0])]["collidable"]
         print "set collidable to ", MAP[player.getLevel()][int(pos[1])][int(pos[0])]["collidable"]
     
+
+#--------------------------------------------------------------------------------
+
 
 # Draw the map
 def fillTiles(tiles,player):
@@ -263,6 +300,9 @@ def fillTiles(tiles,player):
                     else:
                         Tile.color_surface(colored,155,155,0)
                         DISPLAYSURF.blit(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS.CELLRISE))
+
+
+#-------------------------------------------------------------------------------------------------------
 
 
 # base grid that doesn't move
@@ -323,6 +363,10 @@ def drawUpperGrid(player):
                         (startX, startY),
                         (endX, endY),
                         1)
+
+
+#---------------------------------------------------------------------
+
 
 def terminate():
     pygame.quit()

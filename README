@@ -2,17 +2,17 @@ Names: Stephen Wells & John Butchko
 Clemson Email Address: sewells
 			jbutchk
 
-Project no: 3
-Project due date: March 28th, 2014
-Project description: Introduce a player to the game along with a HUD, and give an illusion of depth.
+Project no: 4
+Project due date: April 15th, 2014
+Project description: Pooling, Collisions, smooth player movement, etc
 
 The Specs that we implemented are:
-	1) A modular HUD
-		With HUDComponents such as a health bar tied to the player, the average fps message, and a game timer.
-	2) A player (of class type gridElement) that is controlled via WASD and the arrow keys
-	3) An illusion of depth is created due to our isometric grid.
-		Any and all gridElements move along the axes of the grid with their speed scaled in such a way that makes the motion seem to extend into the background.
-	4) A newly implemented XML parser based on rapidXML
+	1) Object pooling (snowflakes)
+	2) Grid Element collision detection
+	3) Strategy for gridElement AI (following fairy, "bullets"
+	4) projectiles
+    5) event queue (observer pattern)
 
 The Specs that we were unable to implement are:
-
+    We felt that chunking was inappropriate for our aesthetic, so that was omitted
+    Hit detection on snowballs is still a WIP

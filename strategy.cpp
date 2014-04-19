@@ -38,7 +38,7 @@ void ChaseStrategy::onMove(const GameEvents::Event *e) {
     if(e->getSource().compare("coolyeti")==0)
     {
         // Within tolerance of destination
-        if(dist <= radius)
+        if(dist <= radius-2)
             getMyGE()->stop();
         else if(inW)
         {
@@ -129,8 +129,16 @@ void BulletStrategy::init() {
 
 void BulletStrategy::onCollide(const GameEvents::Event* e)
 {
-    if(e->getSource().compare(getMyGE()->getName())) return; // Ignore collisions with our creator
-    GameEvents::EventQueue::getInstance().push(new GameEvents::DamageEvent(e->getSource(), getMyGE()->getPosition(), 10));
+    std::cerr<< "my name is " << getMyGE()->getName() << std::endl;
+    const GameEvents::CollideEvent *c = dynamic_cast<const GameEvents::CollideEvent*>(e);
+    std::string to;
+    if(c->getSubject().compare(getMyGE()->getName())&&e->getSource().compare(getMyGE()->getName())) return; // Ignore collisions with our creator
+
+    if(e->getSource().compare(getMyGE()->getName()))
+        to = c->getSubject();
+    else
+        to = c->getSource();
+    GameEvents::EventQueue::getInstance().push(new GameEvents::DamageEvent(to, getMyGE()->getPosition(), 10));
     GameEvents::EventQueue::getInstance().push(new GameEvents::DeathEvent(getMyGE()->getName(), getMyGE()->getPosition()));
 }
 

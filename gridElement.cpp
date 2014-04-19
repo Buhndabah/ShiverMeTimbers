@@ -9,7 +9,7 @@ GridElement::GridElement(const std::string& name, int stratNum) :
   Listener(),
   moveSpeed(Gamedata::getInstance().getXmlFloat(name+"MoveSpeed")),
   gridSprite(name),
-  gridPosition(100,100),
+  gridPosition(95,105),
   gridVelocity(0,0),
   maxHP(100),
   curHP(100),
@@ -278,7 +278,7 @@ void GridElement::shoot() {
 }
 
 void GridElement::onDamage(const GameEvents::DamageEvent *e) {
-    if(e->getSource().compare(getName()) ==0) return;   // don't respond to ourself
+    if(e->getSource().compare(getName()) !=0) return;   // only respond if our name
     curHP-=e->getDamage();
     if(curHP < 0)
     {
