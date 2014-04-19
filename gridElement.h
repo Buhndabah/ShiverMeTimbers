@@ -60,6 +60,9 @@ public:
   Vector2f getMoveboxVertex(int indx) const { return moveboxVertices[indx];}
   void setMoveboxVertex(int, Vector2f);
 
+  bool getSolid() const { return solid;}
+  void setSolid(bool s) { solid = s;}
+
   void draw() const;
   void update(Uint32 ticks);
   void moveUp();
@@ -90,6 +93,7 @@ private:
   std::vector<bool> moveDir; //boolean vector telling the gridElement which direction it is moving in
   std::vector<Vector2f> moveboxVertices; //Vector2f vector of vertices for the movement hitbox
   Strategy* myStrat;
+  bool solid;
 };
 
 void GridElementDamageForwarder(Listener*, const GameEvents::Event*);

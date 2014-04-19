@@ -291,10 +291,9 @@ void MapManager::collideGridEles(int tileIndx, GridElement& g, Vector2f hypoIncr
 
 	    bool inBounds = (minX && maxX && minY && maxY);
 
-	    if(inBounds){
+	    if(inBounds && g.getSolid() && test->getSolid()){
 		validPos = g.getGridPosition();
 		hitGE = true;
-		//if(test) std::cerr << "\tidk"  << j << std::endl;
 		subject = test;
 	    }
 	} 
@@ -347,7 +346,6 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
     }
     //if(hitGE && !subject) std::cerr << "no subj?" << std::endl;
     if(hitGE && subject){
-	//std::cerr << "heyoooo" << std::endl;
 	GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), subject->getName(), g.getPosition()));
     }
 

@@ -18,7 +18,8 @@ GridElement::GridElement(const std::string& name, int stratNum) :
   map(MapManager::getInstance()),
   moveDir(),
   moveboxVertices(),
-  myStrat(NULL)
+  myStrat(NULL),
+  solid(Gamedata::getInstance().getXmlBool(name+"Solid"))
 {
   std::ostringstream sstream;
   sstream << map.getNumGridElements();
@@ -70,7 +71,8 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, 
     map(MapManager::getInstance()),
     moveDir(),
     moveboxVertices(),
-    myStrat(NULL)
+    myStrat(NULL),
+    solid(Gamedata::getInstance().getXmlBool(name+"Solid"))
 {
   std::ostringstream sstream;
   sstream << map.getNumGridElements();
@@ -124,7 +126,8 @@ GridElement::GridElement(const GridElement& g) :
   map(MapManager::getInstance()),
   moveDir(g.moveDir),
   moveboxVertices(g.moveboxVertices),
-  myStrat((g.myStrat->clone()))
+  myStrat((g.myStrat->clone())),
+  solid(g.solid)
 {
   std::ostringstream sstream;
   sstream << map.getNumGridElements();
@@ -152,6 +155,7 @@ GridElement& GridElement::operator=(const GridElement& g) {
     moveboxVertices = g.moveboxVertices;
     myStrat = g.myStrat->clone();
     registerListeners();
+    solid = g.solid;
     return *this;
 }
 
