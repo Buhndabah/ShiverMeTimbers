@@ -16,7 +16,8 @@ GridElement::GridElement(const std::string& name, int stratNum) :
   map(MapManager::getInstance()),
   moveDir(),
   moveboxVertices(),
-  myStrat(NULL)
+  myStrat(NULL),
+  solid(Gamedata::getInstance().getXmlBool(name+"Solid"))
 {
   //gridSprite.setPosition(map.getOrigin());//+Vector2f(-5,40));//-Vector2f(0,gridSprite.getH())+Vector2f(-5,40));
   gridSprite.setPosition(map.gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
@@ -63,7 +64,8 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, 
     map(MapManager::getInstance()),
     moveDir(),
     moveboxVertices(),
-    myStrat(NULL)
+    myStrat(NULL),
+    solid(Gamedata::getInstance().getXmlBool(name+"Solid"))
 {
     gridSprite.setPosition(map.gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
 
@@ -111,7 +113,8 @@ GridElement::GridElement(const GridElement& g) :
   map(MapManager::getInstance()),
   moveDir(g.moveDir),
   moveboxVertices(g.moveboxVertices),
-  myStrat((g.myStrat->clone()))
+  myStrat((g.myStrat->clone())),
+  solid(g.solid)
 {
     if(myStrat) myStrat->init();
 }
@@ -128,6 +131,7 @@ GridElement& GridElement::operator=(const GridElement& g) {
     moveDir = g.moveDir;
     moveboxVertices = g.moveboxVertices;
     myStrat = g.myStrat->clone();
+    solid = g.solid;
     return *this;
 }
 
