@@ -140,6 +140,7 @@ void GridElement::draw() const {
   gridSprite.draw();
 }
 
+
 void GridElement::update(Uint32 ticks) {
 
   if (getSprite().getVelocity() != Vector2f(0,0))
@@ -151,7 +152,6 @@ void GridElement::update(Uint32 ticks) {
   //recieve validated movement from the map
   Vector2f oldgridPos = gridPosition;
   bool atEdge = false;
-//  if(incr == Vector2f(0,0) && getName() == "snowball") std::cerr<< "WUHHHHHH?! WHY?!" << std::endl;
   gridPosition = map.validateMovement(*this, incr, fticks, atEdge);
 
   incr = getSprite().getVelocity() * fticks * 0.001;
