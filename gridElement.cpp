@@ -310,15 +310,15 @@ void GridElement::shoot() {
 
 void GridElement::onDamage(const GameEvents::DamageEvent *e) {
 
-    // Check if event is from self
-    if(e->getSource().compare(getName()) ==0) {  return; }
+    // Check if event is targeting self
+    if(e->getSource().compare(getName()) !=0) {  return; }
 
     curHP-=e->getDamage();
 
     // What to do if we die
     if(curHP < 0)
     {
-        GameEvents::EventQueue::getInstance().push(new GameEvents::DeathEvent(getName(), getPosition()));
+        //GameEvents::EventQueue::getInstance().push(new GameEvents::DeathEvent(getName(), getPosition()));
         curHP=maxHP;
     }
 
