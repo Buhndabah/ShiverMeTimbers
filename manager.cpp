@@ -49,6 +49,12 @@ Manager::Manager() :
   map.addGridElement(player);
   map.setPlayer(player);
   map.addGridElement(new GridElement("icecream",CHASE_STRAT));
+  
+  // test target 
+  GridElement* test;
+  map.addGridElement(test = new GridElement("testyeti", Vector2f(600,600), 0, NONE));
+  hud.addHealthBar(test->getName(), Vector2f(0,-10));
+
   hud.addHealthBar(player->getName(), Vector2f(0, -10));
   SoundManager::getInstance();
 //  snowballs.push_back(new MultiSprite("spinsnowball"));

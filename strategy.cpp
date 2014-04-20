@@ -3,7 +3,7 @@
 #include "gridElement.h"
 
 ChaseStrategy::ChaseStrategy(GridElement* g, GridElement* c) :
-    Strategy(g),
+    Strategy(g, CHASE_STRAT),
     chaseTarget(c)
 { 
     init();    
@@ -106,7 +106,8 @@ void ChaseStrategy::registerListeners() {
 /*********** Bullet Strategy ****************/
 
 BulletStrategy::BulletStrategy(GridElement* g, int dir) :
-    Strategy(g)
+    Strategy(g, BULLET_STRAT),
+    direction(dir)
 {
     init();
     switch(dir) {
@@ -147,8 +148,9 @@ void BulletStrategy::init() {
 
 void BulletStrategy::onCollide(const GameEvents::Event* e)
 {
-    std::string myName = getMyGE()->getName();
+    GridElement* g = getMyGE();
     const GameEvents::CollideEvent *c = dynamic_cast<const GameEvents::CollideEvent*>(e);
+    std::string myName = g->getName();
     std::string to;
 
     // If this doesn't involve us, ignore it
@@ -156,14 +158,19 @@ void BulletStrategy::onCollide(const GameEvents::Event* e)
 
     /* Get name of what we hit */
     /* Account for both them hitting us and us hitting them */
-    if(c->getSource().compare(myName))
+    if(c->getSource().compare(myName)==0)
         to = c->getSubject();
     else
         to = c->getSource();
+    // ignore collisions with other bullets
+    if(to.substr(to.length()-std::string("bullet").length()).compare("bullet")==0) {
+        return;
+    }
 
     /* Push both a collide event and a death notification for ourself */
-    GameEvents::EventQueue::getInstance().push(new GameEvents::DamageEvent(to, getMyGE()->getPosition(), 10));
-    GameEvents::EventQueue::getInstance().push(new GameEvents::DeathEvent(myName, getMyGE()->getPosition()));
+    GameEvents::EventQueue::getInstance().push(new GameEvents::DamageEvent(myName, to, g->getPosition(), 10));
+    GameEvents::EventQueue::getInstance().push(new GameEvents::DeathEvent(myName, g->getPosition()));
+
 }
 
 /****** Listener registration stuff ******/

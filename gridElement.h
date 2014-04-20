@@ -78,6 +78,8 @@ public:
 
   virtual void onDamage(const GameEvents::DamageEvent *);
 
+  int getStratType() const { if(myStrat)  return  myStrat->getType(); else return NONE; }
+
 private:
   virtual void registerListeners();
   void clearMoveDir();

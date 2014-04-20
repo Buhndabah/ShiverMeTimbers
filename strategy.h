@@ -13,11 +13,12 @@ enum strats {
 class GridElement;
 class Strategy : public Listener{
 public:
-    Strategy(GridElement* g) : myGE(g) {}
-    Strategy(const Strategy& rhs) : myGE(rhs.myGE) {}
+    Strategy(GridElement* g, strats t) : myGE(g), type(t) {}
+    Strategy(const Strategy& rhs) : myGE(rhs.myGE), type(rhs.type){}
     Strategy& operator=(const Strategy& rhs) { 
         if(this == &rhs) return *this;
         myGE = rhs.myGE;  
+        type = rhs.type;
         return *this;
     }
     virtual ~Strategy() {}
@@ -26,8 +27,10 @@ public:
     virtual Strategy* clone() const=0;
     //virtual void update(Uint32 ticks) {};
     GridElement* getMyGE() const { return myGE; }
+    strats getType() const { return type; }
 private:
     GridElement* myGE;
+    strats type;
 };
 
 /******* Strategy Specializations *******/
@@ -59,6 +62,8 @@ public:
           return new BulletStrategy(*this);
       }
       virtual void onCollide(const GameEvents::Event*);
+private:
+    int direction;
 };
 void bulletStratCollideForwarder(Listener*, const GameEvents::Event*);
 #endif

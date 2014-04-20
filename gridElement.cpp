@@ -21,10 +21,6 @@ GridElement::GridElement(const std::string& name, int stratNum) :
   myStrat(NULL),
   solid(Gamedata::getInstance().getXmlBool(name+"Solid"))
 {
-  std::ostringstream sstream;
-  sstream << map.getNumGridElements();
-  std::string tempname = sstream.str();
-  setName(tempname);
   //gridSprite.setPosition(map.getOrigin());//+Vector2f(-5,40));//-Vector2f(0,gridSprite.getH())+Vector2f(-5,40));
   gridSprite.setPosition(map.gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
   moveDir.reserve(8);
@@ -43,18 +39,22 @@ GridElement::GridElement(const std::string& name, int stratNum) :
   moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(0,gridSprite.getH() * .5)));
 
 
-
+  std::ostringstream sstream;
+  sstream << map.getNumGridElements();
+  std::string tempname = std::string(gridSprite.getName()) + sstream.str();
   switch(stratNum) {
       case(CHASE_STRAT):
           myStrat = new ChaseStrategy(this,map.getPlayer());
           break;
       case(BULLET_STRAT):
+          tempname = tempname + std::string("bullet");
           myStrat = new BulletStrategy(this,0);
           break;
       default:
           myStrat = NULL;
           break;
   }
+  setName(tempname);
   if(myStrat) 
       myStrat->init();
   registerListeners();
@@ -62,6 +62,7 @@ GridElement::GridElement(const std::string& name, int stratNum) :
 
 GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, int stratNum) :
     Listener(),
+    name(),
     moveSpeed(Gamedata::getInstance().getXmlFloat(name+"MoveSpeed")),
     gridSprite(name),
     gridPosition(pos),
@@ -74,10 +75,6 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, 
     myStrat(NULL),
     solid(Gamedata::getInstance().getXmlBool(name+"Solid"))
 {
-  std::ostringstream sstream;
-  sstream << map.getNumGridElements();
-  std::string tempname = sstream.str();
-  setName(tempname);
     gridSprite.setPosition(map.gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
 
     moveDir.reserve(8);
@@ -98,17 +95,22 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, 
 
 
 
+  std::ostringstream sstream;
+  sstream << map.getNumGridElements();
+  std::string tempname = std::string(gridSprite.getName()) + sstream.str();
   switch(stratNum) {
       case(CHASE_STRAT):
           myStrat = new ChaseStrategy(this,map.getPlayer());
           break;
       case(BULLET_STRAT):
+          tempname = tempname + std::string("bullet");
           myStrat = new BulletStrategy(this,dir);
           break;
       default:
           myStrat = NULL;
           break;
   }
+  setName(tempname);
   if(myStrat) 
       myStrat->init();
   registerListeners();
@@ -131,7 +133,8 @@ GridElement::GridElement(const GridElement& g) :
 {
   std::ostringstream sstream;
   sstream << map.getNumGridElements();
-  std::string tempname = sstream.str();
+  std::string tempname = std::string(gridSprite.getName()) + sstream.str();
+  if(myStrat != NULL && myStrat->getType()==BULLET_STRAT) tempname = tempname + std::string("bullet");
   setName(tempname);
 
     if(myStrat) myStrat->init();
@@ -140,10 +143,6 @@ GridElement::GridElement(const GridElement& g) :
 
 GridElement& GridElement::operator=(const GridElement& g) {
     if(this == &g) return *this;
-  std::ostringstream sstream;
-  sstream << map.getNumGridElements();
-  std::string tempname = sstream.str();
-  setName(tempname);
     Listener::operator=(g);
     moveSpeed = g.moveSpeed;
     gridSprite = MultiSprite(g.gridSprite);
@@ -154,6 +153,14 @@ GridElement& GridElement::operator=(const GridElement& g) {
     moveDir = g.moveDir;
     moveboxVertices = g.moveboxVertices;
     myStrat = g.myStrat->clone();
+  std::ostringstream sstream;
+  sstream << map.getNumGridElements();
+  std::string tempname = std::string(gridSprite.getName()) + sstream.str();
+    if(myStrat->getType()==BULLET_STRAT)
+    {
+        tempname= tempname+std::string("bullet");
+    }
+  setName(tempname);
     registerListeners();
     solid = g.solid;
     return *this;
@@ -311,7 +318,7 @@ void GridElement::shoot() {
 void GridElement::onDamage(const GameEvents::DamageEvent *e) {
 
     // Check if event is targeting self
-    if(e->getSource().compare(getName()) !=0) {  return; }
+    if(e->getTarget().compare(getName()) !=0) {  return; }
 
     curHP-=e->getDamage();
 

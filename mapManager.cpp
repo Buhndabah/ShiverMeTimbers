@@ -131,7 +131,6 @@ void MapManager::addGridElement(GridElement* gridE) {
     index = std::max(index,getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(diffX/2.,0))));
     index = std::max(index,getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(-diffX/2.,0))));
 
-    std::cerr << gridE->getName() << std::endl;
 
     try{ gridElements.at(index).push_back(gridE); }
     catch(const std::out_of_range& e) {
@@ -300,28 +299,34 @@ const Tile& MapManager::findTileAt(const Vector2f& coord) const {
 void MapManager::collideGridEles(int tileIndx, GridElement& g, Vector2f hypoIncr, Vector2f& validPos, bool& hitGE, GridElement*& subject) const{
     std::list<GridElement *>::const_iterator iter;
     for(iter = (gridElements[tileIndx]).begin(); iter != (gridElements[tileIndx]).end(); ++iter){
-	if(!(*iter)){
-	    std::cerr << "that happened" << std::endl;
-	    break;
-	}
-	GridElement* test = *iter;
-	if(&g == test) break;
-	std::vector<Vector2f> movebox = g.getMoveboxVertices();
-	std::vector<Vector2f> testmovebox = test->getMoveboxVertices();
-	for(int j=0; j<4; ++j){
-	    bool minX = (movebox[j] + hypoIncr)[0] >= (testmovebox[0])[0];
-	    bool minY = (movebox[j] + hypoIncr)[1] >= (testmovebox[0])[1];
-	    bool maxX = (movebox[j] + hypoIncr)[0] <= (testmovebox[1])[0];
-	    bool maxY = (movebox[j] + hypoIncr)[1] <= (testmovebox[2])[1];
-
-	    bool inBounds = (minX && maxX && minY && maxY);
-
-	    if(inBounds && g.getSolid() && test->getSolid()){
-		validPos = g.getGridPosition();
-		hitGE = true;
-		subject = test;
+	    if(!(*iter)){
+	        std::cerr << "that happened" << std::endl;
+	        break;
 	    }
-	} 
+	    GridElement* test = *iter;
+	    if(&g == test) break;
+	    std::vector<Vector2f> movebox = g.getMoveboxVertices();
+	    std::vector<Vector2f> testmovebox = test->getMoveboxVertices();
+	    for(int j=0; j<4; ++j){
+	        bool minX = (movebox[j] + hypoIncr)[0] >= (testmovebox[0])[0];
+	        bool minY = (movebox[j] + hypoIncr)[1] >= (testmovebox[0])[1];
+	        bool maxX = (movebox[j] + hypoIncr)[0] <= (testmovebox[1])[0];
+	        bool maxY = (movebox[j] + hypoIncr)[1] <= (testmovebox[2])[1];
+
+	        bool inBounds = (minX && maxX && minY && maxY);
+
+	        if(inBounds && g.getSolid() && test->getSolid()){
+                if( (g.getStratType() == test->getStratType()) && g.getStratType()==BULLET_STRAT) 
+                {
+                    // nothing
+                }
+                else {
+		            validPos = g.getGridPosition();
+		            hitGE = true;
+		            subject = test;
+                }
+	        }
+	    } 
     }
 }
 
@@ -362,7 +367,7 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
     GridElement *subject = NULL;
 
     for(i=0; i < mapWidth * mapHeight; ++i){
-	collideGridEles(i,g,hypoIncr,validPos,hitGE,subject);
+	    collideGridEles(i,g,hypoIncr,validPos,hitGE,subject);
     }
 
     if(atEdge){
@@ -371,13 +376,20 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
     }
     //if(hitGE && !subject) std::cerr << "no subj?" << std::endl;
     if(hitGE && subject){
-	GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), subject->getName(), g.getPosition()));
+        if( (g.getStratType() == subject->getStratType()) && g.getStratType()==BULLET_STRAT) 
+        {
+            // nothing
+        }
+        else {
+	        GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), subject->getName(), g.getPosition()));
+        }
     }
 
     float dist = sqrt( pow(validPos[0] - g.getGridPosition()[0],2) + pow(validPos[1] - g.getGridPosition()[1],2));
     fticks = 1000 * dist / static_cast<float>(g.getMoveSpeed());
-
-    if(hitGE) atEdge = true;
+    if(hitGE && (subject->getStratType() != BULLET_STRAT)) {
+        atEdge = true;
+    }
     return validPos;
 }
 

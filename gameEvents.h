@@ -49,12 +49,15 @@ private:
 
 class DamageEvent : public Event {
 public:
-    DamageEvent(const std::string& to, const Vector2f& pos, float amount) : 
-        Event(DAMAGE_EVENT, to, pos),
+    DamageEvent(const std::string& from, const std::string& to, const Vector2f& pos, float amount) : 
+        Event(DAMAGE_EVENT, from, pos),
+        target(to),
         damage(amount)
     { }
+    std::string getTarget() const { return target; }
     float getDamage() const { return damage; }
 private:
+    std::string target;
     float damage;
 };
 
