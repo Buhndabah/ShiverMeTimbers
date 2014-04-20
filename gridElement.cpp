@@ -318,11 +318,12 @@ void GridElement::onDamage(const GameEvents::DamageEvent *e) {
     // What to do if we die
     if(curHP < 0)
     {
-        //GameEvents::EventQueue::getInstance().push(new GameEvents::DeathEvent(getName(), getPosition()));
+        // Push a death notification
+        GameEvents::EventQueue::getInstance().push(new GameEvents::DeathEvent(getName(), getPosition()));
         curHP=maxHP;
     }
 
-    // push new damage event
+    // Push a damage notification
     GameEvents::EventQueue::getInstance().push(new GameEvents::DamageReceivedEvent(getName(), getPosition(), getHPRatio()));
 
 }

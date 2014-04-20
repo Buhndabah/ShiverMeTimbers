@@ -142,7 +142,10 @@ void MapManager::addGridElement(GridElement* gridE) {
 
 // Remove grid element from list
 void MapManager::removeGridElement(const std::string& name) {
-    std::cerr<< "destroy" << std::endl;
+
+    // Don't delete the player plz
+    if(player->getName().compare(name) == 0) return;
+
     for(std::vector<std::list<GridElement*> >::iterator it = gridElements.begin(); it!= gridElements.end(); ++it)
     {
         std::list<GridElement*>::iterator it2=(*it).begin();
@@ -150,7 +153,6 @@ void MapManager::removeGridElement(const std::string& name) {
         {
             if((*it2)->getName().compare(name)==0)
             {
-                std::cerr << "found it " << std::endl;
                 delete (*it2);
                 (*it).erase(it2++);
             }
@@ -581,10 +583,7 @@ void MapCreateForwarder(Listener* context, const GameEvents::Event *e) {
 }
 
 void MapDeathForwarder(Listener* context, const GameEvents::Event *e) {
-    std::cerr<<"lol" <<std::endl;
-    std::cerr<<e->getSource() << std::endl;
     dynamic_cast<MapManager*>(context)->removeGridElement(e->getSource());
-    std::cerr<< "my bad" << std::endl;
 }
 
 void MapManager::registerListeners() {
