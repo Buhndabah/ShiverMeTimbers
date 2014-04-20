@@ -5,7 +5,7 @@ namespace GameEvents { class EventQueue; class Event; class DamageEvent; class D
 class Listener {
 public:
     Listener(); 
-    virtual ~Listener() {};
+    virtual ~Listener(); 
     virtual void onDamage(GameEvents::DamageEvent*);
     virtual void onDamageReceived(GameEvents::DamageReceivedEvent*);
     virtual void onMove(GameEvents::Event*);

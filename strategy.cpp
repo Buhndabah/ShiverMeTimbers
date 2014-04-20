@@ -149,7 +149,7 @@ void BulletStrategy::onCollide(const GameEvents::Event* e)
 {
     const GameEvents::CollideEvent *c = dynamic_cast<const GameEvents::CollideEvent*>(e);
     std::string to;
-
+    std::cerr<<"sup" <<std::endl;
 
     /* Get name of what we hit */
     /* Account for both them hitting us and us hitting them */

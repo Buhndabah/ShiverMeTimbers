@@ -61,6 +61,25 @@ void EventQueue::addListener(types eventType, Listener* l, void(*fn)(Listener*, 
     listeners[eventType].push_back(std::pair<Listener*, void(*)(Listener*, const Event*)>(l, fn));
 }
 
+// remove listener from list
+void EventQueue::removeListener(Listener* l) {
+    for(std::map<int, std::list<std::pair<Listener*, void(*)(Listener*, const Event*)> > >::iterator it = listeners.begin(); it!= listeners.end(); ++it)
+    {
+        std::list<std::pair<Listener*, void(*)(Listener*, const Event*)> >::iterator it2 = (*it).second.begin();
+        while(it2 != ((*it).second.end()))
+        {
+            if((*it2).first == l)
+            {
+                (*it).second.erase(it2++);
+            }
+            else
+            {
+                it2++;
+            }
+        }
+    }
+}
+
 // for each event, notify each listener that cares, calling its callback
 void EventQueue::notify() {
     for(std::list<Event*>::const_iterator it=outgoing.begin(); it != outgoing.end(); ++it)

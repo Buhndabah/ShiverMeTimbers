@@ -112,6 +112,7 @@
   <snowballSrcY>0</snowballSrcY>
   <snowballWidth>60</snowballWidth>
   <snowballHeight>60</snowballHeight>
+  <snowballSolid>false</snowballHeight>
   <snowballMoveSpeed>80</snowballMoveSpeed>
   <snowballFrames>1</snowballFrames>
   <snowballFrameInterval>160</snowballFrameInterval>
@@ -282,6 +283,7 @@
   <coolyetiChunks>25</coolyetiChunks>
 
   <coolyetiMoveSpeed>300</coolyetiMoveSpeed>
+  <coolyetiSolid>true</coolyetiSolid>
 
   <coolyetiSrcX>0</coolyetiSrcX>
   <coolyetiSrcY>0</coolyetiSrcY>
@@ -300,6 +302,7 @@
   <icecreamChunks>25</icecreamChunks>
 
   <icecreamMoveSpeed>300</icecreamMoveSpeed>
+  <icecreamSolid>false</icecreamSolid>
 
   <icecreamSrcX>0</icecreamSrcX>
   <icecreamSrcY>0</icecreamSrcY>

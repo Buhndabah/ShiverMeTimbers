@@ -4,6 +4,10 @@ Listener::Listener() :
     eq(GameEvents::EventQueue::getInstance())
 { }
 
+Listener::~Listener() {
+    eq.removeListener(this);
+}
+
 Listener& Listener::operator=(const Listener& rhs) 
 { 
     if(this == &rhs) return *this;

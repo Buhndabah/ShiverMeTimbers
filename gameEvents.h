@@ -146,7 +146,7 @@ public:
     std::list<Event*> findEventsByType(int t);
     std::list<Event*> findEventsByActor(const std::string& name);
     void addListener(types, Listener*, void (*)(Listener*, const Event*));
-
+    void removeListener(Listener*);
 private:
     EventQueue() : incoming(), outgoing(), listeners() {  
         for(int i = 0; i < TYPES_MAX; i++) 

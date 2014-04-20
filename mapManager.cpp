@@ -139,6 +139,29 @@ void MapManager::addGridElement(GridElement* gridE) {
     }
 }
 
+
+// Remove grid element from list
+void MapManager::removeGridElement(const std::string& name) {
+    std::cerr<< "destroy" << std::endl;
+    for(std::vector<std::list<GridElement*> >::iterator it = gridElements.begin(); it!= gridElements.end(); ++it)
+    {
+        std::list<GridElement*>::iterator it2=(*it).begin();
+        while(it2 != (*it).end())
+        {
+            if((*it2)->getName().compare(name)==0)
+            {
+                std::cerr << "found it " << std::endl;
+                delete (*it2);
+                (*it).erase(it2++);
+            }
+            else 
+            {
+                it2++;
+            }
+        }
+    }
+}
+
 // Parse tile definitions (not the actual objects though)
 void MapManager::createTiles() {
     std::list<std::map<std::string, std::string> > tileList = parser.parseNodesWithTag("tile");
@@ -557,6 +580,14 @@ void MapCreateForwarder(Listener* context, const GameEvents::Event *e) {
     }
 }
 
+void MapDeathForwarder(Listener* context, const GameEvents::Event *e) {
+    std::cerr<<"lol" <<std::endl;
+    std::cerr<<e->getSource() << std::endl;
+    dynamic_cast<MapManager*>(context)->removeGridElement(e->getSource());
+    std::cerr<< "my bad" << std::endl;
+}
+
 void MapManager::registerListeners() {
     GameEvents::EventQueue::getInstance().addListener(GameEvents::CREATE_EVENT, static_cast<Listener*>(this), &MapCreateForwarder);
+    GameEvents::EventQueue::getInstance().addListener(GameEvents::DEATH_EVENT, static_cast<Listener*>(this), &MapDeathForwarder);
 }

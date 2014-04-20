@@ -53,6 +53,7 @@ MultiSprite& MultiSprite::operator=(const MultiSprite& rhs) {
     timeSinceLastFrame = rhs.timeSinceLastFrame;
     frameWidth = rhs.frameWidth;
     frameHeight = rhs.frameHeight;
+    return *this;
 }
 
 void MultiSprite::draw() const { 

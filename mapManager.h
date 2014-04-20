@@ -23,6 +23,7 @@ public:
     void debug() const;
 
     void addGridElement(GridElement*);
+    void removeGridElement(const std::string&);
     const Tile& findTileAt(const Vector2f&) const;
 
 
@@ -83,4 +84,5 @@ private:
 };
 
 void MapCreateForwarder(Listener*, const GameEvents::Event);
+void MapDeathForwarder(Listener*, const GameEvents::Event);
 #endif
