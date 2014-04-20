@@ -79,6 +79,7 @@ public:
   virtual void onDamage(const GameEvents::DamageEvent *);
 
   int getStratType() const { if(myStrat)  return  myStrat->getType(); else return NONE; }
+  Strategy* getStrat() const { return myStrat; }
 
 private:
   virtual void registerListeners();

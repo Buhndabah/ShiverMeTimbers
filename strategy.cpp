@@ -166,7 +166,11 @@ void BulletStrategy::onCollide(const GameEvents::Event* e)
     if(to.substr(to.length()-std::string("bullet").length()).compare("bullet")==0) {
         return;
     }
-
+    // ignore collisions with our source
+    if(source.compare(to)==0)
+    {
+        return;
+    } 
     /* Push both a collide event and a death notification for ourself */
     GameEvents::EventQueue::getInstance().push(new GameEvents::DamageEvent(myName, to, g->getPosition(), 10));
     GameEvents::EventQueue::getInstance().push(new GameEvents::DeathEvent(myName, g->getPosition()));

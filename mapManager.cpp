@@ -316,7 +316,15 @@ void MapManager::collideGridEles(int tileIndx, GridElement& g, Vector2f hypoIncr
 	        bool inBounds = (minX && maxX && minY && maxY);
 
 	        if(inBounds && g.getSolid() && test->getSolid()){
+                int myStrat = g.getStratType();
+                int theirStrat = test->getStratType();
                 if( (g.getStratType() == test->getStratType()) && g.getStratType()==BULLET_STRAT) 
+                {
+                    // nothing
+                }
+                // if bullet strat, check that the source isn't us
+                else if(   (myStrat    == BULLET_STRAT && dynamic_cast<BulletStrategy*>(g.getStrat())->getSource().compare(test->getName())==0) 
+                         ||(theirStrat == BULLET_STRAT && dynamic_cast<BulletStrategy*>(test->getStrat())->getSource().compare(g.getName())==0))
                 {
                     // nothing
                 }
@@ -376,7 +384,21 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
     }
     //if(hitGE && !subject) std::cerr << "no subj?" << std::endl;
     if(hitGE && subject){
-        if( (g.getStratType() == subject->getStratType()) && g.getStratType()==BULLET_STRAT) 
+        int myStrat = g.getStratType();
+        int theirStrat = subject->getStratType();
+
+        if(myStrat==BULLET_STRAT) {
+            std::cerr<< "my source is " << dynamic_cast<BulletStrategy*>(g.getStrat())->getSource() <<std::endl;
+            std::cerr << "they are " << subject->getName() << std::endl;
+        }
+
+        if( (myStrat == theirStrat) && myStrat==BULLET_STRAT) 
+        {
+            // nothing
+        }
+        // if bullet strat, check that the source isn't us
+        else if(   (myStrat    == BULLET_STRAT && dynamic_cast<BulletStrategy*>(g.getStrat())->getSource().compare(subject->getName())==0) 
+                 ||(theirStrat == BULLET_STRAT && dynamic_cast<BulletStrategy*>(subject->getStrat())->getSource().compare(g.getName())==0))
         {
             // nothing
         }
@@ -579,6 +601,7 @@ void MapManager::displayData() const {
 // Forwarding function creation events
 void MapCreateForwarder(Listener* context, const GameEvents::Event *e) {
     const GameEvents::CreateEvent *c = dynamic_cast<const GameEvents::CreateEvent*>(e);
+    GridElement* newGE;
 
     // Ignore creation events we pushed
     if(e->getSource().compare("map") ==0) 
@@ -588,7 +611,12 @@ void MapCreateForwarder(Listener* context, const GameEvents::Event *e) {
     else if(dynamic_cast<MapManager*>(context)->getIndexAt(dynamic_cast<MapManager*>(context)->worldToGrid(e->getPosition()))>0)
     {
         // Add a new grid element
-        dynamic_cast<MapManager*>(context)->addGridElement(new GridElement(c->getSprite(), dynamic_cast<MapManager*>(context)->worldToGrid(e->getPosition()), c->getDir(), c->getStrat()));
+        dynamic_cast<MapManager*>(context)->addGridElement(newGE = new GridElement(c->getSprite(), dynamic_cast<MapManager*>(context)->worldToGrid(e->getPosition()), c->getDir(), c->getStrat()));
+
+        if(c->getStrat() == BULLET_STRAT) {
+            dynamic_cast<BulletStrategy*>(newGE->getStrat())->setSource(c->getSource());
+        }
+
         // And then alert everyone it's been created
     GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent("map", c->getSprite(), e->getPosition(), c->getDir(), c->getStrat()));
     }

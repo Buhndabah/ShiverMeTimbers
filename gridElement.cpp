@@ -306,8 +306,11 @@ void GridElement::stop() {
 }
 
 void GridElement::shoot() {
+
+    // figure out what direction to shoot
     int i=0;
     for(i; i<moveDir.size(); ++i) { if(moveDir[i]) break; }
+
     GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", getPosition() + Vector2f(-50,0), i, BULLET_STRAT));
     SoundManager::getInstance()[1];
 }

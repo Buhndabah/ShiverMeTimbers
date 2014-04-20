@@ -62,8 +62,11 @@ public:
           return new BulletStrategy(*this);
       }
       virtual void onCollide(const GameEvents::Event*);
+      void setSource(const std::string& s) { source = s; }
+      std::string getSource() const { return source; }
 private:
     int direction;
+    std::string source;
 };
 void bulletStratCollideForwarder(Listener*, const GameEvents::Event*);
 #endif
