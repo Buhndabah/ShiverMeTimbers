@@ -5,7 +5,8 @@
 enum strats {
     NONE,
     CHASE_STRAT,
-    BULLET_STRAT
+    BULLET_STRAT,
+    TURRET_STRAT
 };
 
 /***** Base Strategy class, don't instantiate */
@@ -69,4 +70,22 @@ private:
     std::string source;
 };
 void bulletStratCollideForwarder(Listener*, const GameEvents::Event*);
+
+class TurretStrategy : public Strategy {
+public:
+    TurretStrategy(GridElement*, GridElement*);
+    TurretStrategy(const TurretStrategy&);
+    TurretStrategy& operator=(const TurretStrategy&);
+
+    virtual void init();
+    virtual void registerListeners();
+    
+    TurretStrategy* clone() const {
+        return new TurretStrategy(*this);
+    }
+
+    virtual void onMove(const GameEvents::Event*);
+private:
+    GridElement* target;
+};
 #endif

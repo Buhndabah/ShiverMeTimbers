@@ -111,28 +111,28 @@ BulletStrategy::BulletStrategy(GridElement* g, int dir) :
 {
     init();
     switch(dir) {
-        case 0:
+        case UP:
             g->moveUp();
             break;
-        case 1:
+        case UPLEFT:
             g->moveUpLeft();
             break;
-        case 2:
+        case UPRIGHT:
             g->moveUpRight();
             break;
-        case 3:
+        case DOWN:
             g->moveDown();
             break;
-        case 4: 
+        case DOWNLEFT: 
             g->moveDownLeft();
             break;
-        case 5:
+        case DOWNRIGHT:
             g->moveDownRight();
             break;
-        case 6:
+        case LEFT:
             g->moveLeft();
             break;
-        case 7:
+        case RIGHT:
             g->moveRight();
             break;
         default:
@@ -185,4 +185,98 @@ void bulletStratCollideForwarder(Listener* context, const GameEvents::Event *e) 
 
 void BulletStrategy::registerListeners() {
     GameEvents::EventQueue::getInstance().addListener(GameEvents::COLLIDE_EVENT, static_cast<Listener*>(this), &bulletStratCollideForwarder);
+}
+
+/********* Turret Strategy ***********************/
+
+TurretStrategy::TurretStrategy(GridElement* g, GridElement* t) :
+    Strategy(g, TURRET_STRAT),
+    target(t)
+{
+    init();
+}
+
+TurretStrategy::TurretStrategy(const TurretStrategy& rhs) :
+    Strategy(rhs),
+    target(rhs.target)
+{
+    init();
+}
+
+TurretStrategy& TurretStrategy::operator=(const TurretStrategy& rhs) {
+    Strategy::operator=(rhs);
+    
+    if(this == &rhs) return *this;
+
+    target = rhs.target;
+    return *this;
+}
+
+void TurretStrategy::init() {
+    registerListeners();
+}
+
+void turretStratMoveForwarder(Listener* context, const GameEvents::Event *e) {
+    dynamic_cast<TurretStrategy*>(context)->onMove(e);
+}
+
+void TurretStrategy::onMove(const GameEvents::Event* e) {
+
+    bool left = ((e->getPosition()[0] > getMyGE()->getPosition()[0]) ? true : false);
+    bool right = ((e->getPosition()[0] <= getMyGE()->getPosition()[0]) ? true : false);
+    bool up = ((e->getPosition()[1] > getMyGE()->getPosition()[1]) ? true : false);
+    bool down = ((e->getPosition()[1] <= getMyGE()->getPosition()[1]) ? true:false);
+    bool inW    = (e->getPosition()[0] > getMyGE()->getPosition()[0]) &&
+                (e->getPosition()[0] < (getMyGE()->getPosition()[0]  + getMyGE()->getSprite().getW()));
+    // Their location is within the sprite's bottom and top edges
+    bool inH    = (e->getPosition()[1] > getMyGE()->getPosition()[1]) &&
+                  (e->getPosition()[1] < (getMyGE()->getPosition()[1]  + getMyGE()->getSprite().getH()));
+
+    // If this is the thing we're shooting
+    std::cerr<<"hey" <<std::endl;
+    if(e->getSource().compare(target->getName())==0)
+    {
+       if(inW)
+       {
+           if(down)
+           {
+               getMyGE()->shoot(DOWN);
+           }
+           else if(up)
+           {
+               getMyGE()->shoot(UP);
+           }
+       }
+       else if(inH)
+       {
+           if(left)
+           {
+               getMyGE()->shoot(RIGHT);
+           }
+           else if(right)
+           {
+               getMyGE()->shoot(LEFT);
+           }
+       }
+       else if(up&&left)
+       {
+           getMyGE()->shoot(DOWNRIGHT);
+       }
+       else if(up&&right)
+       {
+           getMyGE()->shoot(DOWNLEFT);
+       }
+       else if(down&&left)
+       {
+           getMyGE()->shoot(UPRIGHT);
+       }
+       else if(down&&left)
+       {
+           getMyGE()->shoot(UPLEFT);
+       }
+    }
+}
+
+void TurretStrategy::registerListeners() {
+    GameEvents::EventQueue::getInstance().addListener(GameEvents::MOVE_EVENT, static_cast<Listener*>(this), &turretStratMoveForwarder);
 }

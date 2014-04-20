@@ -8,6 +8,17 @@
 #include "mapManager.h"
 #include "strategy.h"
 
+enum dirs {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+    UPRIGHT,
+    UPLEFT,
+    DOWNRIGHT,
+    DOWNLEFT
+};
+
 class MapManager;
 
 class GridElement : public Listener{
@@ -75,6 +86,7 @@ public:
   void moveRight();
   void stop();
   void shoot();
+  void shoot(dirs);
 
   virtual void onDamage(const GameEvents::DamageEvent *);
 

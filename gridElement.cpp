@@ -50,6 +50,9 @@ GridElement::GridElement(const std::string& name, int stratNum) :
           tempname = tempname + std::string("bullet");
           myStrat = new BulletStrategy(this,0);
           break;
+      case(TURRET_STRAT):
+          myStrat = new TurretStrategy(this, map.getPlayer());
+          break;
       default:
           myStrat = NULL;
           break;
@@ -105,6 +108,9 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, 
       case(BULLET_STRAT):
           tempname = tempname + std::string("bullet");
           myStrat = new BulletStrategy(this,dir);
+          break;
+      case(TURRET_STRAT):
+          myStrat = new TurretStrategy(this, map.getPlayer());
           break;
       default:
           myStrat = NULL;
@@ -211,7 +217,7 @@ void GridElement::clearMoveDir() {
 
 void GridElement::moveUp() {
   clearMoveDir();
-  moveDir[0] = true;
+  moveDir[UP] = true;
   getSprite().velocityX(0.);
   getSprite().velocityY(-moveSpeed * (cos(26.565*3.141592653589/180) / cos(45*3.141592653589/180) * 0.5));
 
@@ -221,7 +227,7 @@ void GridElement::moveUp() {
 
 void GridElement::moveUpLeft() {
   clearMoveDir();
-  moveDir[1] = true;
+  moveDir[UPLEFT] = true;
 
   getSprite().velocityX(-moveSpeed * cos(26.565*3.141592653589/180));
   getSprite().velocityY(-moveSpeed * sin(26.565*3.141592653589/180));
@@ -232,7 +238,7 @@ void GridElement::moveUpLeft() {
 
 void GridElement::moveUpRight() {
   clearMoveDir();
-  moveDir[2] = true;
+  moveDir[UPRIGHT] = true;
 
   getSprite().velocityX(moveSpeed * cos(26.565*3.141592653589/180));
   getSprite().velocityY(-moveSpeed * sin(26.565*3.141592653589/180));
@@ -243,7 +249,7 @@ void GridElement::moveUpRight() {
 
 void GridElement::moveDown() {
   clearMoveDir();
-  moveDir[3] = true;
+  moveDir[DOWN] = true;
 
   getSprite().velocityX(0.);
   //getSprite().velocityY(moveSpeed/sqrt(2));
@@ -255,7 +261,7 @@ void GridElement::moveDown() {
 
 void GridElement::moveDownLeft() {
   clearMoveDir();
-  moveDir[4] = true;
+  moveDir[DOWNLEFT] = true;
 
   getSprite().velocityX(-moveSpeed * cos(26.565*3.141592653589/180));
   getSprite().velocityY(moveSpeed * sin(26.565*3.141592653589/180));
@@ -266,7 +272,7 @@ void GridElement::moveDownLeft() {
 
 void GridElement::moveDownRight() {
   clearMoveDir();
-  moveDir[5] = true;
+  moveDir[DOWNRIGHT] = true;
 
   getSprite().velocityX(moveSpeed * cos(26.565*3.141592653589/180));
   getSprite().velocityY(moveSpeed * sin(26.565*3.141592653589/180));
@@ -277,7 +283,7 @@ void GridElement::moveDownRight() {
 
 void GridElement::moveLeft() {
   clearMoveDir();
-  moveDir[6] = true;
+  moveDir[LEFT] = true;
 
   getSprite().velocityX(-moveSpeed *(cos(26.565*3.141592653589/180) / cos(45*3.141592653589/180)));
   getSprite().velocityY(0.);
@@ -288,7 +294,7 @@ void GridElement::moveLeft() {
 
 void GridElement::moveRight() {
   clearMoveDir();
-  moveDir[7] = true;
+  moveDir[RIGHT] = true;
 
   getSprite().velocityX(moveSpeed *(cos(26.565*3.141592653589/180) / cos(45*3.141592653589/180)));
   getSprite().velocityY(0.);
@@ -315,6 +321,9 @@ void GridElement::shoot() {
     SoundManager::getInstance()[1];
 }
 
+void GridElement::shoot(dirs dir) {
+    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", getPosition() + Vector2f(-50,0), dir, BULLET_STRAT));
+}
 
 /*********** Stuff for handling events ***************/
 
