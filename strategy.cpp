@@ -147,19 +147,23 @@ void BulletStrategy::init() {
 
 void BulletStrategy::onCollide(const GameEvents::Event* e)
 {
+    std::string myName = getMyGE()->getName();
     const GameEvents::CollideEvent *c = dynamic_cast<const GameEvents::CollideEvent*>(e);
     std::string to;
 
+    // If this doesn't involve us, ignore it
+    if(c->getSource().compare(myName) != 0 && c->getSubject().compare(myName) !=0) return;
+
     /* Get name of what we hit */
     /* Account for both them hitting us and us hitting them */
-    if(e->getSource().compare(getMyGE()->getName()))
+    if(c->getSource().compare(myName))
         to = c->getSubject();
     else
         to = c->getSource();
 
     /* Push both a collide event and a death notification for ourself */
     GameEvents::EventQueue::getInstance().push(new GameEvents::DamageEvent(to, getMyGE()->getPosition(), 10));
-    GameEvents::EventQueue::getInstance().push(new GameEvents::DeathEvent(getMyGE()->getName(), getMyGE()->getPosition()));
+    GameEvents::EventQueue::getInstance().push(new GameEvents::DeathEvent(myName, getMyGE()->getPosition()));
 }
 
 /****** Listener registration stuff ******/

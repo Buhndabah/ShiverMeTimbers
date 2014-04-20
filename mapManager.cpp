@@ -131,7 +131,7 @@ void MapManager::addGridElement(GridElement* gridE) {
     index = std::max(index,getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(diffX/2.,0))));
     index = std::max(index,getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(-diffX/2.,0))));
 
-
+    std::cerr << gridE->getName() << std::endl;
 
     try{ gridElements.at(index).push_back(gridE); }
     catch(const std::out_of_range& e) {
