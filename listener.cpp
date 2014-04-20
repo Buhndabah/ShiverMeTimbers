@@ -14,9 +14,10 @@ Listener& Listener::operator=(const Listener& rhs)
     return *this;
 }
 
-void Listener::onDamage(GameEvents::DamageEvent *e) {(void)e;}
-void Listener::onDamageReceived(GameEvents::DamageReceivedEvent *e) {(void)e;};
-void Listener::onMove(GameEvents::Event *e) {(void)e;}
-void Listener::onCollide(GameEvents::Event *e) {(void)e;}
-void Listener::onDeath(GameEvents::Event *e) {(void)e;}
-void Listener::onRoundOver(GameEvents::Event *e) {(void)e;}
+void Listener::onDamage(const GameEvents::DamageEvent *e) {(void)e;}
+void Listener::onDamageReceived(const GameEvents::DamageReceivedEvent *e) {(void)e;};
+void Listener::onMove(const GameEvents::Event *e) {(void)e;}
+void Listener::onCollide(const GameEvents::Event *e) {(void)e;}
+void Listener::onDeath(const GameEvents::Event *e) {(void)e;}
+void Listener::onRoundOver(const GameEvents::Event *e) {(void)e;}
+void Listener::onScore(const GameEvents::ScoreEvent *e) {(void)e;}

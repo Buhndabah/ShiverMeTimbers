@@ -18,6 +18,7 @@ enum types {
     DEATH_EVENT,
     ROUNDOVER_EVENT,
     CREATE_EVENT,
+    SCORE_EVENT,
     TYPES_MAX = 7
 };
 
@@ -123,6 +124,17 @@ private:
     std::string sprite;
     int direction;
     int strat;
+};
+
+class ScoreEvent: public Event {
+public:
+    ScoreEvent(const std::string& from, const Vector2f& pos, int amount) : 
+        Event(SCORE_EVENT, from, pos),
+        score(amount)
+        { }
+    int getScore() const { return score; }
+private:
+    int score;
 };
 
 /***************** End Event Specializations ********************/

@@ -6,6 +6,7 @@
 #include "hudFPS.h"
 #include "hudImage.h"
 #include "hudHealthBar.h"
+#include "hudScore.h"
 
 HUD& HUD::getInstance() {
     static HUD instance;
@@ -167,6 +168,13 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
                                           Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())), 
                                           componentParams["visible"].compare("true") ? 0 : 1));
         }
+        else if(componentParams["type"].compare("score")==0)
+        {
+            std::cerr<< "added score" << std::endl;
+            addComponent(new HUDScore(componentParams["name"],
+                                      Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
+                                      componentParams["visible"].compare("true") ? 0 : 1));
+        }
 
         // Check optional parameters
         if(componentParams.find("visibleNotPaused") != componentParams.end())
@@ -241,6 +249,12 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
             cont-> addComponent(new HUDContainer(componentParams["name"], 
                                                  Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())), 
                                                  componentParams["visible"].compare("true") ? 0 : 1));
+        }
+        else if(componentParams["type"].compare("score")==0)
+        {
+            cont->addComponent(new HUDScore(componentParams["name"],
+                                            Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
+                                            componentParams["visible"].compare("true") ? 0 : 1));
         }
 
         // Check optional parameters

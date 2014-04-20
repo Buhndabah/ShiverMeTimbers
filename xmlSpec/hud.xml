@@ -2,6 +2,7 @@
 <hud>
     <component type="text" name="credits" x="750" y="10" visible="true" text="Stephen Wells and John Butchko" centered="false"/>
     <component type="clock" name= "clock" x="10" y="10" visible="true" start="600"/>
+    <component type="score" name="scoreboard" x="10" y="30" visible="true"/>
     <container type = "container" name="pause" x="0" y="0" visible="false" visibleWhenPaused="true" visibleNotPaused="false">
         <item type="image" name="pause screen" x="0" y="0" visible="true" file="pauseScreen"/>
         <item type="text" name="pause text" x="0" y="250" visible="true" text="Paused" centered="true" font="freebooter" color="yellow"/>
