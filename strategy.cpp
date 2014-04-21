@@ -222,18 +222,26 @@ void turretStratMoveForwarder(Listener* context, const GameEvents::Event *e) {
 
 void TurretStrategy::onMove(const GameEvents::Event* e) {
 
-    bool left = ((e->getPosition()[0] > getMyGE()->getPosition()[0]) ? true : false);
-    bool right = ((e->getPosition()[0] <= getMyGE()->getPosition()[0]) ? true : false);
-    bool up = ((e->getPosition()[1] > getMyGE()->getPosition()[1]) ? true : false);
-    bool down = ((e->getPosition()[1] <= getMyGE()->getPosition()[1]) ? true:false);
+    // ignore events from ourself
+    if(e->getSource().compare(getMyGE()->getName())==0) { return; }
+
+    std::cerr<< "their position " << e->getPosition() << std::endl;
+    std::cerr << "my position " << getMyGE()->getPosition() << std::endl;
+    bool left = ((e->getPosition()[0] < getMyGE()->getPosition()[0]));
+    bool right = ((e->getPosition()[0] >= getMyGE()->getPosition()[0]));
+    bool up = ((e->getPosition()[1] < getMyGE()->getPosition()[1]));
+    bool down = ((e->getPosition()[1] > getMyGE()->getPosition()[1]));
     bool inW    = (e->getPosition()[0] > getMyGE()->getPosition()[0]) &&
                 (e->getPosition()[0] < (getMyGE()->getPosition()[0]  + getMyGE()->getSprite().getW()));
     // Their location is within the sprite's bottom and top edges
     bool inH    = (e->getPosition()[1] > getMyGE()->getPosition()[1]) &&
                   (e->getPosition()[1] < (getMyGE()->getPosition()[1]  + getMyGE()->getSprite().getH()));
 
+    std::cerr << "up is " << up << std::endl;
+    std::cerr << "down is " << down << std::endl;
+    std::cerr << "left is " << left << std::endl;
+    std::cerr << "right is " << right << std::endl;
     // If this is the thing we're shooting
-    std::cerr<<"hey" <<std::endl;
     if(e->getSource().compare(target->getName())==0)
     {
        if(inW)
@@ -251,28 +259,28 @@ void TurretStrategy::onMove(const GameEvents::Event* e) {
        {
            if(left)
            {
-               getMyGE()->shoot(RIGHT);
+               getMyGE()->shoot(LEFT);
            }
            else if(right)
            {
-               getMyGE()->shoot(LEFT);
+               getMyGE()->shoot(RIGHT);
            }
        }
        else if(up&&left)
        {
-           getMyGE()->shoot(DOWNRIGHT);
+           getMyGE()->shoot(UPLEFT);
        }
        else if(up&&right)
-       {
-           getMyGE()->shoot(DOWNLEFT);
-       }
-       else if(down&&left)
        {
            getMyGE()->shoot(UPRIGHT);
        }
        else if(down&&left)
        {
-           getMyGE()->shoot(UPLEFT);
+           getMyGE()->shoot(DOWNRIGHT);
+       }
+       else if(down&&right)
+       {
+           getMyGE()->shoot(DOWNLEFT);
        }
     }
 }
