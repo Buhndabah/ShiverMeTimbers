@@ -387,11 +387,6 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
         int myStrat = g.getStratType();
         int theirStrat = subject->getStratType();
 
-        if(myStrat==BULLET_STRAT) {
-            std::cerr<< "my source is " << dynamic_cast<BulletStrategy*>(g.getStrat())->getSource() <<std::endl;
-            std::cerr << "they are " << subject->getName() << std::endl;
-        }
-
         if( (myStrat == theirStrat) && myStrat==BULLET_STRAT) 
         {
             // nothing

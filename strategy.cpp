@@ -191,24 +191,32 @@ void BulletStrategy::registerListeners() {
 
 TurretStrategy::TurretStrategy(GridElement* g, GridElement* t) :
     Strategy(g, TURRET_STRAT),
-    target(t)
+    target(t),
+    clock(Clock::getInstance()),
+    timeBetweenShots(2000),
+    ticks(clock.getTicks())
 {
     init();
 }
 
 TurretStrategy::TurretStrategy(const TurretStrategy& rhs) :
     Strategy(rhs),
-    target(rhs.target)
+    target(rhs.target),
+    clock(Clock::getInstance()),
+    timeBetweenShots(rhs.timeBetweenShots),
+    ticks(rhs.ticks)
 {
     init();
 }
 
 TurretStrategy& TurretStrategy::operator=(const TurretStrategy& rhs) {
     Strategy::operator=(rhs);
-    
+
     if(this == &rhs) return *this;
 
     target = rhs.target;
+    timeBetweenShots = rhs.timeBetweenShots;
+    ticks = rhs.ticks;
     return *this;
 }
 
@@ -222,8 +230,11 @@ void turretStratMoveForwarder(Listener* context, const GameEvents::Event *e) {
 
 void TurretStrategy::onMove(const GameEvents::Event* e) {
 
-    // ignore events from ourself
-    if(e->getSource().compare(getMyGE()->getName())==0) { return; }
+    // ignore events not from our target
+    if(e->getSource().compare(target->getName())!=0) { return; }
+    
+    if(clock.getTicks()-ticks < timeBetweenShots) return;
+    else ticks = clock.getTicks();
 
     bool left = ((e->getPosition()[0] < getMyGE()->getPosition()[0]));
     bool right = ((e->getPosition()[0] >= getMyGE()->getPosition()[0]));
@@ -234,7 +245,6 @@ void TurretStrategy::onMove(const GameEvents::Event* e) {
     // Their location is within the sprite's bottom and top edges
     bool inH    = (e->getPosition()[1] > getMyGE()->getPosition()[1]) &&
                   (e->getPosition()[1] < (getMyGE()->getPosition()[1]  + getMyGE()->getSprite().getH()));
-
     // If this is the thing we're shooting
     if(e->getSource().compare(target->getName())==0)
     {

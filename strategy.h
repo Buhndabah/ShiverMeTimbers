@@ -1,5 +1,6 @@
 #ifndef STRATEGY_H
 #define STRATEGY_H
+#include "clock.h"
 #include "listener.h"
 
 enum strats {
@@ -87,5 +88,8 @@ public:
     virtual void onMove(const GameEvents::Event*);
 private:
     GridElement* target;
+    const Clock& clock;
+    int timeBetweenShots;
+    int ticks;
 };
 #endif
