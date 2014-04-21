@@ -225,8 +225,6 @@ void TurretStrategy::onMove(const GameEvents::Event* e) {
     // ignore events from ourself
     if(e->getSource().compare(getMyGE()->getName())==0) { return; }
 
-    std::cerr<< "their position " << e->getPosition() << std::endl;
-    std::cerr << "my position " << getMyGE()->getPosition() << std::endl;
     bool left = ((e->getPosition()[0] < getMyGE()->getPosition()[0]));
     bool right = ((e->getPosition()[0] >= getMyGE()->getPosition()[0]));
     bool up = ((e->getPosition()[1] < getMyGE()->getPosition()[1]));
@@ -237,10 +235,6 @@ void TurretStrategy::onMove(const GameEvents::Event* e) {
     bool inH    = (e->getPosition()[1] > getMyGE()->getPosition()[1]) &&
                   (e->getPosition()[1] < (getMyGE()->getPosition()[1]  + getMyGE()->getSprite().getH()));
 
-    std::cerr << "up is " << up << std::endl;
-    std::cerr << "down is " << down << std::endl;
-    std::cerr << "left is " << left << std::endl;
-    std::cerr << "right is " << right << std::endl;
     // If this is the thing we're shooting
     if(e->getSource().compare(target->getName())==0)
     {
