@@ -322,7 +322,7 @@ void GridElement::shoot() {
 }
 
 void GridElement::shoot(dirs dir) {
-    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", getPosition() + Vector2f(-50,0), dir, BULLET_STRAT));
+    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", getPosition() + gridSprite.getSize()/2, dir, BULLET_STRAT));
 }
 
 /*********** Stuff for handling events ***************/
