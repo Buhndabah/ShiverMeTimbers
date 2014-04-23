@@ -333,7 +333,6 @@ void GridElement::moveTowards(Vector2f target){
 
 
 void GridElement::shoot() {
-    std::cerr<< "shot" <<std::endl;
     // figure out what direction to shoot
     int i=0;
     for(i; i<moveDir.size(); ++i) { if(moveDir[i]) break; }

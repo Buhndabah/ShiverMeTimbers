@@ -21,6 +21,7 @@ public:
     virtual void onHUDRemove(const GameEvents::Event*);
     virtual void onRoundOver(const GameEvents::Event*);
     virtual void onScore(const GameEvents::ScoreEvent*);
+    virtual void onWin(const GameEvents::Event*);
 
     Listener& operator=(const Listener&);
 private:

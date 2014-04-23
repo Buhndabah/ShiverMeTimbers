@@ -234,6 +234,10 @@ TurretStrategy& TurretStrategy::operator=(const TurretStrategy& rhs) {
     return *this;
 }
 
+TurretStrategy::~TurretStrategy() {
+    GameEvents::EventQueue::getInstance().push(new GameEvents::ScoreEvent("turret",getMyGE()->getPosition(),10));
+}
+
 void TurretStrategy::init() {
     registerListeners();
 }

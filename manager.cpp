@@ -35,7 +35,8 @@ Manager::Manager() :
   frameCount( 0 ),
   username(  Gamedata::getInstance().getXmlStr("username") ),
   frameMax( Gamedata::getInstance().getXmlInt("frameMax") ),
-  TITLE( Gamedata::getInstance().getXmlStr("screenTitle") )
+  TITLE( Gamedata::getInstance().getXmlStr("screenTitle") ),
+  gameOver(false)
 {
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     throw std::string("Unable to initialize SDL: ");
@@ -71,6 +72,7 @@ Manager::Manager() :
 	//snowballs.push_back(new Sprite("snowball"));
   viewport.setObjectToTrack(&(player->getSprite()));
 //  viewport.setObjectToTrack(snowballs[1]);
+  registerListeners();
 }
 
 
@@ -212,7 +214,7 @@ void Manager::play() {
           hud.toggleHelp();
       }
 
-      if (keystate[SDLK_p] && !keyCatch) {
+      if (keystate[SDLK_p] && !keyCatch &&!gameOver) {
         keyCatch = true;
         if ( clock.isPaused() ) 
         {
@@ -272,4 +274,20 @@ void Manager::play() {
     draw();
     update();
   }
+}
+
+/******** Event Handling Functions **********/
+
+void Manager::onWin(const GameEvents::Event* e) {
+    hud.onWin();
+    clock.pause();
+    gameOver = true;
+}
+
+void Manager::registerListeners() {
+    GameEvents::EventQueue::getInstance().addListener(GameEvents::WIN_EVENT, static_cast<Listener*>(this), &ManagerWinForwarder);
+}
+
+void ManagerWinForwarder(Listener* context, const GameEvents::Event *e) {
+    dynamic_cast<Manager*>(context)->onWin(e);
 }

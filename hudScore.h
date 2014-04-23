@@ -19,6 +19,7 @@ private:
     virtual void registerListeners();
     const IOManager& io;
     int score;
+    int limit;
 };
 
 void HUDScoreScoreForwarder(Listener*, const GameEvents::Event*);

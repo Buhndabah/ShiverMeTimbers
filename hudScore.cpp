@@ -3,7 +3,8 @@
 HUDScore::HUDScore(const std::string& n, const Vector2f& pos, bool vis) :
     HUDComponent(n, pos, vis),
     io(IOManager::getInstance()),
-    score(0)
+    score(0),
+    limit(10)
 { 
     registerListeners();
 }
@@ -11,7 +12,8 @@ HUDScore::HUDScore(const std::string& n, const Vector2f& pos, bool vis) :
 HUDScore::HUDScore(const HUDScore& rhs) :
     HUDComponent(rhs),
     io(IOManager::getInstance()),
-    score(rhs.score)
+    score(rhs.score),
+    limit(rhs.limit)
 {
     registerListeners();
 }
@@ -30,6 +32,9 @@ void HUDScore::update(Uint32 ticks) {
 
 void HUDScore::onScore(const GameEvents::ScoreEvent* e) {
     score += e->getScore();
+    if(score>=limit) {
+        GameEvents::EventQueue::getInstance().push(new GameEvents::WinEvent(getName(), Vector2f(0,0)));
+    }
 }
 
 void HUDScore::registerListeners() {
