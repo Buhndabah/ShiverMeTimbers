@@ -10,13 +10,21 @@
 #include "mapManager.h"
 #include "hud.h"
 
+enum startOver {
+    YES=1,
+    NO=2
+};
+
 class Manager : public Listener{
 public:
   Manager ();
   ~Manager ();
-  void play();
+  bool play();
+  void reinit();
 
   virtual void onWin(const GameEvents::Event*);
+  virtual void onLose(const GameEvents::Event*);
+  virtual void onGameEnd(const GameEvents::Event*);
 
 private:
   const bool env;
@@ -30,7 +38,7 @@ private:
   std::vector<Drawable *> snowballs;
   unsigned int currentSprite;
 
-  GridElement *player;
+  GridElement* player;
   MapManager& map;
   HUD& hud;
 
@@ -40,10 +48,10 @@ private:
   int frameMax;
   const std::string TITLE;
   bool gameOver;
+  int restart;
 
   void draw() const;
   void update();
-
 
   virtual void registerListeners();
 
@@ -52,3 +60,5 @@ private:
 };
 
 void ManagerWinForwarder(Listener*, const GameEvents::Event*);
+void ManagerLoseForwarder(Listener*, const GameEvents::Event*);
+void ManagerGameEndForwarder(Listener*, const GameEvents::Event*);

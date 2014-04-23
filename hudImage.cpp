@@ -13,6 +13,11 @@ HUDImage::HUDImage(const std::string& n, const Vector2f& p, bool v,  const std::
 { 
 }
 
+HUDImage::HUDImage(const HUDImage& rhs) :
+    HUDComponent(rhs),
+    sprite(new Sprite((Sprite&)*rhs.sprite))
+{ }
+
 HUDImage& HUDImage::operator=(const HUDImage& rhs)
 {
     HUDComponent::operator=(rhs);

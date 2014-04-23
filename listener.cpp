@@ -23,3 +23,6 @@ void Listener::onHUDRemove(const GameEvents::Event *e) {(void)e;}
 void Listener::onRoundOver(const GameEvents::Event *e) {(void)e;}
 void Listener::onScore(const GameEvents::ScoreEvent *e) {(void)e;}
 void Listener::onWin(const GameEvents::Event *e) {(void)e;}
+void Listener::onLose(const GameEvents::Event* e) {(void)e;}
+void Listener::onClick(const GameEvents::Event* e) {(void)e;}
+void Listener::onRestart(const GameEvents::Event* e) {(void)e;}

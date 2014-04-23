@@ -106,6 +106,17 @@
     <pauseScreenTransparency>true</pauseScreenTransparency>
 </pauseScreen>
 
+<button>
+    <buttonFile>images/button.png</buttonFile>
+    <buttonSrcX>0</buttonSrcX>
+    <buttonSrcY>0</buttonSrcY>
+    <buttonWidth>128</buttonWidth>
+    <buttonHeight>64</buttonHeight>
+    <buttonLoc buttonX="0" buttonY="0"/>
+    <buttonSpeed buttonSpeedX="0" buttonSpeedY="0"/>
+    <buttonTransparency>true</buttonTransparency>
+</button>
+
 <snowball>
   <snowballFile>images/snowball.png</snowballFile>
   <snowballSrcX>0</snowballSrcX>

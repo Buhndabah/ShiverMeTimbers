@@ -6,6 +6,7 @@
 #include "hudFPS.h"
 #include "hudImage.h"
 #include "hudHealthBar.h"
+#include "hudButton.h"
 #include "hudScore.h"
 
 HUD& HUD::getInstance() {
@@ -72,6 +73,21 @@ void HUD::onWin() const {
     for(std::list<HUDComponent*>::const_iterator it=components.begin(); it!= components.end();++it)
     {
         if((*it)->isVisibleWin())
+        {
+            (*it)->setVisible(true);
+        }
+        else
+        {
+            (*it)->setVisible(false);
+        }
+    }
+}
+
+// toggle each component's visibility based on game state
+void HUD::onLose() const {
+    for(std::list<HUDComponent*>::const_iterator it=components.begin(); it!= components.end();++it)
+    {
+        if((*it)->isVisibleLose())
         {
             (*it)->setVisible(true);
         }
@@ -165,6 +181,15 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
                                          componentParams["centered"].compare("true") ? 0 : 1));
             }
         }
+        else if(componentParams["type"].compare("button")==0)
+        {
+            addComponent(new HUDButton(componentParams["name"],
+                                       Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
+                                       componentParams["visible"].compare("true") ? 0 : 1,
+                                       componentParams["file"],
+                                       componentParams["text"],
+                                       componentParams["action"]));
+        }
         else if(componentParams["type"].compare("fps")==0)
         {
             addComponent(new HUDFPS(componentParams["name"],
@@ -214,6 +239,10 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
         {
             components.back()->setVisibleWin(componentParams["visibleWin"].compare("true") ? 0 : 1);
         }
+        if(componentParams.find("visibleLose") != componentParams.end())
+        {
+            components.back()->setVisibleLose(componentParams["visibleLose"].compare("true") ? 0 : 1);
+        }
 
 
         return components.back();
@@ -250,6 +279,15 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
                                                componentParams["text"],
                                                componentParams["centered"].compare("true") ? 0 : 1));
             }
+        }
+        else if(componentParams["type"].compare("button")==0)
+        {
+            cont->addComponent(new HUDButton(componentParams["name"],
+                                       Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
+                                       componentParams["visible"].compare("true") ? 0 : 1,
+                                       componentParams["file"],
+                                       componentParams["text"],
+                                       componentParams["action"]));
         }
         else if(componentParams["type"].compare("fps")==0)
         {
@@ -297,6 +335,10 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
         if(componentParams.find("visibleWin") != componentParams.end())
         {
             cont->back()->setVisibleWin(componentParams["visibleWin"].compare("true") ? 0 : 1);
+        }
+        if(componentParams.find("visibleLose") != componentParams.end())
+        {
+            components.back()->setVisibleLose(componentParams["visibleLose"].compare("true") ? 0 : 1);
         }
         return cont->back();
 }

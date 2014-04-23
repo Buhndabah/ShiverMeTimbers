@@ -4,6 +4,7 @@
     <font name="dyslexic" file="font/dyslexic-bold.otf" size="14"/>
     <font name="freebooter" file="font/FreebooterUpdated.ttf" size="100"/>
     <font name="freebooter_medium" file="font/FreebooterUpdated.ttf" size="75"/>
+    <font name="freebooter_small" file="font/FreebooterUpdated.ttf" size="40"/>
     <color name="black" r="0" g="0" b="0" unused="0"/>
     <color name="yellow" r="255" g="255" b="0" unused="0"/>
     <color name="purple" r="53" g="0" b="54" unused="0"/>

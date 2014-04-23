@@ -19,7 +19,7 @@ Manager::~Manager() {
 Manager::Manager() :
   env( SDL_putenv(const_cast<char*>("SDL_VIDEO_CENTERED=center")) ),
   io( IOManager::getInstance() ),
-  clock( Clock::getInstance() ),
+  clock(Clock::getInstance() ),
   world("back", Gamedata::getInstance().getXmlInt("backFactor") ),
   viewport(Viewport::getInstance() ),
   screen( io.getScreen() ),
@@ -36,7 +36,8 @@ Manager::Manager() :
   username(  Gamedata::getInstance().getXmlStr("username") ),
   frameMax( Gamedata::getInstance().getXmlInt("frameMax") ),
   TITLE( Gamedata::getInstance().getXmlStr("screenTitle") ),
-  gameOver(false)
+  gameOver(false),
+  restart(0)
 {
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     throw std::string("Unable to initialize SDL: ");
@@ -96,7 +97,7 @@ void Manager::draw() const {
 }
 
 void Manager::update() {
-  ++clock;
+  ++(clock);
   Uint32 ticks = clock.getElapsedTicks();
   //player->update(ticks);
   GameEvents::EventQueue::getInstance().prepEvents();
@@ -121,7 +122,7 @@ void Manager::update() {
   hud.update(ticks);
 }
 
-void Manager::play() {
+bool Manager::play() {
   SDL_Event event;
 
   bool done = false;
@@ -194,7 +195,9 @@ void Manager::play() {
     if(event.type == SDL_MOUSEBUTTONDOWN) {
         if(event.button.button==SDL_BUTTON_LEFT)
         {
-            std::cerr<<"received mouse event" << std::endl;
+            int x,y;
+            SDL_GetMouseState(&x,&y);
+            GameEvents::EventQueue::getInstance().push(new GameEvents::ClickEvent("SDLMOUSE", Vector2f(x,y)));
             space = true;
         }
     }
@@ -273,21 +276,55 @@ void Manager::play() {
 
     draw();
     update();
+    if(restart) break;
   }
+  return restart == 1 ? true : false;
+}
+
+void Manager::reinit() {
 }
 
 /******** Event Handling Functions **********/
 
 void Manager::onWin(const GameEvents::Event* e) {
+    (void)e;
     hud.onWin();
     clock.pause();
     gameOver = true;
 }
 
+void Manager::onLose(const GameEvents::Event* e) {
+    (void)e;
+    hud.onLose();
+    clock.pause();
+    gameOver = true;
+}
+
+void Manager::onGameEnd(const GameEvents::Event* e) {
+    if(static_cast<const GameEvents::GameEndEvent*>(e)->getRestart())
+    {
+        std::cerr<<"restart" << std::endl;
+        restart=YES;
+    }
+    else
+    {
+        std::cerr<<"end" << std::endl;
+        restart=NO;
+    }
+}
 void Manager::registerListeners() {
+    GameEvents::EventQueue::getInstance().addListener(GameEvents::LOSE_EVENT, static_cast<Listener*>(this), &ManagerLoseForwarder);
     GameEvents::EventQueue::getInstance().addListener(GameEvents::WIN_EVENT, static_cast<Listener*>(this), &ManagerWinForwarder);
+    GameEvents::EventQueue::getInstance().addListener(GameEvents::GAMEEND_EVENT, static_cast<Listener*>(this), &ManagerGameEndForwarder);
 }
 
 void ManagerWinForwarder(Listener* context, const GameEvents::Event *e) {
     dynamic_cast<Manager*>(context)->onWin(e);
+}
+void ManagerLoseForwarder(Listener* context, const GameEvents::Event *e) {
+    dynamic_cast<Manager*>(context)->onLose(e);
+}
+void ManagerGameEndForwarder(Listener* context, const GameEvents::Event *e) {
+    std::cerr<< "registered" << std::endl;
+    dynamic_cast<Manager*>(context)->onGameEnd(e);
 }

@@ -22,6 +22,9 @@ public:
     virtual void onRoundOver(const GameEvents::Event*);
     virtual void onScore(const GameEvents::ScoreEvent*);
     virtual void onWin(const GameEvents::Event*);
+    virtual void onLose(const GameEvents::Event*);
+    virtual void onClick(const GameEvents::Event*);
+    virtual void onRestart(const GameEvents::Event*);
 
     Listener& operator=(const Listener&);
 private:

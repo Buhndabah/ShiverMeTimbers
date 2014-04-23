@@ -21,7 +21,10 @@ enum types {
     CREATE_EVENT,
     SCORE_EVENT,
     WIN_EVENT,
-    TYPES_MAX = 10
+    LOSE_EVENT,
+    GAMEEND_EVENT,
+    CLICK_EVENT,
+    TYPES_MAX = 13
 };
 
 // Base event class, abstract
@@ -153,6 +156,31 @@ class WinEvent: public Event {
 public:
     WinEvent(const std::string& from, const Vector2f& pos) :
         Event(WIN_EVENT, from, pos)
+    { }
+};
+
+class LoseEvent: public Event {
+public:
+    LoseEvent(const std::string& from, const Vector2f& pos) :
+        Event(LOSE_EVENT, from, pos)
+    { }
+};
+
+class GameEndEvent : public Event {
+public: 
+    GameEndEvent(const std::string& from, const Vector2f& pos, bool r) :
+        Event(GAMEEND_EVENT, from, pos),
+        restart(r)
+    { }
+    bool getRestart() const { return restart; }
+private:
+    bool restart;
+};
+
+class ClickEvent: public Event {
+public:
+    ClickEvent(const std::string& from, const Vector2f& pos) :
+        Event(CLICK_EVENT, from, pos)
     { }
 };
 

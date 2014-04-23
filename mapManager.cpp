@@ -591,8 +591,10 @@ void MapManager::displayData() const {
 
 void MapManager::onDeath(const GameEvents::Event *e) {
     // Don't delete the player plz
-    if(player->getName().compare(e->getSource()) == 0) return;
-    
+    if(player->getName().compare(e->getSource()) == 0) {
+        GameEvents::EventQueue::getInstance().push(new GameEvents::LoseEvent(e->getSource(), e->getPosition()));
+        return;
+    }
     removeGridElement(e->getSource());
 }
 

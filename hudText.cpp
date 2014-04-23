@@ -27,6 +27,15 @@ HUDText::HUDText(const std::string& n, const Vector2f& p, bool v, const std::str
     fontColor(color)
 { }
 
+HUDText::HUDText(const HUDText& rhs) :
+    HUDComponent(rhs),
+    io(IOManager::getInstance()),
+    text(rhs.text),
+    centered(rhs.centered),
+    fontName(rhs.fontName),
+    fontColor(rhs.fontColor)
+{}
+
 HUDText& HUDText::operator=(const HUDText& rhs)
 {
     HUDComponent::operator=(rhs);

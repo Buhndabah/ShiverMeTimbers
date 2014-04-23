@@ -23,6 +23,7 @@ public:
     void update(Uint32) const;
     void onPause(unsigned int) const;
     void onWin() const;
+    void onLose() const;
 
     void addComponent(HUDComponent*);
     void addTextComponent(const std::string&,const Vector2f&,const std::string&, bool);
