@@ -33,6 +33,9 @@
     <!-- Lose Screen Stuff -->
     <container type="container" name="lose" x="0" y="0" visible="false" visibleNotPaused="false" visibleLose="true">
         <item type="image" name="lose screen" x="0" y="0" visible="true" file="pauseScreen"/>
+        <item type="button" name="yes button" type="restart" x="200" y="400" visible="true" file="button" text="Yes"/>
+        <item type="button" name="no button" action="end" x="400" y="400" visible="true" file="button" text="No"/>
         <item type="text" name="lose text" x="0" y="250" visible="true" text="You Lose." centered="true" font="freebooter" color="yellow"/>
+        <item type="text" name="continue" x="200" y="350" visible="true" text="Play Again?" font="freebooter_small" color="yellow"/>
     </container>
 </hud>
