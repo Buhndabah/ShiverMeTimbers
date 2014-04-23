@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <vector>
+#include "listener.h"
 #include "ioManager.h"
 #include "clock.h"
 #include "sprite.h"
@@ -9,11 +10,13 @@
 #include "mapManager.h"
 #include "hud.h"
 
-class Manager {
+class Manager : public Listener{
 public:
   Manager ();
   ~Manager ();
   void play();
+
+  virtual void onWin(const GameEvents::Event*);
 
 private:
   const bool env;
@@ -36,10 +39,16 @@ private:
   std::string username;
   int frameMax;
   const std::string TITLE;
+  bool gameOver;
 
   void draw() const;
   void update();
 
+
+  virtual void registerListeners();
+
   Manager(const Manager&);
   Manager& operator=(const Manager&);
 };
+
+void ManagerWinForwarder(Listener*, const GameEvents::Event*);

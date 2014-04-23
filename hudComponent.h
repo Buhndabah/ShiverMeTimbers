@@ -14,6 +14,7 @@ public:
         visible(v),
         visibleWhenPaused(false),
         visibleNotPause(true),
+        visibleWin(false),
         flicker(false),
         flickerTime(0.0),
         elapsedTicks(0)
@@ -25,6 +26,7 @@ public:
         visible(rhs.visible),
         visibleWhenPaused(rhs.visibleWhenPaused),
         visibleNotPause(rhs.visibleNotPause),
+        visibleWin(rhs.visibleWin),
         flicker(rhs.flicker),
         flickerTime(rhs.flickerTime),
         elapsedTicks(rhs.elapsedTicks)
@@ -43,6 +45,9 @@ public:
 
     bool isVisibleNotPaused() const { return visibleNotPause; }
     void setVisibleNotPaused(bool v) { visibleNotPause = v; }
+
+    bool isVisibleWin() const { return visibleWin; }
+    void setVisibleWin(bool v) { visibleWin = v; }
 
     const Vector2f& getPosition() const { return position; }
     virtual void setPosition(const Vector2f& newPos) { position = newPos; }
@@ -64,6 +69,7 @@ private:
     bool visible;
     bool visibleWhenPaused;
     bool visibleNotPause;
+    bool visibleWin;
     bool flicker;
     double flickerTime;
     Uint32 elapsedTicks;

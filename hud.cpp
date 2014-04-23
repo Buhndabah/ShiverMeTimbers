@@ -67,6 +67,21 @@ void HUD::onPause(unsigned int state) const {
     }
 }
 
+// toggle each component's visibility based on game state
+void HUD::onWin() const {
+    for(std::list<HUDComponent*>::const_iterator it=components.begin(); it!= components.end();++it)
+    {
+        if((*it)->isVisibleWin())
+        {
+            (*it)->setVisible(true);
+        }
+        else
+        {
+            (*it)->setVisible(false);
+        }
+    }
+}
+
 // draw each component
 void HUD::draw() const {
     if(visible) {
@@ -195,6 +210,10 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
             std::cerr << " loaded flicker time " << atoi(componentParams["flickerTime"].c_str()) << std::endl;
             components.back()->setFlicker(atoi(componentParams["flickerTime"].c_str()));
         }
+        if(componentParams.find("visibleWin") != componentParams.end())
+        {
+            components.back()->setVisibleWin(componentParams["visibleWin"].compare("true") ? 0 : 1);
+        }
 
 
         return components.back();
@@ -274,6 +293,10 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
         if(componentParams.find("flickerTime") != componentParams.end())
         {
             cont->back()->setTimeToFlicker(atoi(componentParams["flickerTime"].c_str()));
+        }
+        if(componentParams.find("visibleWin") != componentParams.end())
+        {
+            cont->back()->setVisibleWin(componentParams["visibleWin"].compare("true") ? 0 : 1);
         }
         return cont->back();
 }

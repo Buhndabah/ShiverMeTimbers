@@ -20,7 +20,8 @@ enum types {
     ROUNDOVER_EVENT,
     CREATE_EVENT,
     SCORE_EVENT,
-    TYPES_MAX = 7
+    WIN_EVENT,
+    TYPES_MAX = 10
 };
 
 // Base event class, abstract
@@ -143,6 +144,13 @@ public:
     int getScore() const { return score; }
 private:
     int score;
+};
+
+class WinEvent: public Event {
+public:
+    WinEvent(const std::string& from, const Vector2f& pos) :
+        Event(WIN_EVENT, from, pos)
+    { }
 };
 
 /***************** End Event Specializations ********************/
