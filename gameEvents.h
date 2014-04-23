@@ -127,16 +127,27 @@ public:
         Event(CREATE_EVENT, from, pos),
         sprite(n),
         direction(dir),
-	target(t),
+        timer(0),
+	    target(t),
+        strat(st)
+        { }
+    CreateEvent(const std::string& from, const std::string& n, const Vector2f& pos, int dir, Vector2f t, int st, int time) :
+        Event(CREATE_EVENT, from, pos),
+        sprite(n),
+        direction(dir),
+        timer(time),
+	    target(t),
         strat(st)
         { }
     std::string getSprite() const { return sprite; }
     int getDir() const { return direction; }
     Vector2f getTarget() const { return target; }
     int getStrat() const { return strat; }
+    int getTimer() const { return timer; }
 private:
     std::string sprite;
     int direction;
+    int timer;
     Vector2f target;
     int strat;
 };

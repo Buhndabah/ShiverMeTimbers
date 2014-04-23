@@ -15,15 +15,19 @@ enum strats {
 class GridElement;
 class Strategy : public Listener{
 public:
-    Strategy(GridElement* g, strats t) : myGE(g), type(t) {}
-    Strategy(const Strategy& rhs) : myGE(rhs.myGE), type(rhs.type){}
+    Strategy(GridElement* g, strats t) : suppressed(false), myGE(g), type(t) {}
+    Strategy(const Strategy& rhs) : suppressed(rhs.suppressed), myGE(rhs.myGE), type(rhs.type){}
     Strategy& operator=(const Strategy& rhs) { 
         if(this == &rhs) return *this;
+        suppressed = rhs.suppressed;
         myGE = rhs.myGE;  
         type = rhs.type;
         return *this;
     }
     virtual ~Strategy() {}
+    virtual void suppress() { suppressed = true; };
+    virtual void unsuppress() { suppressed = false; }
+    virtual bool isSuppressed() const { return suppressed; }
     virtual void init()=0;
     virtual void registerListeners()=0;
     virtual Strategy* clone() const=0;
@@ -31,6 +35,7 @@ public:
     GridElement* getMyGE() const { return myGE; }
     strats getType() const { return type; }
 private:
+    bool suppressed;
     GridElement* myGE;
     strats type;
 };
@@ -83,7 +88,7 @@ public:
 
     virtual void init();
     virtual void registerListeners();
-    
+   
     TurretStrategy* clone() const {
         return new TurretStrategy(*this);
     }

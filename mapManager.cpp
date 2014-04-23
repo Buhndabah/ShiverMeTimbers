@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <sstream>
 #include <SDL/SDL.h>
+#include <iterator>
 #include <iostream>
 #include <math.h>
 #include <stdexcept>
@@ -23,6 +24,7 @@ MapManager::MapManager(const std::string& fn) :
     numGridElements(0),
     player(NULL),
     tiles(),
+    reserve(),
     updateTiles(),
     mapLayers(),
     gridElements(),
@@ -89,6 +91,12 @@ void MapManager::reinit() {
     {   
         gridElements.push_back( std::list<GridElement* >());
     }
+    while(!reserve.empty())
+    {
+        GridElement* temp = (*reserve.begin()).first;
+        reserve.erase(reserve.begin());
+        delete temp;
+    }
     registerListeners();
 }
 
@@ -103,6 +111,12 @@ MapManager::~MapManager() {
             list.erase(list.begin());
         }
         gridElements.erase(gridElements.begin());
+    }
+    while(!reserve.empty())
+    {
+        GridElement* temp = (*reserve.begin()).first;
+        reserve.erase(reserve.begin());
+        delete temp;
     }
 }
 
@@ -541,6 +555,26 @@ void MapManager::update(Uint32& ticks) {
             (*layer_it).update(ticks);
         }
     }*/
+
+    std::map<GridElement*, int>::iterator resIt = reserve.begin();
+    while(resIt != reserve.end()){
+        if((*resIt).second ==0)
+        {
+            addGridElement((*resIt).first);
+            (*resIt).first->resetHP();
+            (*resIt).first->getStrat()->unsuppress();
+            std::map<GridElement*,int>::iterator toErase = resIt;
+            resIt++;
+            reserve.erase(toErase);
+        }
+        else
+        {
+            (*resIt).second--;
+        ++resIt;
+        }
+    }
+
+
     // Update only important tiles
     for(std::list<Tile*>::const_iterator it=updateTiles.begin(); it!= updateTiles.end(); ++it)
     {
@@ -620,10 +654,7 @@ void MapManager::onDeath(const GameEvents::Event *e) {
 }
 
 
-/*********** Listener set up and forwarder ************/
-
-// Forwarding function creation events
-void MapCreateForwarder(Listener* context, const GameEvents::Event *e) {
+void MapManager::onCreate(const GameEvents::Event *e) {
     const GameEvents::CreateEvent *c = dynamic_cast<const GameEvents::CreateEvent*>(e);
     GridElement* newGE;
 
@@ -632,18 +663,34 @@ void MapCreateForwarder(Listener* context, const GameEvents::Event *e) {
         return; 
     
     // If the requested location is legal
-    else if(dynamic_cast<MapManager*>(context)->getIndexAt(dynamic_cast<MapManager*>(context)->worldToGrid(e->getPosition()))>0)
+    else if(getIndexAt(worldToGrid(e->getPosition()))>0)
     {
         // Add a new grid element
-        dynamic_cast<MapManager*>(context)->addGridElement(newGE = new GridElement(c->getSprite(), dynamic_cast<MapManager*>(context)->worldToGrid(e->getPosition()), c->getDir(), c->getStrat(), c->getTarget()));
+        if(c->getTimer()==0)
+        {
+            addGridElement(newGE = new GridElement(c->getSprite(), worldToGrid(e->getPosition()), c->getDir(), c->getStrat(), c->getTarget()));
 
+        }
+        else {
+            reserve.insert(std::pair<GridElement*, int>(newGE = new GridElement(c->getSprite(), worldToGrid(e->getPosition()), c->getDir(), c->getStrat(), c->getTarget()), c->getTimer()));
+            newGE->getStrat()->suppress();
+        }
         if(c->getStrat() == BULLET_STRAT) {
             dynamic_cast<BulletStrategy*>(newGE->getStrat())->setSource(c->getSource());
         }
-
         // And then alert everyone it's been created
     GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent("map", c->getSprite(), e->getPosition(), c->getDir(), c->getTarget(), c->getStrat()));
     }
+}
+
+
+/*********** Listener set up and forwarder ************/
+
+
+
+// Forwarding function creation events
+void MapCreateForwarder(Listener* context, const GameEvents::Event *e) {
+    dynamic_cast<MapManager*>(context)->onCreate(e);
 }
 
 void MapDeathForwarder(Listener* context, const GameEvents::Event *e) {

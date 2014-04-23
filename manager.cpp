@@ -59,7 +59,6 @@ Manager::Manager() :
   // test target 
   GridElement* test;
   map.addGridElement(test = new GridElement("icecream", Vector2f(650,650), 0, TURRET_STRAT));
-  hud.addHealthBar(test->getName(), Vector2f(0,-10));
 
   hud.addHealthBar(player->getName(), Vector2f(0, -10));
   SoundManager::getInstance();

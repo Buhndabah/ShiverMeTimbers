@@ -236,6 +236,7 @@ TurretStrategy& TurretStrategy::operator=(const TurretStrategy& rhs) {
 
 TurretStrategy::~TurretStrategy() {
     GameEvents::EventQueue::getInstance().push(new GameEvents::ScoreEvent("turret",getMyGE()->getPosition(),10));
+    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent("turret", "icecream", getMyGE()->getPosition(), 0, Vector2f(0,0), TURRET_STRAT, 200));
 }
 
 void TurretStrategy::init() {
@@ -247,6 +248,8 @@ void turretStratMoveForwarder(Listener* context, const GameEvents::Event *e) {
 }
 
 void TurretStrategy::onMove(const GameEvents::Event* e) {
+
+    if(isSuppressed() ) return;
 
     // ignore events not from our target
     if(e->getSource().compare(target->getName())!=0) { return; }

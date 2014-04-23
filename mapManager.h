@@ -51,6 +51,7 @@ public:
     void setPlayer(GridElement* p) { player = p; }
 
     virtual void onDeath(const GameEvents::Event*);
+    virtual void onCreate(const GameEvents::Event*);
 
     void reinit();
     
@@ -74,6 +75,7 @@ private:
 
 
     std::map<std::string, std::string> tiles;
+    std::map<GridElement*, int> reserve;
     std::list<Tile*> updateTiles;
     std::list<std::vector<Tile> > mapLayers;
     std::vector<std::list<GridElement*> > gridElements; // ordered by relevant tile

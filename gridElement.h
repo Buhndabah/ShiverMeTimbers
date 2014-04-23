@@ -59,6 +59,7 @@ public:
   float getMoveSpeed() const {return moveSpeed;}
  
   int   getCurrentHP() const { return curHP; }
+  void resetHP() { curHP = maxHP; }
   int   getMaxHP() const { return maxHP; }
   float getHPRatio() const { return static_cast<float>(curHP)/static_cast<float>(maxHP); }
 
