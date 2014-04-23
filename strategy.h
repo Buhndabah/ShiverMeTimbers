@@ -78,6 +78,7 @@ public:
     TurretStrategy(GridElement*, GridElement*);
     TurretStrategy(const TurretStrategy&);
     TurretStrategy& operator=(const TurretStrategy&);
+    ~TurretStrategy();
 
     virtual void init();
     virtual void registerListeners();
