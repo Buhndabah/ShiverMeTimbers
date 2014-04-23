@@ -71,6 +71,27 @@ MapManager::MapManager(const std::string& fn) :
     registerListeners();
 }
 
+void MapManager::reinit() {
+    std::list<GridElement*> list;
+    while (!gridElements.empty())
+    {
+        list=gridElements.front();
+        while(!list.empty())
+        {
+            delete list.front();
+            list.erase(list.begin());
+        }
+        gridElements.erase(gridElements.begin());
+    }
+    gridElements.reserve(mapWidth*mapHeight);
+    int i;
+    for(i=0; i < mapHeight * mapWidth; i++)
+    {   
+        gridElements.push_back( std::list<GridElement* >());
+    }
+    registerListeners();
+}
+
 MapManager::~MapManager() {
     std::list<GridElement*> list;
     while (!gridElements.empty())

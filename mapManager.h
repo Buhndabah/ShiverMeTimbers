@@ -52,6 +52,8 @@ public:
 
     virtual void onDeath(const GameEvents::Event*);
 
+    void reinit();
+    
 private:
 //    MapManager(const std::string& fn = "xmlSpec/basicMap.xml");
 //    MapManager(const std::string& fn = "xmlSpec/testMap.xml");

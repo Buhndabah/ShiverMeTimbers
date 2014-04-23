@@ -32,6 +32,7 @@ public:
     void addHealthBar(const std::string&, const Vector2f&);
 
     void onHUDRemove(const GameEvents::Event*);
+    void reinit();
 
 private:
     HUD(const std::string& fn = "xmlSpec/hud.xml"); 

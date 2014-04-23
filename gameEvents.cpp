@@ -8,6 +8,15 @@ EventQueue& EventQueue::getInstance() {
 }
 
 EventQueue::~EventQueue() {
+    clearEvents();
+}
+
+void EventQueue::reinit() {
+    clearEvents();
+    listeners.clear();
+}
+
+void EventQueue::clearEvents() {
     while(!incoming.empty())
     {
         delete incoming.front();

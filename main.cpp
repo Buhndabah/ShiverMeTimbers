@@ -11,6 +11,7 @@ int main(int, char*[]) {
             {
                 break;
             }
+            gameManager.reinit();
         }
         catch (const std::string& msg) { std::cout << msg << std::endl; }
         catch (...) {

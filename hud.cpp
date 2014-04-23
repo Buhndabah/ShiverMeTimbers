@@ -25,6 +25,16 @@ HUD::HUD(const std::string& fn) :
     parseComponents();
 }
 
+void HUD::reinit() {
+    while(!components.empty())
+    {
+        delete components.front();
+        components.pop_front();
+    }
+    parseComponents();
+    registerListeners();
+}
+
 HUD::~HUD() 
 {
     while(!components.empty())
@@ -211,7 +221,6 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
         }
         else if(componentParams["type"].compare("score")==0)
         {
-            std::cerr<< "added score" << std::endl;
             addComponent(new HUDScore(componentParams["name"],
                                       Vector2f(atoi(componentParams["x"].c_str()),atoi(componentParams["y"].c_str())),
                                       componentParams["visible"].compare("true") ? 0 : 1));

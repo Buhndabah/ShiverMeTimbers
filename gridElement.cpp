@@ -342,7 +342,6 @@ void GridElement::shoot() {
 }
 
 void GridElement::shoot(Vector2f target) {
-    std::cerr<< "mouse shot" <<std::endl;
     // figure out what direction to shoot
 
     GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", map.gridToWorld(gridPosition), -1, target, BULLET_STRAT));

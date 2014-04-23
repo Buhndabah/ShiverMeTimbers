@@ -201,6 +201,8 @@ public:
     bool emptyOut() const { return outgoing.empty(); }
     void clear() { outgoing.clear(); }
 
+    void reinit();
+    void clearEvents();
 
     /*Event operator[](int i) { return incoming[i]; }
     const Event operator[](int i) const { return incoming[i]; }*/

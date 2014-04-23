@@ -278,10 +278,30 @@ bool Manager::play() {
     update();
     if(restart) break;
   }
-  return restart == 1 ? true : false;
+  return restart == YES ? true : false;
 }
 
 void Manager::reinit() {
+    GameEvents::EventQueue::getInstance().reinit();
+    map.reinit();
+    hud.reinit();
+    currentSprite =0;
+    player = new GridElement("coolyeti");
+    map.addGridElement(player);
+    map.setPlayer(player);
+    GridElement* test;
+    map.addGridElement(test = new GridElement("icecream", Vector2f(650, 650),0, TURRET_STRAT));
+    hud.addHealthBar(test->getName(), Vector2f(0,-10));
+    hud.addHealthBar(player->getName(), Vector2f(0,-10));
+    viewport.setObjectToTrack(&player->getSprite());
+    registerListeners();
+    gameOver = false;
+    restart = 0;
+    if ( clock.isPaused() ) 
+    {
+            clock.unpause();
+    }
+    GameEvents::EventQueue::getInstance().clearEvents();
 }
 
 /******** Event Handling Functions **********/
@@ -303,12 +323,10 @@ void Manager::onLose(const GameEvents::Event* e) {
 void Manager::onGameEnd(const GameEvents::Event* e) {
     if(static_cast<const GameEvents::GameEndEvent*>(e)->getRestart())
     {
-        std::cerr<<"restart" << std::endl;
         restart=YES;
     }
     else
     {
-        std::cerr<<"end" << std::endl;
         restart=NO;
     }
 }
@@ -325,6 +343,5 @@ void ManagerLoseForwarder(Listener* context, const GameEvents::Event *e) {
     dynamic_cast<Manager*>(context)->onLose(e);
 }
 void ManagerGameEndForwarder(Listener* context, const GameEvents::Event *e) {
-    std::cerr<< "registered" << std::endl;
     dynamic_cast<Manager*>(context)->onGameEnd(e);
 }
