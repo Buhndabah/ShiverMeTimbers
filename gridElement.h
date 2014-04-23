@@ -24,7 +24,7 @@ class MapManager;
 class GridElement : public Listener{
 public:
   GridElement(const std::string&, int strat = NONE);
-  GridElement(const std::string&, const Vector2f&, int dir, int strat = NONE);
+  GridElement(const std::string&, const Vector2f&, int dir, int strat = NONE, Vector2f = Vector2f(0,0));
   GridElement(const GridElement&);
   GridElement& operator=(const GridElement&);
   virtual ~GridElement() { if(myStrat) delete myStrat; }
@@ -85,7 +85,10 @@ public:
   void moveLeft();
   void moveRight();
   void stop();
+
+  void moveTowards(Vector2f);
   void shoot();
+  void shoot(Vector2f);
   void shoot(dirs);
 
   virtual void onDamage(const GameEvents::DamageEvent *);

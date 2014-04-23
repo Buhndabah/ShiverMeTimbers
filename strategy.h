@@ -57,6 +57,7 @@ void chaseStratMoveForwarder(Listener*, const GameEvents::Event*);
 class BulletStrategy : public Strategy {
 public:
       BulletStrategy(GridElement*, int dir);
+      BulletStrategy(GridElement*, Vector2f mouseDir);
       virtual void init();
       virtual void registerListeners();
       //virtual void update(Uint32 ticks);
@@ -67,8 +68,8 @@ public:
       void setSource(const std::string& s) { source = s; }
       std::string getSource() const { return source; }
 private:
-    Vector2f vDir;
     int direction;
+    Vector2f vDir;
     std::string source;
 };
 void bulletStratCollideForwarder(Listener*, const GameEvents::Event*);

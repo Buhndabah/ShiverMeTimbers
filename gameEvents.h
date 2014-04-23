@@ -119,18 +119,21 @@ public:
 
 class CreateEvent : public Event {
 public:
-    CreateEvent(const std::string& from, const std::string& n, const Vector2f& pos, int dir, int st) :
+    CreateEvent(const std::string& from, const std::string& n, const Vector2f& pos, int dir, Vector2f t, int st) :
         Event(CREATE_EVENT, from, pos),
         sprite(n),
         direction(dir),
+	target(t),
         strat(st)
         { }
     std::string getSprite() const { return sprite; }
     int getDir() const { return direction; }
+    Vector2f getTarget() const { return target; }
     int getStrat() const { return strat; }
 private:
     std::string sprite;
     int direction;
+    Vector2f target;
     int strat;
 };
 

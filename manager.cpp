@@ -42,7 +42,8 @@ Manager::Manager() :
   }
 
   // trap cursor in window
-  SDL_WM_GrabInput( SDL_GRAB_ON );
+  //too annoying
+  //SDL_WM_GrabInput( SDL_GRAB_ON );
 
   atexit(SDL_Quit);
   int numSnowballs = Gamedata::getInstance().getXmlInt("numSnowballs");
@@ -164,7 +165,11 @@ void Manager::play() {
 
     // check for shots fired
     if(space&&!shot){
-        player->shoot();
+	int x[1], y[1];
+	SDL_GetMouseState(x,y);
+	Vector2f target(x[0],y[0]);
+	target += viewport.getPosition();
+        player->shoot(target);
         shot = true;
     }
 

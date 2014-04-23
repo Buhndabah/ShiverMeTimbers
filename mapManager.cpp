@@ -455,7 +455,7 @@ void MapManager::drawGridElements(int index) const {
     {
 
         /* If enabled will draw a box around the sprite boundaries */
-	//#define HITBOX
+//	#define HITBOX
         #ifdef HITBOX
         SDL_Rect rect;
         Uint32 color;
@@ -613,14 +613,14 @@ void MapCreateForwarder(Listener* context, const GameEvents::Event *e) {
     else if(dynamic_cast<MapManager*>(context)->getIndexAt(dynamic_cast<MapManager*>(context)->worldToGrid(e->getPosition()))>0)
     {
         // Add a new grid element
-        dynamic_cast<MapManager*>(context)->addGridElement(newGE = new GridElement(c->getSprite(), dynamic_cast<MapManager*>(context)->worldToGrid(e->getPosition()), c->getDir(), c->getStrat()));
+        dynamic_cast<MapManager*>(context)->addGridElement(newGE = new GridElement(c->getSprite(), dynamic_cast<MapManager*>(context)->worldToGrid(e->getPosition()), c->getDir(), c->getStrat(), c->getTarget()));
 
         if(c->getStrat() == BULLET_STRAT) {
             dynamic_cast<BulletStrategy*>(newGE->getStrat())->setSource(c->getSource());
         }
 
         // And then alert everyone it's been created
-    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent("map", c->getSprite(), e->getPosition(), c->getDir(), c->getStrat()));
+    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent("map", c->getSprite(), e->getPosition(), c->getDir(), c->getTarget(), c->getStrat()));
     }
 }
 

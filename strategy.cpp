@@ -136,11 +136,24 @@ BulletStrategy::BulletStrategy(GridElement* g, int dir) :
         case RIGHT:
             g->moveRight();
             break;
+	case -1:
+	    std::cerr << "why is this being called?" << std::endl;
+	    break;
         default:
             std::cerr<< "Dir " << dir << std::endl;
             throw std::string("Tried to create bullet with invalid direction ");
             break;
     }
+}
+
+BulletStrategy::BulletStrategy(GridElement* g, Vector2f target) :
+    Strategy(g, BULLET_STRAT),
+    direction(-1),
+    vDir(0,0)
+{
+    init();
+    std::cerr << "THIS should be being called" << std::endl;
+    g->moveTowards(target);
 }
 
 void BulletStrategy::init() {

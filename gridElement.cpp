@@ -63,7 +63,7 @@ GridElement::GridElement(const std::string& name, int stratNum) :
   registerListeners();
 }
 
-GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, int stratNum) :
+GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, int stratNum, Vector2f target) :
     Listener(),
     name(),
     moveSpeed(Gamedata::getInstance().getXmlFloat(name+"MoveSpeed")),
@@ -107,7 +107,10 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, 
           break;
       case(BULLET_STRAT):
           tempname = tempname + std::string("bullet");
-          myStrat = new BulletStrategy(this,dir);
+	  if(dir == -1)
+              myStrat = new BulletStrategy(this,target);
+          else
+	      myStrat = new BulletStrategy(this,dir);
           break;
       case(TURRET_STRAT):
           myStrat = new TurretStrategy(this, map.getPlayer());
@@ -195,13 +198,16 @@ void GridElement::update(Uint32 ticks) {
   bool atEdge = false;
   gridPosition = map.validateMovement(*this, incr, fticks, atEdge);
 
-  incr = getSprite().getVelocity() * fticks * 0.001;
-  getSprite().setPosition(getSprite().getPosition() + incr);
+//  incr = getSprite().getVelocity() * fticks * 0.001;
+//  getSprite().setPosition(getSprite().getPosition() + incr);
 
   Vector2f diff = gridPosition - oldgridPos;
   for(int i=0; i<4; ++i){
     moveboxVertices[i] = moveboxVertices[i] + diff;
   }
+
+
+  gridSprite.setPosition(map.gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
   // send off a move event
   //if(incr[0] != 0.0 && incr[1] != 0.0) {
     GameEvents::EventQueue::getInstance().push(new GameEvents::MoveEvent(getName(), getPosition(), incr));
@@ -311,18 +317,42 @@ void GridElement::stop() {
   gridVelocityY(0.);
 }
 
+void GridElement::moveTowards(Vector2f target){
+  Vector2f worldDir = target - map.gridToWorld(gridPosition);
+  Vector2f gridDir = map.worldToGrid(target) - gridPosition;
+  worldDir = worldDir.normalize();
+  gridDir = gridDir.normalize();
+
+  getSprite().velocityX(1);
+  getSprite().velocityY(1);
+
+  gridVelocityX(moveSpeed * gridDir[0]);
+  gridVelocityY(moveSpeed * gridDir[1]); 
+
+}
+
+
 void GridElement::shoot() {
     std::cerr<< "shot" <<std::endl;
     // figure out what direction to shoot
     int i=0;
     for(i; i<moveDir.size(); ++i) { if(moveDir[i]) break; }
 
-    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", getPosition() + Vector2f(-50,0), i, BULLET_STRAT));
+    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", map.gridToWorld(gridPosition), i, Vector2f(0,0), BULLET_STRAT));
     SoundManager::getInstance()[1];
 }
 
+void GridElement::shoot(Vector2f target) {
+    std::cerr<< "mouse shot" <<std::endl;
+    // figure out what direction to shoot
+
+    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", map.gridToWorld(gridPosition), -1, target, BULLET_STRAT));
+    SoundManager::getInstance()[1];
+}
+
+
 void GridElement::shoot(dirs dir) {
-    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", getPosition() + gridSprite.getSize()/2, dir, BULLET_STRAT));
+    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", getPosition() + gridSprite.getSize()/2, dir, Vector2f(0,0), BULLET_STRAT));
 }
 
 /*********** Stuff for handling events ***************/
