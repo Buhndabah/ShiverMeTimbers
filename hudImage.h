@@ -1,6 +1,7 @@
 #ifndef HUDIMAGE_H
 #define HUDIMAGE_H
 #include "hudComponent.h"
+
 #include "sprite.h"
 
 class HUDImage : public HUDComponent {

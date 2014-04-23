@@ -16,6 +16,7 @@ enum types {
     MOVE_EVENT,
     COLLIDE_EVENT,
     DEATH_EVENT,
+    HUDREMOVE_EVENT,
     ROUNDOVER_EVENT,
     CREATE_EVENT,
     SCORE_EVENT,
@@ -99,6 +100,13 @@ class DeathEvent : public Event {
 public:
     DeathEvent(const std::string& from, const Vector2f& pos) :
         Event(DEATH_EVENT, from, pos)
+    { }
+};
+
+class HUDRemoveEvent : public Event {
+public:
+    HUDRemoveEvent(const std::string& from, const Vector2f& pos) :
+        Event(HUDREMOVE_EVENT, from, pos)
     { }
 };
 

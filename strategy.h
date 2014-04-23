@@ -67,6 +67,7 @@ public:
       void setSource(const std::string& s) { source = s; }
       std::string getSource() const { return source; }
 private:
+    Vector2f vDir;
     int direction;
     std::string source;
 };

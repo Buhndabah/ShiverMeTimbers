@@ -59,6 +59,14 @@ void HUDHealthBar::onMove(const GameEvents::Event *e) {
     }
 }
 
+
+void HUDHealthBar::onDeath(const GameEvents::Event *e) {
+    if(e->getSource().compare(getName())==0)
+    {
+        GameEvents::EventQueue::getInstance().push(new GameEvents::HUDRemoveEvent(getName(), e->getPosition()));
+    }
+}
+
 /**********************************************************/
 
 /***** Forwarding functions for event handlers ******/
@@ -73,11 +81,16 @@ void HUDHPMoveForwarder(Listener* context, const GameEvents::Event *e) {
     dynamic_cast<HUDHealthBar*>(context)->onMove(e);
 }
 
+void HUDHPDeathForwarder(Listener* context, const GameEvents::Event *e) {
+    dynamic_cast<HUDHealthBar*>(context)->onDeath(e);
+}
+
 /****************************************************/
 
 // Register a damage listener and a move listener
 void HUDHealthBar::registerListeners() {
     GameEvents::EventQueue::getInstance().addListener(GameEvents::DAMAGERECEIVED_EVENT, static_cast<Listener*>(this), &HUDHPDamageForwarder); 
     GameEvents::EventQueue::getInstance().addListener(GameEvents::MOVE_EVENT, static_cast<Listener*>(this), &HUDHPMoveForwarder); 
+    GameEvents::EventQueue::getInstance().addListener(GameEvents::DEATH_EVENT, static_cast<Listener*>(this), &HUDHPDeathForwarder);
 }
 

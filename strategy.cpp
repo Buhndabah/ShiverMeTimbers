@@ -107,7 +107,8 @@ void ChaseStrategy::registerListeners() {
 
 BulletStrategy::BulletStrategy(GridElement* g, int dir) :
     Strategy(g, BULLET_STRAT),
-    direction(dir)
+    direction(dir),
+    vDir(Vector2f(0,0))
 {
     init();
     switch(dir) {

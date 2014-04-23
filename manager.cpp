@@ -41,6 +41,9 @@ Manager::Manager() :
     throw std::string("Unable to initialize SDL: ");
   }
 
+  // trap cursor in window
+  SDL_WM_GrabInput( SDL_GRAB_ON );
+
   atexit(SDL_Quit);
   int numSnowballs = Gamedata::getInstance().getXmlInt("numSnowballs");
   snowballs.reserve(numSnowballs+4);
@@ -48,11 +51,11 @@ Manager::Manager() :
   player = new GridElement("coolyeti"); // deleted by the mapManager
   map.addGridElement(player);
   map.setPlayer(player);
-  map.addGridElement(new GridElement("icecream", CHASE_STRAT));
+  //map.addGridElement(new GridElement("icecream", CHASE_STRAT));
   
   // test target 
   GridElement* test;
-  map.addGridElement(test = new GridElement("testyeti", Vector2f(600,600), 0, TURRET_STRAT));
+  map.addGridElement(test = new GridElement("icecream", Vector2f(650,650), 0, TURRET_STRAT));
   hud.addHealthBar(test->getName(), Vector2f(0,-10));
 
   hud.addHealthBar(player->getName(), Vector2f(0, -10));
@@ -174,6 +177,19 @@ void Manager::play() {
       if(!keystate[SDLK_d]&&!keystate[SDLK_RIGHT]) d = false;
       if(!keystate[SDLK_SPACE]) { space = false; shot = false; }
       keyCatch = false;
+    }
+    if(event.type == SDL_MOUSEBUTTONUP) {
+        if(event.button.button==SDL_BUTTON_LEFT) {
+            space = false;
+            shot = false;
+        }
+    }
+    if(event.type == SDL_MOUSEBUTTONDOWN) {
+        if(event.button.button==SDL_BUTTON_LEFT)
+        {
+            std::cerr<<"received mouse event" << std::endl;
+            space = true;
+        }
     }
     if(event.type == SDL_KEYDOWN) {
       if (keystate[SDLK_ESCAPE]){// || keystate[SDLK_q]) {

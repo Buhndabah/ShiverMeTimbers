@@ -19,6 +19,7 @@ HUD::HUD(const std::string& fn) :
     visible(true),
     fade(false)
 { 
+    registerListeners();
     parser.parse(fn);
     parseComponents();
 }
@@ -308,3 +309,25 @@ void HUD::parseComponents() {
 
     parser.removeDoc("xmlSpec/hud.xml");
 } 
+
+/********** Event Handling Methods ************/
+
+void HUD::onHUDRemove(const GameEvents::Event *e) {
+    for(std::list<HUDComponent*>::iterator it = components.begin(); it!=components.end(); ++it)
+    {
+        if( (*it)->getName().compare(e->getSource())==0)
+        {
+            delete (*it);
+            components.erase(it);
+            return;
+        }
+    }
+}
+
+void HUD::registerListeners() {
+    GameEvents::EventQueue::getInstance().addListener(GameEvents::HUDREMOVE_EVENT, static_cast<Listener*>(this), &HUDRemoveForwarder);
+}
+
+void HUDRemoveForwarder(Listener* context, const GameEvents::Event *e) {
+    dynamic_cast<HUD*>(context)->onHUDRemove(e);
+}

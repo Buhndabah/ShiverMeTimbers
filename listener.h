@@ -18,6 +18,7 @@ public:
     virtual void onMove(const GameEvents::Event*);
     virtual void onCollide(const GameEvents::Event*);
     virtual void onDeath(const GameEvents::Event*);
+    virtual void onHUDRemove(const GameEvents::Event*);
     virtual void onRoundOver(const GameEvents::Event*);
     virtual void onScore(const GameEvents::ScoreEvent*);
 

@@ -2,12 +2,13 @@
 #define HUD_H
 #include <list>
 #include <map>
+#include "listener.h"
 #include "hudComponent.h"
 #include "hudContainer.h"
 #include "gridElement.h"
 #include "xmlparser.h"
 
-class HUD {
+class HUD : public Listener{
 public:
     static HUD& getInstance();
 
@@ -28,12 +29,15 @@ public:
     void setComponentText(const std::string&, const std::string&) const;
     void addHealthBar(const std::string&, const Vector2f&);
 
+    void onHUDRemove(const GameEvents::Event*);
+
 private:
     HUD(const std::string& fn = "xmlSpec/hud.xml"); 
     HUD(const HUD&);
     HUD& operator=(const HUD&);
 
     void parseComponents();
+    virtual void registerListeners();
 
     XMLParser& parser;
     std::list<HUDComponent*> components;
@@ -47,4 +51,5 @@ private:
         PAUSE
     };
 };
+void HUDRemoveForwarder(Listener*, const GameEvents::Event *);
 #endif

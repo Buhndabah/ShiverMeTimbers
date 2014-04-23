@@ -142,9 +142,7 @@ void MapManager::addGridElement(GridElement* gridE) {
 // Remove grid element from list
 void MapManager::removeGridElement(const std::string& name) {
 
-    // Don't delete the player plz
-    if(player->getName().compare(name) == 0) return;
-
+    
     for(std::vector<std::list<GridElement*> >::iterator it = gridElements.begin(); it!= gridElements.end(); ++it)
     {
         std::list<GridElement*>::iterator it2=(*it).begin();
@@ -591,6 +589,15 @@ void MapManager::displayData() const {
     parser.displayData();
 }
 
+void MapManager::onDeath(const GameEvents::Event *e) {
+    // Don't delete the player plz
+    if(player->getName().compare(e->getSource()) == 0) return;
+    
+    GameEvents::EventQueue::getInstance().push(new GameEvents::ScoreEvent(e->getSource(), e->getPosition(), 10));
+    removeGridElement(e->getSource());
+}
+
+
 /*********** Listener set up and forwarder ************/
 
 // Forwarding function creation events
@@ -618,7 +625,7 @@ void MapCreateForwarder(Listener* context, const GameEvents::Event *e) {
 }
 
 void MapDeathForwarder(Listener* context, const GameEvents::Event *e) {
-    dynamic_cast<MapManager*>(context)->removeGridElement(e->getSource());
+    dynamic_cast<MapManager*>(context)->onDeath(e);
 }
 
 void MapManager::registerListeners() {

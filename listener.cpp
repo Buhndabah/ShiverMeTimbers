@@ -19,5 +19,6 @@ void Listener::onDamageReceived(const GameEvents::DamageReceivedEvent *e) {(void
 void Listener::onMove(const GameEvents::Event *e) {(void)e;}
 void Listener::onCollide(const GameEvents::Event *e) {(void)e;}
 void Listener::onDeath(const GameEvents::Event *e) {(void)e;}
+void Listener::onHUDRemove(const GameEvents::Event *e) {(void)e;}
 void Listener::onRoundOver(const GameEvents::Event *e) {(void)e;}
 void Listener::onScore(const GameEvents::ScoreEvent *e) {(void)e;}

@@ -320,7 +320,7 @@
   <icecreamChunks>25</icecreamChunks>
 
   <icecreamMoveSpeed>300</icecreamMoveSpeed>
-  <icecreamSolid>false</icecreamSolid>
+  <icecreamSolid>true</icecreamSolid>
 
   <icecreamSrcX>0</icecreamSrcX>
   <icecreamSrcY>0</icecreamSrcY>

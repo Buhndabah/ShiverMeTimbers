@@ -16,6 +16,7 @@ public:
 
     virtual void onDamageReceived(const GameEvents::DamageReceivedEvent *);
     virtual void onMove(const GameEvents::Event *);
+    virtual void onDeath(const GameEvents::Event *);
 
 private:
     virtual void registerListeners();

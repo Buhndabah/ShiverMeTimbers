@@ -4,7 +4,9 @@
 #include <cmath>
 #include "xmlparser.h"
 #include "tile.h"
+#include "listener.h"
 #include "gridElement.h"
+#include "gameEvents.h"
 
 class GridElement;
 
@@ -47,6 +49,8 @@ public:
 
     GridElement* getPlayer() const { return player; }
     void setPlayer(GridElement* p) { player = p; }
+
+    virtual void onDeath(const GameEvents::Event*);
 
 private:
 //    MapManager(const std::string& fn = "xmlSpec/basicMap.xml");
