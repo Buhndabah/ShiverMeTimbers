@@ -51,7 +51,7 @@ HUDClock& HUDClock::operator=(const HUDClock& rhs)
 void HUDClock::draw() const{
     if(isVisible()) 
     {
-        io.printMessageAt(time, getPosition()[0],getPosition()[1]);
+        io.printMessageAt(time, getPosition()[0],getPosition()[1],"freebooter_small", "black");
     }
 }
 

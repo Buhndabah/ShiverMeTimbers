@@ -1,6 +1,6 @@
 <?xml version = "1.0"?>
 <GameData>
-<screenTitle>Project #3</screenTitle>
+<screenTitle>Shiver Me Timbers</screenTitle>
 <username>sewells</username>
 <frameMax>400</frameMax>
 <frameCap>60</frameCap>
@@ -116,6 +116,16 @@
     <buttonSpeed buttonSpeedX="0" buttonSpeedY="0"/>
     <buttonTransparency>true</buttonTransparency>
 </button>
+<score>
+    <scoreFile>images/score.png</scoreFile>
+    <scoreSrcX>0</scoreSrcX>
+    <scoreSrcY>0</scoreSrcY>
+    <scoreWidth>128</scoreWidth>
+    <scoreHeight>64</scoreHeight>
+    <scoreLoc scoreX="0" scoreY="0"/>
+    <scoreSpeed scoreSpeedX="0" scoreSpeedY="0"/>
+    <scoreTransparency>true</scoreTransparency>
+</score>
 
 <snowball>
   <snowballFile>images/snowball.png</snowballFile>
@@ -124,7 +134,7 @@
   <snowballWidth>60</snowballWidth>
   <snowballHeight>60</snowballHeight>
   <snowballSolid>true</snowballHeight>
-  <snowballMoveSpeed>120</snowballMoveSpeed>
+  <snowballMoveSpeed>200</snowballMoveSpeed>
   <snowballFrames>1</snowballFrames>
   <snowballFrameInterval>160</snowballFrameInterval>
   <snowballChunks>25</snowballChunks>

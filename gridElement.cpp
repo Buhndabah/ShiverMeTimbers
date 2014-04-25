@@ -363,7 +363,7 @@ void GridElement::onDamage(const GameEvents::DamageEvent *e) {
     curHP-=e->getDamage();
 
     // What to do if we die
-    if(curHP < 0)
+    if(curHP <= 0)
     {
         // Push a death notification
         GameEvents::EventQueue::getInstance().push(new GameEvents::DeathEvent(getName(), getPosition()));

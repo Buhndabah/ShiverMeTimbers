@@ -92,7 +92,7 @@ void IOManager::printMessageValueAt(const std::string& msg, T value,
    message = strm.str();
    SDL_Rect dest = {x,y,0,0};
    SDL_Surface *stext = 
-       TTF_RenderText_Blended(fonts.find(font)->second, message.c_str(), colors.find(DEFAULT_COLOR)->second);
+       TTF_RenderText_Blended(fonts.find(font)->second, message.c_str(), colors.find(color)->second);
    if (stext) {
      SDL_BlitSurface( stext, NULL, screen, &dest );
      SDL_FreeSurface(stext);

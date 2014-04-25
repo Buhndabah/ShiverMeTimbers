@@ -4,7 +4,7 @@ HUDScore::HUDScore(const std::string& n, const Vector2f& pos, bool vis) :
     HUDComponent(n, pos, vis),
     io(IOManager::getInstance()),
     score(0),
-    limit(100)
+    limit(20)
 { 
     registerListeners();
 }
@@ -22,7 +22,7 @@ void HUDScore::draw() const {
     
     if(isVisible())
     {
-        io.printMessageValueAt("Score: ", score, getPosition()[0], getPosition()[1], "freebooter_small", "yellow");
+        io.printMessageValueAt("Score: ", score, getPosition()[0], getPosition()[1], "freebooter_small", "black");
     }
 }
 

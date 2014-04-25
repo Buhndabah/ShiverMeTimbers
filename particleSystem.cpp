@@ -10,7 +10,7 @@ ParticleSystem::ParticleSystem(const Vector2f& p, const Vector2f& d, int h, cons
     viewHeight(Gamedata::getInstance().getXmlInt("viewHeight")),
     maxHeight(h),
     maxLife(30),
-    maxCount(7),
+    maxCount(5),
     particles(),
     type(t)
 {

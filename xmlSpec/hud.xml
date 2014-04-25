@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <hud>
-    <component type="text" name="credits" x="750" y="10" visible="true" text="Stephen Wells and John Butchko" centered="false"/>
+
+<!--    <component type="text" name="credits" x="750" y="10" visible="true" text="Stephen Wells and John Butchko" centered="false"/>-->
+    <component type="image" name="scoreback" x="0" y="7" visible="true" file="score"/>
     <component type="clock" name= "clock" x="10" y="10" visible="true" start="600"/>
     <component type="score" name="scoreboard" x="10" y="30" visible="true"/>
 
