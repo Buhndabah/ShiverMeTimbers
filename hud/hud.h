@@ -35,7 +35,7 @@ public:
     void reinit();
 
 private:
-    HUD(const std::string& fn = "xmlSpec/hud.xml"); 
+    HUD(const std::string& fn = "xml/xmlSpec/hud.xml"); 
     HUD(const HUD&);
     HUD& operator=(const HUD&);
 

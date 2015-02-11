@@ -40,7 +40,7 @@
 </grid>
 
 <back>
-  <backFile>images/icecave.png</backFile>
+  <backFile>resources/images/icecave.png</backFile>
   <backFactor>1</backFactor>
   <backSrcX>0</backSrcX>
   <backSrcY>0</backSrcY>
@@ -52,7 +52,7 @@
 </back>
 
 <healthBar>
-  <healthBarFile>images/healthBar.png</healthBarFile>
+  <healthBarFile>resources/images/healthBar.png</healthBarFile>
   <healthBarFactor>1</healthBarFactor>
   <healthBarSrcX>0</healthBarSrcX>
   <healthBarSrcY>0</healthBarSrcY>
@@ -64,7 +64,7 @@
 </back>
 
 <controlPopUp>
-    <controlPopUpFile>images/controlPopUp.png</controlPopUpFile>
+    <controlPopUpFile>resources/images/controlPopUp.png</controlPopUpFile>
     <controlPopUpSrcX>0</controlPopUpSrcX>
     <controlPopUpSrcY>0</ControlPopUpSrcY>
     <controlPopUpWidth>1000</controlPopUpWidth>
@@ -75,7 +75,7 @@
 </controlPopUp>
 
 <controls>
-    <controlsFile>images/controls.png</controlsFile>
+    <controlsFile>resources/images/controls.png</controlsFile>
     <controlsSrcX>0</controlsSrcX>
     <controlsSrcY>0</controlsSrcY>
     <controlsWidth>227</controlsWidth>
@@ -86,7 +86,7 @@
 </controls>
 
 <controls2>
-    <controls2File>images/controls2.png</controls2File>
+    <controls2File>resources/images/controls2.png</controls2File>
     <controls2SrcX>0</controls2SrcX>
     <controls2SrcY>0</controls2SrcY>
     <controls2Width>227</controls2Width>
@@ -96,7 +96,7 @@
     <controls2Transparency>true</controls2Transparency>
 </controls2>
 <pauseScreen>
-    <pauseScreenFile>images/pauseScreen.png</pauseScreenFile>
+    <pauseScreenFile>resources/images/pauseScreen.png</pauseScreenFile>
     <pauseScreenSrcX>0</pauseScreenSrcX>
     <pauseScreenSrcY>0</pauseScreenSrcY>
     <pauseScreenWidth>1000</pauseScreenWidth>
@@ -107,7 +107,7 @@
 </pauseScreen>
 
 <button>
-    <buttonFile>images/button.png</buttonFile>
+    <buttonFile>resources/images/button.png</buttonFile>
     <buttonSrcX>0</buttonSrcX>
     <buttonSrcY>0</buttonSrcY>
     <buttonWidth>128</buttonWidth>
@@ -117,7 +117,7 @@
     <buttonTransparency>true</buttonTransparency>
 </button>
 <score>
-    <scoreFile>images/score.png</scoreFile>
+    <scoreFile>resources/images/score.png</scoreFile>
     <scoreSrcX>0</scoreSrcX>
     <scoreSrcY>0</scoreSrcY>
     <scoreWidth>128</scoreWidth>
@@ -128,7 +128,7 @@
 </score>
 
 <snowball>
-  <snowballFile>images/snowball.png</snowballFile>
+  <snowballFile>resources/images/snowball.png</snowballFile>
   <snowballSrcX>0</snowballSrcX>
   <snowballSrcY>0</snowballSrcY>
   <snowballWidth>60</snowballWidth>
@@ -146,7 +146,7 @@
 
 
 <spinsnowball>
-  <spinsnowballFile>images/rotating_snowball.png</spinsnowballFile>
+  <spinsnowballFile>resources/images/rotating_snowball.png</spinsnowballFile>
   <spinsnowballLoc spinsnowballX="320" spinsnowballY="240"/>
 
   <spinsnowballFrames>4</spinsnowballFrames>
@@ -162,7 +162,7 @@
 </spinsnowball>
 
 <tile1>
-  <tile1File>images/tile1.png</tile1File>
+  <tile1File>resources/images/tile1.png</tile1File>
   <tile1Loc tile1X="30" tile1Y="10"/>
   <tile1Width>128</tile1Width>
   <tile1Height>64</tile1Height>
@@ -173,7 +173,7 @@
 </tile1>
 
 <snow>
-  <snowFile>images/snow.png</snowFile>
+  <snowFile>resources/images/snow.png</snowFile>
   <snowLoc snowX="30" snowY="10"/>
   <snowWidth>128</snowWidth>
   <snowHeight>110</snowHeight>
@@ -184,7 +184,7 @@
 </snow>
 
 <water>
-  <waterFile>images/water.png</waterFile>
+  <waterFile>resources/images/water.png</waterFile>
   <waterLoc snowX="30" snowY="10"/>
   <waterWidth>128</waterWidth>
   <waterHeight>110</waterHeight>
@@ -195,7 +195,7 @@
 </water>
 
 <empty>
-  <emptyFile>images/empty.png</emptyFile>
+  <emptyFile>resources/images/empty.png</emptyFile>
   <emptyLoc emptyX="30" emptyY="10"/>
   <emptyWidth>128</emptyWidth>
   <emptyHeight>80</emptyHeight>
@@ -206,7 +206,7 @@
 </empty>
 
 <tile2>
-  <tile2File>images/tile2.png</tile2File>
+  <tile2File>resources/images/tile2.png</tile2File>
   <tile2Loc tile2X="30" tile2Y="10"/>
   <tile2Width>128</tile2Width>
   <tile2Height>80</tile2Height>
@@ -216,7 +216,7 @@
   <tile2Transparency>false</tile2Transparency>
 </tile2>
 <tile3>
-  <tile3File>images/tile3.png</tile3File>
+  <tile3File>resources/images/tile3.png</tile3File>
   <tile3Loc tile3X="30" tile3Y="10"/>
   <tile3Width>128</tile3Width>
   <tile3Height>64</tile3Height>
@@ -226,7 +226,7 @@
   <tile3Transparency>false</tile3Transparency>
 </tile3>
 <tile4>
-  <tile4File>images/tile4.png</tile4File>
+  <tile4File>resources/images/tile4.png</tile4File>
   <tile4Loc tile4X="30" tile4Y="10"/>
   <tile4Width>128</tile4Width>
   <tile4Height>64</tile4Height>
@@ -236,7 +236,7 @@
   <tile4Transparency>false</tile4Transparency>
 </tile4>
 <tile5>
-  <tile5File>images/tile5.png</tile5File>
+  <tile5File>resources/images/tile5.png</tile5File>
   <tile5Loc tile5X="30" tile5Y="10"/>
   <tile5Width>128</tile5Width>
   <tile5Height>64</tile5Height>
@@ -246,7 +246,7 @@
   <tile5Transparency>false</tile5Transparency>
 </tile5>
 <tile6>
-  <tile6File>images/tile6.png</tile6File>
+  <tile6File>resources/images/tile6.png</tile6File>
   <tile6Loc tile6X="30" tile6Y="10"/>
   <tile6Width>128</tile6Width>
   <tile6Height>64</tile6Height>
@@ -256,7 +256,7 @@
   <tile6Transparency>false</tile6Transparency>
 </tile6>
 <tile7>
-  <tile7File>images/tile7.png</tile7File>
+  <tile7File>resources/images/tile7.png</tile7File>
   <tile7Loc tile7X="30" tile7Y="10"/>
   <tile7Width>128</tile7Width>
   <tile7Height>64</tile7Height>
@@ -266,7 +266,7 @@
   <tile7Transparency>false</tile7Transparency>
 </tile7>
 <tile8>
-  <tile8File>images/tile8.png</tile8File>
+  <tile8File>resources/images/tile8.png</tile8File>
   <tile8Loc tile8X="30" tile8Y="10"/>
   <tile8Width>128</tile8Width>
   <tile8Height>64</tile8Height>
@@ -276,7 +276,7 @@
   <tile8Transparency>false</tile8Transparency>
 </tile8>
 <hut>
-  <hutFile>images/hut.png</hutFile>
+  <hutFile>resources/images/hut.png</hutFile>
   <hutLoc hutX="30" hutY="10"/>
   <hutWidth>70</hutWidth>
   <hutHeight>70</hutHeight>
@@ -286,7 +286,7 @@
   <hutTransparency>false</hutTransparency>
 </hut>
 <tile9>
-  <tile9File>images/tile9.png</tile9File>
+  <tile9File>resources/images/tile9.png</tile9File>
   <tile9Loc tile9X="30" tile9Y="10"/>
   <tile9Width>128</tile9Width>
   <tile9Height>64</tile9Height>
@@ -296,7 +296,7 @@
   <tile9Transparency>false</tile9Transparency>
 </tile9>
 <coolyeti>
-  <coolyetiFile>images/coolyeti.png</coolyetiFile>
+  <coolyetiFile>resources/images/coolyeti.png</coolyetiFile>
   <coolyetiLoc coolyetiX="464" coolyetiY="27"/>
 
   <coolyetiFrames>4</coolyetiFrames>
@@ -315,7 +315,7 @@
 </coolyeti>
 
 <testyeti>
-  <testyetiFile>images/coolyeti.png</testyetiFile>
+  <testyetiFile>resources/images/coolyeti.png</testyetiFile>
   <testyetiLoc testyetiX="464" testyetiY="27"/>
 
   <testyetiFrames>4</testyetiFrames>
@@ -333,7 +333,7 @@
   <testyetiTransparency>true</testyetiTransparency>
 </testyeti>
 <icecream>
-    <icecreamFile>images/icecream.png</icecreamFile>
+    <icecreamFile>resources/images/icecream.png</icecreamFile>
     <icecreamLoc icecreamX="0" icecreamY="0"/>
 
   <icecreamFrames>1</icecreamFrames>
@@ -352,7 +352,7 @@
 </icecream>
 
 <yeti>
-  <yetiFile>images/yeti2.png</yetiFile>
+  <yetiFile>resources/images/yeti2.png</yetiFile>
   <yetiSrcX>0</yetiSrcX>
   <yetiSrcY>0</yetiSrcY>
   <yetiWidth>200</yetiWidth>
@@ -364,7 +364,7 @@
 </yeti>
 
 <penguin>
-  <penguinFile>images/penguin.png</penguinFile>
+  <penguinFile>resources/images/penguin.png</penguinFile>
   <penguinSrcX>0</penguinSrcX>
   <penguinSrcY>0</penguinSrcY>
  <penguinWidth>200</penguinWidth>

@@ -29,10 +29,10 @@ IOManager::IOManager( ) :
   if ( TTF_Init() == -1 ) {
     throw string("TTF_Init failed: ") + TTF_GetError();
   }
-  parser.parse("xmlSpec/font.xml");
+  parser.parse("xml/xmlSpec/font.xml");
   parseFonts();
   parseColors();
-  parser.removeDoc("xmlSpec/font.xml");
+  parser.removeDoc("xml/xmlSpec/font.xml");
   SDL_EnableUNICODE( SDL_ENABLE );
   SDL_WM_SetCaption(title.c_str(), NULL);
   atexit(TTF_Quit);

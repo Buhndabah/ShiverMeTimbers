@@ -10,7 +10,7 @@ Gamedata& Gamedata::getInstance() {
 
 Gamedata::Gamedata() :
   parser(XMLParser::getInstance()),
-  readFile("xmlSpec/game.xml"),
+  readFile("xml/xmlSpec/game.xml"),
   roto(false)
 {
     parser.parse(readFile);

@@ -354,7 +354,7 @@ HUDComponent* HUD::createComponent(std::map<std::string, std::string> componentP
 
 /* Read in components from xml file */
 void HUD::parseComponents() {
-    parser.setCurDocument("xmlSpec/hud.xml");
+    parser.setCurDocument("xml/xmlSpec/hud.xml");
 
     std::list<std::map<std::string, std::string> > componentList = parser.parseNodesWithTag("component");   // components are immediately ready to parse in...
 

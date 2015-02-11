@@ -1,4 +1,4 @@
-DIRS=hud:.
+DIRS=.:hud:particles:events:graphics:gameObjects:xml:utils
 EMPTY= 
 SPACE= $(EMPTY) $(EMPTY) 
 #INCLUDEDIRS=$(addprefix -I, $(subst :, -I, $(DIRS)))

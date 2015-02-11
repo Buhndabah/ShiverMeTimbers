@@ -37,13 +37,13 @@ SoundManager::SoundManager() :
         {
             throw std::string("Unable to open audio");
         }
-        music = Mix_LoadMUS("sounds/freezeezy.wav");
-        //music = Mix_LoadMUS("sounds/trololo.mp3");
+        music = Mix_LoadMUS("resources/sounds/freezeezy.wav");
+        //music = Mix_LoadMUS("resources/sounds/trololo.mp3");
         //if(!music) throw std::string("Couldn't load trololo.mp3 ")+Mix_GetError();
         if(!music) throw std::string("Couldn't load explosion.wav")+Mix_GetError();
         startMusic();
-        sounds.push_back( Mix_LoadWAV("sounds/snowstep.wav"));
-        sounds.push_back( Mix_LoadWAV("sounds/snowthrow.wav"));
+        sounds.push_back( Mix_LoadWAV("resources/sounds/snowstep.wav"));
+        sounds.push_back( Mix_LoadWAV("resources/sounds/snowthrow.wav"));
         for(unsigned int i=0; i< sounds.size(); ++i) channels.push_back(i);
 }
 

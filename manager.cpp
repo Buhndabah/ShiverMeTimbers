@@ -1,3 +1,5 @@
+//#define TEST_ENEMY
+
 #include <iostream>
 #include <string>
 #include <iomanip>
@@ -55,10 +57,13 @@ Manager::Manager() :
   map.addGridElement(player);
   map.setPlayer(player);
   //map.addGridElement(new GridElement("icecream", CHASE_STRAT));
-  
+ 
+#ifdef TEST_ENEMY 
   // test target 
   GridElement* test;
   map.addGridElement(test = new GridElement("icecream", Vector2f(650,650), 0, TURRET_STRAT));
+  hud.addHealthBar(test->getName(), Vector2f(0,-10));
+#endif
 
   hud.addHealthBar(player->getName(), Vector2f(0, -10));
   SoundManager::getInstance();
@@ -121,6 +126,7 @@ void Manager::update() {
   hud.update(ticks);
 }
 
+
 bool Manager::play() {
   SDL_Event event;
 
@@ -135,6 +141,7 @@ bool Manager::play() {
 //std::cout << "display: " << player->getSprite().getPosition() << std::endl;
 //std::cout << "grid: " << player->getGridPosition() << std::endl;
 
+    // Continue moving the player if a keystate is registered
 
     //adjust the player's velocity according to the key(s) being held down
     if(w){
@@ -162,10 +169,7 @@ bool Manager::play() {
     else
       player->stop();
 
-    SDL_PollEvent(&event);
-    Uint8 *keystate = SDL_GetKeyState(NULL);
-
-    // check for shots fired
+    // check whether we need to shoot
     if(space&&!shot){
 	int x[1], y[1];
 	SDL_GetMouseState(x,y);
@@ -175,6 +179,11 @@ bool Manager::play() {
         shot = true;
     }
 
+    // Get input and set key flags
+
+    SDL_PollEvent(&event);
+    Uint8 *keystate = SDL_GetKeyState(NULL);
+
     if (event.type ==  SDL_QUIT) { done = true; break; }
     if(event.type == SDL_KEYUP) {
       //when a key is lifted, check to see if it was a movement button
@@ -182,14 +191,15 @@ bool Manager::play() {
       if(!keystate[SDLK_a]&&!keystate[SDLK_LEFT]) a = false;
       if(!keystate[SDLK_s]&&!keystate[SDLK_DOWN]) s = false;
       if(!keystate[SDLK_d]&&!keystate[SDLK_RIGHT]) d = false;
-      if(!keystate[SDLK_SPACE]) { space = false; shot = false; }
       keyCatch = false;
     }
-    if(event.type == SDL_MOUSEBUTTONUP) {
-        if(event.button.button==SDL_BUTTON_LEFT) {
+
+    // Handle the mouse or space being lifted
+    if(  (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT)
+      || (event.type == SDL_KEYUP && !keystate[SDLK_SPACE]) ) {
             space = false;
             shot = false;
-        }
+            keyCatch = false;
     }
     if(event.type == SDL_MOUSEBUTTONDOWN) {
         if(event.button.button==SDL_BUTTON_LEFT)
@@ -288,9 +298,11 @@ void Manager::reinit() {
     player = new GridElement("coolyeti");
     map.addGridElement(player);
     map.setPlayer(player);
+#ifdef TEST_ENEMY
     GridElement* test;
     map.addGridElement(test = new GridElement("icecream", Vector2f(650, 650),0, TURRET_STRAT));
     hud.addHealthBar(test->getName(), Vector2f(0,-10));
+#endif
     hud.addHealthBar(player->getName(), Vector2f(0,-10));
     viewport.setObjectToTrack(&player->getSprite());
     registerListeners();
