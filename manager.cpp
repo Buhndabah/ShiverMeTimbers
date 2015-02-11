@@ -224,77 +224,77 @@ bool Manager::play() {
       }
       if(event.type == SDL_KEYDOWN) {
             if (keystate[SDLK_ESCAPE]){// || keystate[SDLK_q]) {
-            done = true;
-            break;
-      }
+                done = true;
+                break;
+            }
 
-      if (keystate[SDLK_F4] && !makeVideo) {
-            std::cout << "Making video frames" << std::endl;
-            makeVideo = true;
-      }
+            if (keystate[SDLK_F4] && !makeVideo) {
+                std::cout << "Making video frames" << std::endl;
+                makeVideo = true;
+            }
 
-      if(keystate[SDLK_F1] && !keyCatch) {
-            keyCatch=true;
-            hud.toggleHelp();
-      }
+            if(keystate[SDLK_F1] && !keyCatch) {
+                keyCatch=true;
+                hud.toggleHelp();
+            }
 
-      if (keystate[SDLK_p] && !keyCatch &&!gameOver) {
-        keyCatch = true;
-        if ( clock.isPaused() ) 
-        {
-            hud.onPause(0);
-            clock.unpause();
-        }
-        else { 
-            hud.onPause(1);
-            clock.pause();
-        }
-      }
+            if (keystate[SDLK_p] && !keyCatch &&!gameOver) {
+                keyCatch = true;
+                if ( clock.isPaused() ) 
+                {
+                    hud.onPause(0);
+                    clock.unpause();
+                }
+                else { 
+                    hud.onPause(1);
+                    clock.pause();
+                }
+            }
 
-      // XXX damage testing
-      if(keystate[SDLK_r] && !keyCatch) {
-          keyCatch= true;
-          //player->onDamage(10);
-      }
-      //change tracking sprite
-      if (keystate[SDLK_t] && !keyCatch) {
-	keyCatch = true;
-	if(currentSprite  < snowballs.size())
-	  viewport.setObjectToTrack(snowballs[currentSprite++]);
-	else{
-          viewport.setObjectToTrack(&player->getSprite());
-          currentSprite = 0;
-        }
-      }
+            // XXX damage testing
+            if(keystate[SDLK_r] && !keyCatch) {
+                keyCatch= true;
+                //player->onDamage(10);
+            }
+            //change tracking sprite
+            if (keystate[SDLK_t] && !keyCatch) {
+	        keyCatch = true;
+	        if(currentSprite  < snowballs.size())
+	            viewport.setObjectToTrack(snowballs[currentSprite++]);
+	        else{
+                    viewport.setObjectToTrack(&player->getSprite());
+                    currentSprite = 0;
+                }
+            }
 
-      //rotate RotateSprite's
-      if (keystate[SDLK_r] && !keyCatch) {
-	    keyCatch = true;
-	    Gamedata::getInstance().setRoto(!Gamedata::getInstance().getRoto());
-      }
+            //rotate RotateSprite's
+            if (keystate[SDLK_r] && !keyCatch) {
+	        keyCatch = true;
+	        Gamedata::getInstance().setRoto(!Gamedata::getInstance().getRoto());
+            }
 
-      //check for player movement input
-      if (keystate[SDLK_w]||keystate[SDLK_UP]){
-        SoundManager::getInstance()[0];
-        w = true;
-      }
-      if (keystate[SDLK_a]||keystate[SDLK_LEFT]){
-        SoundManager::getInstance()[0];
-        a = true;
-      }
-      if (keystate[SDLK_s]||keystate[SDLK_DOWN]){
-        SoundManager::getInstance()[0];
-        s = true;
-      }
-      if (keystate[SDLK_d]||keystate[SDLK_RIGHT]){
-        SoundManager::getInstance()[0];
-        d = true;
-      }
-      if (keystate[SDLK_SPACE]){
-          space = true;
-      }
-    }
-  }
+            //check for player movement input
+            if (keystate[SDLK_w]||keystate[SDLK_UP]){
+                SoundManager::getInstance()[0];
+                w = true;
+            }
+            if (keystate[SDLK_a]||keystate[SDLK_LEFT]){
+                SoundManager::getInstance()[0];
+                a = true;
+            }
+            if (keystate[SDLK_s]||keystate[SDLK_DOWN]){
+                SoundManager::getInstance()[0];
+                s = true;
+            }
+            if (keystate[SDLK_d]||keystate[SDLK_RIGHT]){
+                SoundManager::getInstance()[0];
+                d = true;
+            }
+            if (keystate[SDLK_SPACE]){
+                space = true;
+            }
+        } // end key down
+    } // end pollevents
     draw();
     update();
 
