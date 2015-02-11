@@ -1,5 +1,6 @@
 //#define TEST_ENEMY
 
+#include <ctime>
 #include <iostream>
 #include <string>
 #include <iomanip>
@@ -82,6 +83,8 @@ Manager::Manager() :
 
 
 void Manager::draw() const {
+
+
   Uint32 backColor = SDL_MapRGB(screen->format, 100,100,100);
   SDL_FillRect(screen, NULL, backColor);
   world.draw();
@@ -98,11 +101,15 @@ void Manager::draw() const {
   viewport.draw();
   hud.draw();
   SDL_Flip(screen);
+
+
 }
 
 void Manager::update() {
   ++(clock);
   Uint32 ticks = clock.getElapsedTicks();
+
+
   //player->update(ticks);
   GameEvents::EventQueue::getInstance().prepEvents();
   std::vector<Drawable*>::iterator it = snowballs.begin();
@@ -124,6 +131,7 @@ void Manager::update() {
   map.update(ticks);
   viewport.update();	//update the viewport last
   hud.update(ticks);
+
 }
 
 
@@ -181,27 +189,31 @@ bool Manager::play() {
 
     // Get input and set key flags
 
-    SDL_PollEvent(&event);
-    Uint8 *keystate = SDL_GetKeyState(NULL);
+    while(SDL_PollEvent(&event)) {
+      Uint8 *keystate = SDL_GetKeyState(NULL);
 
-    if (event.type ==  SDL_QUIT) { done = true; break; }
-    if(event.type == SDL_KEYUP) {
-      //when a key is lifted, check to see if it was a movement button
-      if(!keystate[SDLK_w]&&!keystate[SDLK_UP]) w = false;
-      if(!keystate[SDLK_a]&&!keystate[SDLK_LEFT]) a = false;
-      if(!keystate[SDLK_s]&&!keystate[SDLK_DOWN]) s = false;
-      if(!keystate[SDLK_d]&&!keystate[SDLK_RIGHT]) d = false;
-      keyCatch = false;
-    }
+      if (event.type ==  SDL_QUIT) { 
+        done = true; 
+        break; 
+      }
 
-    // Handle the mouse or space being lifted
-    if(  (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT)
-      || (event.type == SDL_KEYUP && !keystate[SDLK_SPACE]) ) {
-            space = false;
-            shot = false;
-            keyCatch = false;
-    }
-    if(event.type == SDL_MOUSEBUTTONDOWN) {
+      if(event.type == SDL_KEYUP) {
+        //when a key is lifted, check to see if it was a movement button
+        if(!keystate[SDLK_w]&&!keystate[SDLK_UP]) w = false;
+        if(!keystate[SDLK_a]&&!keystate[SDLK_LEFT]) a = false;
+        if(!keystate[SDLK_s]&&!keystate[SDLK_DOWN]) s = false;
+        if(!keystate[SDLK_d]&&!keystate[SDLK_RIGHT]) d = false;
+        keyCatch = false;
+      }
+
+      // Handle the mouse or space being lifted
+      if(  (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT)
+        || (event.type == SDL_KEYUP && !keystate[SDLK_SPACE]) ) {
+        space = false;
+        shot = false;
+        keyCatch = false;
+      }
+      if(event.type == SDL_MOUSEBUTTONDOWN) {
         if(event.button.button==SDL_BUTTON_LEFT)
         {
             int x,y;
@@ -209,21 +221,21 @@ bool Manager::play() {
             GameEvents::EventQueue::getInstance().push(new GameEvents::ClickEvent("SDLMOUSE", Vector2f(x,y)));
             space = true;
         }
-    }
-    if(event.type == SDL_KEYDOWN) {
-      if (keystate[SDLK_ESCAPE]){// || keystate[SDLK_q]) {
-        done = true;
-        break;
+      }
+      if(event.type == SDL_KEYDOWN) {
+            if (keystate[SDLK_ESCAPE]){// || keystate[SDLK_q]) {
+            done = true;
+            break;
       }
 
       if (keystate[SDLK_F4] && !makeVideo) {
-        std::cout << "Making video frames" << std::endl;
-        makeVideo = true;
+            std::cout << "Making video frames" << std::endl;
+            makeVideo = true;
       }
 
       if(keystate[SDLK_F1] && !keyCatch) {
-          keyCatch=true;
-          hud.toggleHelp();
+            keyCatch=true;
+            hud.toggleHelp();
       }
 
       if (keystate[SDLK_p] && !keyCatch &&!gameOver) {
@@ -282,9 +294,11 @@ bool Manager::play() {
           space = true;
       }
     }
-
+  }
     draw();
     update();
+
+
     if(restart) break;
   }
   return restart == YES ? true : false;
