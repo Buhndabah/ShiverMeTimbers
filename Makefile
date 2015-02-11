@@ -1,13 +1,22 @@
+DIRS=hud:.
+EMPTY= 
+SPACE= $(EMPTY) $(EMPTY) 
+#INCLUDEDIRS=$(addprefix -I, $(subst :, -I, $(DIRS)))
+#INCLUDEDIRS=$(subst $(SPACE), -I, $(DIRS))
+INCLUDEDIRS=$(subst :, -I, $(DIRS))
+
 # Written by DJ Edmonson
 # Warnings frequently signal eventual errors:
-CXXFLAGS=`sdl-config --cflags` -g -W -Wall -Weffc++ -Wextra -pedantic -O0
+CXXFLAGS=`sdl-config --cflags` -g -W -Wall -Weffc++ -Wextra -pedantic -O0 -I$(INCLUDEDIRS)
 
 # Linker flags for both OS X and Linux
-LDFLAGS = `sdl-config --libs` -lSDL_ttf -lSDL_image -lexpat -lSDL_gfx -lSDL_mixer
+LDFLAGS = `sdl-config --libs` -lSDL_ttf -lSDL_image -lexpat -lSDL_gfx -lSDL_mixer -I$(INCLUDEDIRS)
+
+VPATH = hud
 
 # Generates list of object files from all the
 #   source files in directory
-OBJS = $(addsuffix .o, $(basename $(shell find *.cpp)))
+OBJS = $(addsuffix .o, $(basename $(shell find -name "*.cpp")))
 DEPS = $(OBJS:.o=.d)
 
 # Set executable name
@@ -35,6 +44,7 @@ clean:
 	rm -rf $(OBJS)
 	rm -rf $(DEPS)
 	rm -rf $(EXEC)
+	rm -rf *.d*
 
 # Phony target to use clang for compile and linking
 setclang:
@@ -45,6 +55,7 @@ setclang:
 # Phony target to use g++ for compile and linking
 setgcc:
 	@echo "Setting g++"
+	@echo "Objs: " $(OBJS)
 	$(eval CXX = g++)
 	$(eval CXX_LINK = g++)
 
@@ -57,7 +68,7 @@ $(OBJS): %.o: %.cpp
 $(DEPS): %.d: %.cpp
 	@echo "Generating "$@
 	@set -e; rm -f $@; \
-      g++ -MM $(CPPFLAGS) $< > $@.$$$$; \
+      g++ -MM $(CXXFLAGS) $< > $@.$$$$; \
       sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
       rm -f $@.$$$$
 
