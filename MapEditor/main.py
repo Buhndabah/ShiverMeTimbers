@@ -58,11 +58,12 @@ def runGame(tiles):
         fillTiles(tiles,p)
         drawLowerGrid()
 
-        # draw currently selected tile at player's loc
+        # draw currently selected tile type at cursor's loc
         pos = (p.getCoords()[STRINGS.X], p.getCoords()[STRINGS.Y]-p.getLevel()*E_VARS.CELLRISE)
         image = tiles[TODRAW].getPic()
         DISPLAYSURF.blit(image,pos)
 
+        #make tile grid
         drawUpperGrid(p)
 
         pygame.display.update()
@@ -76,46 +77,70 @@ def runGame(tiles):
 def handleEvents(player,tiles):
     global TODRAW
     for event in pygame.event.get():
-        if event.type == QUIT:  #exit program
+
+        #exit editor
+        if event.type == QUIT: 
             terminate()
         elif event.type == KEYUP:
             pygame.key.set_repeat(1,100)
+
+        #key press received
         elif event.type == KEYDOWN:
-            if event.key == K_ESCAPE:   # exit program
+
+            #exit program
+            if event.key == K_ESCAPE:
                 if tkMessageBox.askyesno(title="Greetings", message="Do you want to save your changes before exiting?"):
                     printMap(tiles)
                 terminate()
                 pygame.event.clear()
 
             # Map Editing functions
-            elif event.key == K_RETURN: # edit map to new item (currently defaults to starpad
+
+            # place the selected tile type at the cursor
+            elif event.key == K_RETURN:
                 insertItem(player)
+
+            # if a tile exists at the cursor, delete it
             elif event.key == K_BACKSPACE:
                 removeItem(player)
+
+            # turn on the collision map
             elif event.key == K_c:
                 pygame.key.set_repeat()
                 setCollide(player)
+
+            # scroll back one tile type
             elif event.key == K_z:
                 if TODRAW > 0:
                     TODRAW = TODRAW - 1
+
+            # scroll forward one tile type
             elif event.key == K_x:
                 if TODRAW <  len(tiles)-1:
                     TODRAW = TODRAW + 1
+
+            # save the map to file
             elif event.key == K_m:
                 printMap(tiles)
-            # Here be movement handling
+
+            # move up one elevation
             elif event.key == K_t:
                 player.goUp()
+
+            # move down one elevation
             elif event.key == K_y:
                 if not (player.getLevel() == 0):
                     player.goDown()
-            else:                       # tell player to move in dir
+            
+            # move the cursor in direction
+            else:                       
                 player.setDir(event.key)
 
 
 #-------------------------------------------
 
 # Write out to xml
+# XXX TODO currently this always print to a file named "test.xml"
 def printMap(tiles):
 
    nameChoice = Entry(WINDOW)
@@ -279,7 +304,7 @@ def fillTiles(tiles,player):
     # For every row
     for i in range(E_VARS.MAPWIDTH+E_VARS.MAPHEIGHT-1):
 
-        # and every height
+        # and every elevation
         for k in range(len(MAP)):
 
             if(i < E_VARS.MAPWIDTH):    # top half of diamond
@@ -293,6 +318,8 @@ def fillTiles(tiles,player):
     
             # draw the appropriate number of tiles
             for j in range(num):
+
+                # calculate the coordinates
                 if i < E_VARS.MAPWIDTH:
                     mapY = (i + (j*(E_VARS.MAPWIDTH-1))) % E_VARS.MAPWIDTH;
                     mapX = (i + (j*(E_VARS.MAPWIDTH-1))) / E_VARS.MAPWIDTH;
@@ -300,7 +327,7 @@ def fillTiles(tiles,player):
                     mapY = (i + ((i+1)%E_VARS.MAPWIDTH)*(E_VARS.MAPWIDTH-1) + j*(E_VARS.MAPWIDTH-1)) % E_VARS.MAPWIDTH;
                     mapX =(i + ((i+1)%E_VARS.MAPWIDTH)*(E_VARS.MAPWIDTH-1) + j*(E_VARS.MAPWIDTH-1)) / E_VARS.MAPWIDTH;
 
-                # if this tile has been initialized
+                # if there's a tile here (nonblank)
                 if MAP[k][mapY][mapX] is not 0:
                     item = tiles[MAP[k][mapY][mapX]["id"]].getPic()
                     item.convert_alpha()
