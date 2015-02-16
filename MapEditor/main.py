@@ -14,6 +14,8 @@ TODRAW = 1
 COLLIDABLE=True
 NONCOLLIDABLE=False
 
+OFFSET=[0,0]
+
 #array storing tile info
 MAP =[]
 
@@ -31,7 +33,7 @@ def main():
     GRID=True
 
     pygame.init()
-    pygame.key.set_repeat(1,100)
+    pygame.key.set_repeat(2,1000)
     pygame.display.set_caption('Editor')
 
     DISPLAYSURF = pygame.display.set_mode((E_VARS.W_WIDTH,E_VARS.W_HEIGHT))
@@ -53,6 +55,13 @@ def runGame(tiles):
     global TODRAW 
     p = Player()
 
+    #set player initial position to middle
+    #on initialization the player's at map 0,0, the top corne
+    for i in range(0, E_VARS.MAPWIDTH-1):
+        p.setDir(K_DOWN)
+
+    center = (p.getCoords()[STRINGS.X], p.getCoords()[STRINGS.Y])
+
     while True:
     
         # time to shut down
@@ -67,9 +76,9 @@ def runGame(tiles):
         drawLowerGrid()
 
         # draw currently selected tile type at cursor's loc
-        pos = (p.getCoords()[STRINGS.X], p.getCoords()[STRINGS.Y]-p.getLevel()*E_VARS.CELLRISE)
+        #pos = (p.getCoords()[STRINGS.X], p.getCoords()[STRINGS.Y]-p.getLevel()*E_VARS.CELLRISE)
         image = tiles[TODRAW].getPic()
-        DISPLAYSURF.blit(image,pos)
+        drawWithOffset(image,center,(0,0))
 
         #make tile grid
         drawUpperGrid(p)
@@ -79,6 +88,9 @@ def runGame(tiles):
 
 
 #-------------------------------------------
+
+def drawWithOffset(image,pos,offset) :
+    DISPLAYSURF.blit(image,(pos[0]-offset[0], pos[1]-offset[1]))
 
 
 # Handle keyboard input
@@ -92,8 +104,6 @@ def handleEvents(player,tiles):
         #exit editor
         if event.type == QUIT: 
             QUIT_GAME = True
-        elif event.type == KEYUP:
-            pygame.key.set_repeat(1,100)
 
         #key press received
         elif event.type == KEYDOWN:
@@ -116,7 +126,6 @@ def handleEvents(player,tiles):
 
             # turn on the collision map
             elif event.key == K_c:
-                pygame.key.set_repeat()
                 setCollide(player)
 
             # scroll back one tile type
@@ -144,6 +153,14 @@ def handleEvents(player,tiles):
             
             # move the cursor in direction
             else:                       
+                if event.key == K_LEFT or event.key==K_a:
+                    OFFSET[0] = OFFSET[0]-E_VARS.CELLWIDTH/2
+                elif event.key == K_RIGHT or event.key == K_d:
+                    OFFSET[0] = OFFSET[0] + E_VARS.CELLWIDTH/2
+                elif event.key == K_UP or event.key == K_w:
+                    OFFSET[1] = OFFSET[1] - E_VARS.CELLHEIGHT/2
+                elif event.key == K_DOWN or event.key == K_s:
+                    OFFSET[1] = OFFSET[1] + E_VARS.CELLHEIGHT/2
                 player.setDir(event.key)
 
 
@@ -354,10 +371,10 @@ def fillTiles(tiles,player):
                     colored = item.copy()
                     if MAP[k][mapY][mapX]["collidable"] is True:
                         Tile.color_surface(colored,0,155,155)
-                        DISPLAYSURF.blit(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS.CELLRISE))
+                        drawWithOffset(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS.CELLRISE),(OFFSET[0], OFFSET[1]))
                     else:
                         Tile.color_surface(colored,155,155,0)
-                        DISPLAYSURF.blit(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS.CELLRISE))
+                        drawWithOffset(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS.CELLRISE),(OFFSET[0], OFFSET[1]))
 
 
 #-------------------------------------------------------------------------------------------------------
@@ -366,13 +383,15 @@ def fillTiles(tiles,player):
 # base grid that doesn't move
 def drawLowerGrid():
            
+    global OFFSET
+
     for x in range(0,E_VARS.MAPWIDTH+1):
 
         # down and left
-        startX = E_VARS.W_WIDTH/2+x*E_VARS.CELLWIDTH/2 
-        startY = E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2+x*E_VARS.CELLHEIGHT/2
-        endX = E_VARS.W_WIDTH/2-E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2+E_VARS.CELLWIDTH/2*x
-        endY = E_VARS.W_HEIGHT/2+x*E_VARS.CELLHEIGHT/2
+        startX = E_VARS.W_WIDTH/2+x*E_VARS.CELLWIDTH/2-OFFSET[0]
+        startY = E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2+x*E_VARS.CELLHEIGHT/2-OFFSET[1]
+        endX = E_VARS.W_WIDTH/2-E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2+E_VARS.CELLWIDTH/2*x-OFFSET[0]
+        endY = E_VARS.W_HEIGHT/2+x*E_VARS.CELLHEIGHT/2-OFFSET[1]
 
         pygame.draw.line(DISPLAYSURF, 
                          COLORS.BLACK,
@@ -381,10 +400,10 @@ def drawLowerGrid():
                          1)
         
         #down and right
-        startX = E_VARS.W_WIDTH/2-x*E_VARS.CELLWIDTH/2
-        startY = E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2+x*E_VARS.CELLHEIGHT/2
-        endX = E_VARS.W_WIDTH/2+E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2-E_VARS.CELLWIDTH/2*x
-        endY = E_VARS.W_HEIGHT/2+x*E_VARS.CELLHEIGHT/2
+        startX = E_VARS.W_WIDTH/2-x*E_VARS.CELLWIDTH/2-OFFSET[0]
+        startY = E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2+x*E_VARS.CELLHEIGHT/2-OFFSET[1]
+        endX = E_VARS.W_WIDTH/2+E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2-E_VARS.CELLWIDTH/2*x-OFFSET[0]
+        endY = E_VARS.W_HEIGHT/2+x*E_VARS.CELLHEIGHT/2-OFFSET[1]
 
         pygame.draw.line(DISPLAYSURF, 
                          COLORS.BLACK, 
@@ -396,13 +415,15 @@ def drawLowerGrid():
 # grid tied to player level
 def drawUpperGrid(player):
 
+    global OFFSET
+
     for x in range(0,E_VARS.MAPWIDTH+1):
 
         # down and left
-        startX = E_VARS.W_WIDTH/2+x*E_VARS.CELLWIDTH/2
-        startY = E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2+x*E_VARS.CELLHEIGHT/2-player.getLevel()*E_VARS.CELLRISE
-        endX = E_VARS.W_WIDTH/2-E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2+E_VARS.CELLWIDTH/2*x
-        endY = E_VARS.W_HEIGHT/2+x*E_VARS.CELLHEIGHT/2-player.getLevel()*E_VARS.CELLRISE
+        startX = E_VARS.W_WIDTH/2+x*E_VARS.CELLWIDTH/2-OFFSET[0]
+        startY = E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2+x*E_VARS.CELLHEIGHT/2-player.getLevel()*E_VARS.CELLRISE-OFFSET[1]
+        endX = E_VARS.W_WIDTH/2-E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2+E_VARS.CELLWIDTH/2*x-OFFSET[0]
+        endY = E_VARS.W_HEIGHT/2+x*E_VARS.CELLHEIGHT/2-player.getLevel()*E_VARS.CELLRISE-OFFSET[1]
 
         pygame.draw.line(DISPLAYSURF, 
                          COLORS.WHITE,
@@ -411,10 +432,10 @@ def drawUpperGrid(player):
                          1)
         
         #down and right
-        startX = E_VARS.W_WIDTH/2-x*E_VARS.CELLWIDTH/2
-        startY = E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2+x*E_VARS.CELLHEIGHT/2-player.getLevel()*E_VARS.CELLRISE
-        endX = E_VARS.W_WIDTH/2+E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2-E_VARS.CELLWIDTH/2*x
-        endY = E_VARS.W_HEIGHT/2+x*E_VARS.CELLHEIGHT/2-player.getLevel()*E_VARS.CELLRISE
+        startX = E_VARS.W_WIDTH/2-x*E_VARS.CELLWIDTH/2-OFFSET[0]
+        startY = E_VARS.W_HEIGHT/2-E_VARS.CELLHEIGHT*E_VARS.MAPHEIGHT/2+x*E_VARS.CELLHEIGHT/2-player.getLevel()*E_VARS.CELLRISE-OFFSET[1]
+        endX = E_VARS.W_WIDTH/2+E_VARS.MAPWIDTH*E_VARS.CELLWIDTH/2-E_VARS.CELLWIDTH/2*x-OFFSET[0]
+        endY = E_VARS.W_HEIGHT/2+x*E_VARS.CELLHEIGHT/2-player.getLevel()*E_VARS.CELLRISE-OFFSET[1]
 
         pygame.draw.line(DISPLAYSURF, 
                          COLORS.WHITE, 
