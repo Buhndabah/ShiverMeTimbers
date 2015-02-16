@@ -1,5 +1,5 @@
 import pygame, sys, os, math, Tkinter
-from Tkinter import Entry,Button
+import Tkinter as tk
 import tkMessageBox 
 from pygame.locals import *
 from globals import E_VARS
@@ -7,6 +7,7 @@ from globals import STRINGS
 from globals import COLORS
 from player import Player
 from tile import Tile
+from popupWindow import popupWindow
 
 # index of tile we're currently drawing
 TODRAW = 1
@@ -20,6 +21,9 @@ MAP =[]
 WINDOW = Tkinter.Tk()
 WINDOW.geometry('+'+str(E_VARS.W_WIDTH/2)+'+'+str(E_VARS.W_HEIGHT/2))
 WINDOW.wm_withdraw()
+
+# keep running?
+QUIT_GAME = False
 
 
 def main():
@@ -50,6 +54,10 @@ def runGame(tiles):
     p = Player()
 
     while True:
+    
+        # time to shut down
+        if QUIT_GAME:
+            terminate()
 
         handleEvents(p,tiles)
       
@@ -76,11 +84,14 @@ def runGame(tiles):
 # Handle keyboard input
 def handleEvents(player,tiles):
     global TODRAW
+    global QUIT_GAME
+    global WINDOW
+
     for event in pygame.event.get():
 
         #exit editor
         if event.type == QUIT: 
-            terminate()
+            QUIT_GAME = True
         elif event.type == KEYUP:
             pygame.key.set_repeat(1,100)
 
@@ -89,10 +100,9 @@ def handleEvents(player,tiles):
 
             #exit program
             if event.key == K_ESCAPE:
-                if tkMessageBox.askyesno(title="Greetings", message="Do you want to save your changes before exiting?"):
-                    printMap(tiles)
-                terminate()
-                pygame.event.clear()
+                if tkMessageBox.askyesno(title="Save?", message="Do you want to save your changes before exiting?"):
+                    savePrompt(tiles)
+                QUIT_GAME = True
 
             # Map Editing functions
 
@@ -121,7 +131,7 @@ def handleEvents(player,tiles):
 
             # save the map to file
             elif event.key == K_m:
-                printMap(tiles)
+                savePrompt(tiles)
 
             # move up one elevation
             elif event.key == K_t:
@@ -139,23 +149,32 @@ def handleEvents(player,tiles):
 
 #-------------------------------------------
 
+def savePrompt(tiles):
+
+    # open a new window
+    new_win = Tkinter.Tk()
+    new_win.geometry('+'+str(E_VARS.W_WIDTH/2)+'+'+str(E_VARS.W_HEIGHT/2))
+
+    # create an entry field in it
+    nameChoice = tk.Entry(new_win)
+    nameChoice.pack()
+    nameChoice.insert(0, "myMap")
+
+    # add a confirmation button
+    nameButton = Tkinter.Button(new_win, text='Ok', command= lambda :  printMap(tiles, nameChoice.get(), new_win))
+    nameButton.pack()
+    #nameChoice.bind("<Return>", lambda event : printMap(tiles, nameChoice.get()))
+
+    # wait until the new window closes
+    new_win.wait_window(nameChoice)
+
 # Write out to xml
 # XXX TODO currently this always print to a file named "test.xml"
-def printMap(tiles):
-
-   nameChoice = Entry(WINDOW)
-   nameChoice.pack()
-   nameChoice.focus_set()
-
-   b= Button(WINDOW,text="test",width=10,command=None)
-   b.pack()
-
-   WINDOW.wm_deiconify()
-   Tkinter.mainloop()
+def printMap(tiles, fileName, window):
 
    print("\nPrinting map to file\n")
 
-   file = open('maps/test.xml','w')
+   file = open('maps/'+fileName+'.xml','w')
    file.write("<?xml version=\"1.0\"?>\n")
    file.write("<map width=\"")
    file.write(str(len(MAP[0][0])))
@@ -207,6 +226,7 @@ def printMap(tiles):
 
    print "Finished writing map\n"
 
+   window.destroy()
 
 #-------------------------------------------------------------------
 
