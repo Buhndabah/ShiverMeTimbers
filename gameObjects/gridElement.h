@@ -108,6 +108,7 @@ private:
   Vector2f gridVelocity;
   int maxHP;
   int curHP;
+  unsigned int shootTimer;
   const MapManager& map; //the grid the gridElement is attached to
   std::vector<bool> moveDir; //boolean vector telling the gridElement which direction it is moving in
   std::vector<Vector2f> moveboxVertices; //Vector2f vector of vertices for the movement hitbox

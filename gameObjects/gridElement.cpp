@@ -1,5 +1,6 @@
 #include <math.h>
 #include <sstream>
+#include "clock.h"
 #include "gridElement.h"
 #include "gamedata.h"
 #include "frameFactory.h"
@@ -15,6 +16,7 @@ GridElement::GridElement(const std::string& name, int stratNum) :
   gridVelocity(0,0),
   maxHP(100),
   curHP(100),
+  shootTimer(0),
   map(MapManager::getInstance()),
   moveDir(),
   moveboxVertices(),
@@ -72,6 +74,7 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, 
     gridVelocity(),
     maxHP(100),
     curHP(100),
+    shootTimer(0),
     map(MapManager::getInstance()),
     moveDir(),
     moveboxVertices(),
@@ -134,6 +137,7 @@ GridElement::GridElement(const GridElement& g) :
   gridVelocity(g.gridVelocity),
   maxHP(g.maxHP),
   curHP(g.curHP),
+  shootTimer(0),
   map(MapManager::getInstance()),
   moveDir(g.moveDir),
   moveboxVertices(g.moveboxVertices),
@@ -333,24 +337,47 @@ void GridElement::moveTowards(Vector2f target){
 
 
 void GridElement::shoot() {
-    // figure out what direction to shoot
-    int i=0;
-    for(i; i<moveDir.size(); ++i) { if(moveDir[i]) break; }
+    
+    unsigned int curTicks = Clock::getInstance().getTotalTicks();
 
-    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", map.gridToWorld(gridPosition), i, Vector2f(0,0), BULLET_STRAT));
-    SoundManager::getInstance()[1];
+    // are we ready to shoot again?
+    if(curTicks - shootTimer > 1000 ) {
+
+        shootTimer = curTicks;
+     
+        // figure out what direction to shoot
+        int i=0;
+        for(i; i<moveDir.size(); ++i) { if(moveDir[i]) break; }
+
+        GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", map.gridToWorld(gridPosition), i, Vector2f(0,0), BULLET_STRAT));
+        SoundManager::getInstance()[1];
+    }
 }
 
 void GridElement::shoot(Vector2f target) {
-    // figure out what direction to shoot
 
-    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", map.gridToWorld(gridPosition), -1, target, BULLET_STRAT));
-    SoundManager::getInstance()[1];
+    unsigned int curTicks = Clock::getInstance().getTotalTicks();
+    // Are we ready to shoot?
+    if(curTicks - shootTimer > 1000) {
+
+        shootTimer = curTicks;
+
+        GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", map.gridToWorld(gridPosition), -1, target, BULLET_STRAT));
+        SoundManager::getInstance()[1];
+    }
 }
 
 
 void GridElement::shoot(dirs dir) {
-    GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", getPosition() + gridSprite.getSize()/2, dir, Vector2f(0,0), BULLET_STRAT));
+
+    unsigned int curTicks = Clock::getInstance().getTotalTicks();
+    if(curTicks - shootTimer > 1000) {
+
+        shootTimer = curTicks;
+
+        GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", getPosition() + gridSprite.getSize()/2, dir, Vector2f(0,0), BULLET_STRAT));
+
+    }
 }
 
 /*********** Stuff for handling events ***************/

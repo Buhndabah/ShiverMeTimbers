@@ -101,8 +101,8 @@ bool Manager::play() {
   bool done = false;
   bool keyCatch = false;
 
-  bool w,a,s,d,space,shot;
-  w = a = s = d = space = shot = false;
+  bool w,a,s,d,space;
+  w = a = s = d = space = false;
 
 // go until told to quit
   while ( not done ) {
@@ -150,27 +150,31 @@ bool Manager::play() {
     }
 
     // check whether we need to shoot
-    if(space&&!shot){
-	int x[1], y[1];
-	SDL_GetMouseState(x,y);
-	Vector2f target(x[0],y[0]);
+    if(space){
+
+        // get coordinates from mouse
+	int x, y;
+	SDL_GetMouseState(&x,&y);
+	Vector2f target(x,y);
+
+        // apply viewport offset and shoot at it
 	target += viewport.getPosition();
         player->shoot(target);
-        shot = true;
     }
 
     // Get input and set key flags
 
     while(SDL_PollEvent(&event)) {
-      Uint8 *keystate = SDL_GetKeyState(NULL);
 
       if (event.type ==  SDL_QUIT) { 
         done = true; 
         break; 
       }
 
+      Uint8 *keystate = SDL_GetKeyState(NULL);
+
+      //when a key is lifted, check to see if it was a movement button
       if(event.type == SDL_KEYUP) {
-        //when a key is lifted, check to see if it was a movement button
         if(!keystate[SDLK_w]&&!keystate[SDLK_UP]) w = false;
         if(!keystate[SDLK_a]&&!keystate[SDLK_LEFT]) a = false;
         if(!keystate[SDLK_s]&&!keystate[SDLK_DOWN]) s = false;
@@ -178,33 +182,36 @@ bool Manager::play() {
         keyCatch = false;
       }
 
-      // Handle the mouse or space being lifted
-      if(  (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT)
-        || (event.type == SDL_KEYUP && !keystate[SDLK_SPACE]) ) {
+      // space being lifted
+      if( event.type == SDL_KEYUP && !keystate[SDLK_SPACE])  {
         space = false;
-        shot = false;
         keyCatch = false;
       }
+
+      // Handle mouse clicks
       if(event.type == SDL_MOUSEBUTTONDOWN) {
         if(event.button.button==SDL_BUTTON_LEFT)
         {
             int x,y;
             SDL_GetMouseState(&x,&y);
             GameEvents::EventQueue::getInstance().push(new GameEvents::ClickEvent("SDLMOUSE", Vector2f(x,y)));
-            space = true;
         }
       }
+
+      // Handle key presses
       if(event.type == SDL_KEYDOWN) {
             if (keystate[SDLK_ESCAPE]){// || keystate[SDLK_q]) {
                 done = true;
                 break;
             }
 
+            // Turn the "help" screen on and off
             if(keystate[SDLK_F1] && !keyCatch) {
                 keyCatch=true;
                 hud.toggleHelp();
             }
 
+            // Pause the game
             if (keystate[SDLK_p] && !keyCatch &&!gameOver) {
                 keyCatch = true;
                 if ( clock.isPaused() ) 
@@ -223,16 +230,12 @@ bool Manager::play() {
                 keyCatch= true;
                 //player->onDamage(10);
             }
-            //change tracking sprite
+
+            //XXX change tracking sprite
+            //currently we don't track anything besides the player
             if (keystate[SDLK_t] && !keyCatch) {
 	        keyCatch = true;
                 viewport.setObjectToTrack(&player->getSprite());
-            }
-
-            //rotate RotateSprite's
-            if (keystate[SDLK_r] && !keyCatch) {
-	        keyCatch = true;
-	        Gamedata::getInstance().setRoto(!Gamedata::getInstance().getRoto());
             }
 
             //check for player movement input
@@ -257,6 +260,8 @@ bool Manager::play() {
             }
         } // end key down
     } // end pollevents
+
+    // Now draw and update
     draw();
     update();
 
