@@ -35,7 +35,6 @@ private:
 
   SDL_Surface * const screen;
 
-  std::vector<Drawable *> snowballs;
   unsigned int currentSprite;
 
   GridElement* player;

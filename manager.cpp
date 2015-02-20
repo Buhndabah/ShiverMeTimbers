@@ -14,9 +14,6 @@
 
 Manager::~Manager() { 
   // Manager made it, so Manager needs to delete it
-  for(unsigned int i = 0; i < snowballs.size(); i++){
-     delete snowballs[i]; 
-  }
 }
 
 Manager::Manager() :
@@ -27,7 +24,6 @@ Manager::Manager() :
   viewport(Viewport::getInstance() ),
   screen( io.getScreen() ),
 
-  snowballs(),
   currentSprite(0),
 
   player(NULL),
@@ -52,7 +48,6 @@ Manager::Manager() :
 
   atexit(SDL_Quit);
   int numSnowballs = Gamedata::getInstance().getXmlInt("numSnowballs");
-  snowballs.reserve(numSnowballs+4);
 
   player = new GridElement("coolyeti"); // deleted by the mapManager
   map.addGridElement(player);
@@ -68,16 +63,8 @@ Manager::Manager() :
 
   hud.addHealthBar(player->getName(), Vector2f(0, -10));
   SoundManager::getInstance();
-//  snowballs.push_back(new MultiSprite("spinsnowball"));
-  //snowballs.push_back(new MultiSprite("coolyeti"));
-//  snowballs.push_back(player);
-  //snowballs.push_back(new RotateSprite("yeti"));
-  //snowballs.push_back(new MultiSprite("spinsnowball"));
-  //snowballs.push_back(new RotateSprite("penguin"));
   //for(int i=0; i<numSnowballs; ++i)
-	//snowballs.push_back(new Sprite("snowball"));
   viewport.setObjectToTrack(&(player->getSprite()));
-//  viewport.setObjectToTrack(snowballs[1]);
   registerListeners();
 }
 
@@ -89,12 +76,6 @@ void Manager::draw() const {
   SDL_FillRect(screen, NULL, backColor);
   world.draw();
   map.draw();
-  //player->draw();
-  std::vector<Drawable*>::const_iterator it = snowballs.begin();
-  while(it != snowballs.end()){
-	(*it)->draw();
-	++it;
-  }
   //io.printMessageCenteredAt(TITLE, 10);
 //  io.printMessageAt("Controls: T to track next sprite", 10, 30);
 //  io.printMessageAt("               R to rotate special sprites", 10, 50);
@@ -112,11 +93,6 @@ void Manager::update() {
 
   //player->update(ticks);
   GameEvents::EventQueue::getInstance().prepEvents();
-  std::vector<Drawable*>::iterator it = snowballs.begin();
-  while(it != snowballs.end()){
-	(*it)->update(ticks);
-	++it;
-  }
 
   if ( makeVideo && frameCount < frameMax ) {
     std::stringstream strm;
@@ -259,12 +235,8 @@ bool Manager::play() {
             //change tracking sprite
             if (keystate[SDLK_t] && !keyCatch) {
 	        keyCatch = true;
-	        if(currentSprite  < snowballs.size())
-	            viewport.setObjectToTrack(snowballs[currentSprite++]);
-	        else{
-                    viewport.setObjectToTrack(&player->getSprite());
-                    currentSprite = 0;
-                }
+                viewport.setObjectToTrack(&player->getSprite());
+                currentSprite = 0;
             }
 
             //rotate RotateSprite's

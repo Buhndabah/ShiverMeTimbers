@@ -56,7 +56,7 @@ public:
     void reinit();
     
 private:
-    MapManager(const std::string& fn = "xml/xmlSpec/416Final.xml");
+    MapManager(const std::string& fn = "xml/xmlSpec/smallTest.xml");
 //    MapManager(const std::string& fn = "xml/xmlSpec/testCube.xml");
 //    MapManager(const std::string& fn = "xml/xmlSpec/416Final.xml");
 //    MapManager(const std::string& fn = "xml/xmlSpec/wuh.xml");
