@@ -35,17 +35,10 @@ private:
 
   SDL_Surface * const screen;
 
-  unsigned int currentSprite;
-
   GridElement* player;
   MapManager& map;
   HUD& hud;
 
-  bool makeVideo;
-  int frameCount;
-  std::string username;
-  int frameMax;
-  const std::string TITLE;
   bool gameOver;
   int restart;
 

@@ -24,17 +24,10 @@ Manager::Manager() :
   viewport(Viewport::getInstance() ),
   screen( io.getScreen() ),
 
-  currentSprite(0),
-
   player(NULL),
   map(MapManager::getInstance()),
   hud(HUD::getInstance()),
 
-  makeVideo( false ),
-  frameCount( 0 ),
-  username(  Gamedata::getInstance().getXmlStr("username") ),
-  frameMax( Gamedata::getInstance().getXmlInt("frameMax") ),
-  TITLE( Gamedata::getInstance().getXmlStr("screenTitle") ),
   gameOver(false),
   restart(0)
 {
@@ -42,17 +35,15 @@ Manager::Manager() :
     throw std::string("Unable to initialize SDL: ");
   }
 
-  // trap cursor in window
-  //too annoying
-  //SDL_WM_GrabInput( SDL_GRAB_ON );
-
   atexit(SDL_Quit);
-  int numSnowballs = Gamedata::getInstance().getXmlInt("numSnowballs");
 
+
+// Add player to map
   player = new GridElement("coolyeti"); // deleted by the mapManager
   map.addGridElement(player);
   map.setPlayer(player);
-  //map.addGridElement(new GridElement("icecream", CHASE_STRAT));
+  hud.addHealthBar(player->getName(), Vector2f(0, -10));
+  viewport.setObjectToTrack(&(player->getSprite()));
  
 #ifdef TEST_ENEMY 
   // test target 
@@ -61,48 +52,41 @@ Manager::Manager() :
   hud.addHealthBar(test->getName(), Vector2f(0,-10));
 #endif
 
-  hud.addHealthBar(player->getName(), Vector2f(0, -10));
+// init sound
   SoundManager::getInstance();
-  //for(int i=0; i<numSnowballs; ++i)
-  viewport.setObjectToTrack(&(player->getSprite()));
+
+// set up listeners
   registerListeners();
 }
 
 
 void Manager::draw() const {
 
-
+// fill background with some color
   Uint32 backColor = SDL_MapRGB(screen->format, 100,100,100);
   SDL_FillRect(screen, NULL, backColor);
+
+// draw background, map, view, then hud
   world.draw();
   map.draw();
-  //io.printMessageCenteredAt(TITLE, 10);
-//  io.printMessageAt("Controls: T to track next sprite", 10, 30);
-//  io.printMessageAt("               R to rotate special sprites", 10, 50);
   viewport.draw();
   hud.draw();
-  SDL_Flip(screen);
 
+// get all that on the screen
+  SDL_Flip(screen);
 
 }
 
 void Manager::update() {
+
+// tick up clock
   ++(clock);
   Uint32 ticks = clock.getElapsedTicks();
 
-
-  //player->update(ticks);
+// send out events from queue
   GameEvents::EventQueue::getInstance().prepEvents();
 
-  if ( makeVideo && frameCount < frameMax ) {
-    std::stringstream strm;
-    strm << "video/" << username<< '.' 
-         << std::setfill('0') << std::setw(4) 
-         << frameCount++ << ".bmp";
-    std::string filename( strm.str() );
-    std::cout << "Making frame: " << filename << std::endl;
-    SDL_SaveBMP(screen, filename.c_str());
-  }
+// update all objects
   world.update();
   map.update(ticks);
   viewport.update();	//update the viewport last
@@ -120,38 +104,50 @@ bool Manager::play() {
   bool w,a,s,d,space,shot;
   w = a = s = d = space = shot = false;
 
+// go until told to quit
   while ( not done ) {
 
 //std::cout << "display: " << player->getSprite().getPosition() << std::endl;
 //std::cout << "grid: " << player->getGridPosition() << std::endl;
 
-    // Continue moving the player if a keystate is registered
 
-    //adjust the player's velocity according to the key(s) being held down
-    if(w){
-      if(a)
-        player->moveUpLeft();
-      else if(d)
-        player->moveUpRight();
-      else if(s)
+    // move the player depending on what keys are currently down
+    
+    // opposites - stop
+    if( (w && s) || (a && d) ) { 
         player->stop();
-      else
+    }
+    if(w && a) {
+        player->moveUpLeft();
+    }
+    else if(w && d) {
+        player->moveUpRight();
+    }
+    else if(s && a) {
+        player->moveDownLeft(); 
+    }
+    else if(s && d) {
+        player->moveDownRight();
+    }
+    else if(w && s) {
+        player->stop();
+    }
+    else if(a && !d) {
+      player->moveLeft();
+    }
+    else if(d && !a) {
+      player->moveRight();
+    }
+    else if(w) {
         player->moveUp();
     }
-    else if(s){
-      if(a)
-        player->moveDownLeft();
-      else if(d)
-        player->moveDownRight();
-      else
+    else if(s) {
         player->moveDown();
     }
-    else if(a && !d)
-      player->moveLeft();
-    else if(d && !a)
-      player->moveRight();
-    else
+    // catch all
+    else {
       player->stop();
+    }
 
     // check whether we need to shoot
     if(space&&!shot){
@@ -204,11 +200,6 @@ bool Manager::play() {
                 break;
             }
 
-            if (keystate[SDLK_F4] && !makeVideo) {
-                std::cout << "Making video frames" << std::endl;
-                makeVideo = true;
-            }
-
             if(keystate[SDLK_F1] && !keyCatch) {
                 keyCatch=true;
                 hud.toggleHelp();
@@ -236,7 +227,6 @@ bool Manager::play() {
             if (keystate[SDLK_t] && !keyCatch) {
 	        keyCatch = true;
                 viewport.setObjectToTrack(&player->getSprite());
-                currentSprite = 0;
             }
 
             //rotate RotateSprite's
@@ -280,7 +270,6 @@ void Manager::reinit() {
     GameEvents::EventQueue::getInstance().reinit();
     map.reinit();
     hud.reinit();
-    currentSprite =0;
     player = new GridElement("coolyeti");
     map.addGridElement(player);
     map.setPlayer(player);
