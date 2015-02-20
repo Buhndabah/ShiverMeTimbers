@@ -74,6 +74,8 @@ MapManager::MapManager(const std::string& fn) :
 }
 
 void MapManager::reinit() {
+
+    // dump all grid elements that have been created
     std::list<GridElement*> list;
     while (!gridElements.empty())
     {
@@ -85,22 +87,30 @@ void MapManager::reinit() {
         }
         gridElements.erase(gridElements.begin());
     }
+
+    // put <MAPSIZE> lists back into grid element
     gridElements.reserve(mapWidth*mapHeight);
     int i;
     for(i=0; i < mapHeight * mapWidth; i++)
     {   
         gridElements.push_back( std::list<GridElement* >());
     }
+
+    // dump our list of temp gridElements
     while(!reserve.empty())
     {
         GridElement* temp = (*reserve.begin()).first;
         reserve.erase(reserve.begin());
         delete temp;
     }
+
+    // the event queue got reset - reregister ourself
     registerListeners();
 }
 
 MapManager::~MapManager() {
+
+    // dump all of our allocated lists
     std::list<GridElement*> list;
     while (!gridElements.empty())
     {
@@ -158,15 +168,28 @@ Vector2f MapManager::worldToGrid(Vector2f worldPos) const {
 // XXX THE EXCEPTION IN THIS FUNCTION ISN'T CATCHING WHEN YOU TRY TO ADD TO AN INVALID INDEX
 void MapManager::addGridElement(GridElement* gridE) {
 
+    // increment gridElement counter
     numGridElements++;
+
     //Find the max index between the bottom corner of the movebox and the bottom right corner of the gridSprite
+    
+    // Calculate how wide the gridElement is
     float diffX = gridToWorld(gridE->getMoveboxVertices()[2])[0] - gridToWorld(gridE->getMoveboxVertices()[3])[0];
+
+    // XXX why are we converting grid to world then world to grid here?
+    
+    // find which is further a full length on either side? (???)
     int index = std::max(getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]))),
-					getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(diffX,0))));
-    index = std::max(index,getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(diffX/2.,0))));
-    index = std::max(index,getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(-diffX/2.,0))));
+			 getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(diffX,0))));
+
+    // now we're going half way on each side? (?????)
+    index = std::max(index,
+                     getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(diffX/2.,0))));
+    index = std::max(index, 
+                     getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(-diffX/2.,0))));
 
 
+    // THIS PART BREAKS
     try{ gridElements.at(index).push_back(gridE); }
     catch(const std::out_of_range& e) {
         std::cerr << "Tried to add GridElement with name " << gridE->getSprite().getName() << " to map at invalid grid position " << gridE->gridX() << ", " << gridE->gridY() << std::endl;
@@ -176,8 +199,8 @@ void MapManager::addGridElement(GridElement* gridE) {
 
 // Remove grid element from list
 void MapManager::removeGridElement(const std::string& name) {
-
     
+    // search the list for <name>
     for(std::vector<std::list<GridElement*> >::iterator it = gridElements.begin(); it!= gridElements.end(); ++it)
     {
         std::list<GridElement*>::iterator it2=(*it).begin();
@@ -196,7 +219,7 @@ void MapManager::removeGridElement(const std::string& name) {
     }
 }
 
-// Parse tile definitions (not the actual objects though)
+// Parse tile definitions
 void MapManager::createTiles() {
     std::list<std::map<std::string, std::string> > tileList = parser.parseNodesWithTag("tile");
 
@@ -303,8 +326,6 @@ const Tile& MapManager::findTileAt(const Vector2f& coord) const {
 
     std::string errMess;
     std::stringstream strm;
-  //  unsigned int indexX = coord[0]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)-1);
-  //  unsigned int indexY = coord[1]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2)-1);
     unsigned int indexX = coord[0]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2));
     unsigned int indexY = coord[1]/sqrt(pow(tileWidth/2,2) + pow(tileHeight/2,2));
  
@@ -329,26 +350,36 @@ const Tile& MapManager::findTileAt(const Vector2f& coord) const {
 }
 
 /*Helper function*/
+// XXX TODO this is horribly inefficient right now, it checks every gridElement against every gridElement
 void MapManager::collideGridEles(int tileIndx, GridElement& g, Vector2f hypoIncr, Vector2f& validPos, bool& hitGE, GridElement*& subject) const{
+
+    // check collision against every grid element
     std::list<GridElement *>::const_iterator iter;
     for(iter = (gridElements[tileIndx]).begin(); iter != (gridElements[tileIndx]).end(); ++iter){
-	    if(!(*iter)){
-	        std::cerr << "that happened" << std::endl;
-	        break;
-	    }
-	    GridElement* test = *iter;
-	    if(&g == test) break;
-	    std::vector<Vector2f> movebox = g.getMoveboxVertices();
-	    std::vector<Vector2f> testmovebox = test->getMoveboxVertices();
-	    for(int j=0; j<4; ++j){
-	        bool minX = (movebox[j] + hypoIncr)[0] >= (testmovebox[0])[0];
-	        bool minY = (movebox[j] + hypoIncr)[1] >= (testmovebox[0])[1];
-	        bool maxX = (movebox[j] + hypoIncr)[0] <= (testmovebox[1])[0];
-	        bool maxY = (movebox[j] + hypoIncr)[1] <= (testmovebox[2])[1];
 
-	        bool inBounds = (minX && maxX && minY && maxY);
+        // sanity check
+	if(!(*iter)){
+	    std::cerr << "that happened" << std::endl;
+	    break;
+	}
 
-	        if(inBounds && g.getSolid() && test->getSolid()){
+        // if we try to collide ourselves?
+	GridElement* test = *iter;
+	if(&g == test) {
+            break;
+        }
+
+	std::vector<Vector2f> movebox = g.getMoveboxVertices();
+	std::vector<Vector2f> testmovebox = test->getMoveboxVertices();
+	for(int j=0; j<4; ++j){
+	    bool minX = (movebox[j] + hypoIncr)[0] >= (testmovebox[0])[0];
+	    bool minY = (movebox[j] + hypoIncr)[1] >= (testmovebox[0])[1];
+	    bool maxX = (movebox[j] + hypoIncr)[0] <= (testmovebox[1])[0];
+	    bool maxY = (movebox[j] + hypoIncr)[1] <= (testmovebox[2])[1];
+
+	    bool inBounds = (minX && maxX && minY && maxY);
+
+	    if(inBounds && g.getSolid() && test->getSolid()){
                 int myStrat = g.getStratType();
                 int theirStrat = test->getStratType();
                 if( (g.getStratType() == test->getStratType()) && g.getStratType()==BULLET_STRAT) 
@@ -356,18 +387,18 @@ void MapManager::collideGridEles(int tileIndx, GridElement& g, Vector2f hypoIncr
                     // nothing
                 }
                 // if bullet strat, check that the source isn't us
-                else if(   (myStrat    == BULLET_STRAT && dynamic_cast<BulletStrategy*>(g.getStrat())->getSource().compare(test->getName())==0) 
-                         ||(theirStrat == BULLET_STRAT && dynamic_cast<BulletStrategy*>(test->getStrat())->getSource().compare(g.getName())==0))
+                else if( (myStrat == BULLET_STRAT && dynamic_cast<BulletStrategy*>(g.getStrat())->getSource().compare(test->getName())==0) 
+                          ||(theirStrat == BULLET_STRAT && dynamic_cast<BulletStrategy*>(test->getStrat())->getSource().compare(g.getName())==0))
                 {
-                    // nothing
+                        // nothing
                 }
                 else {
-		            validPos = g.getGridPosition();
-		            hitGE = true;
-		            subject = test;
+		    validPos = g.getGridPosition();
+		    hitGE = true;
+		    subject = test;
                 }
-	        }
-	    } 
+	    }
+	} 
     }
 }
 
@@ -380,8 +411,8 @@ void MapManager::collideGridEles(int tileIndx, GridElement& g, Vector2f hypoIncr
 Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& fticks, bool& atEdge) const{
 
     Vector2f validPos = g.getGridPosition() + hypoIncr;
-
     std::vector<Vector2f> movebox = g.getMoveboxVertices();
+
     //check each corner of the movebox
     for(int i=0; i<4; ++i){
     	if(!findTileAt(movebox[i] + hypoIncr).isCollidable()){
@@ -411,11 +442,12 @@ Vector2f MapManager::validateMovement(GridElement& g, Vector2f hypoIncr, float& 
 	    collideGridEles(i,g,hypoIncr,validPos,hitGE,subject);
     }
 
+    // edge of map
     if(atEdge){
         Tile tile = Tile(findTileAt(validPos));
         GameEvents::EventQueue::getInstance().push(new GameEvents::CollideEvent(g.getName(), tile.getName(), g.getPosition()));
     }
-    //if(hitGE && !subject) std::cerr << "no subj?" << std::endl;
+
     if(hitGE && subject){
         int myStrat = g.getStratType();
         int theirStrat = subject->getStratType();
@@ -490,7 +522,7 @@ void MapManager::drawGridElements(int index) const {
     {
 
         /* If enabled will draw a box around the sprite boundaries */
-//	#define HITBOX
+#define HITBOX
         #ifdef HITBOX
         SDL_Rect rect;
         Uint32 color;
@@ -547,6 +579,7 @@ void MapManager::drawGridElements(int index) const {
 
 void MapManager::update(Uint32& ticks) {
 
+    // unnecessary right now, our tiles don't do anything
     // update each tile in each layer
     /*for(std::list<std::vector<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
     {   
@@ -556,6 +589,7 @@ void MapManager::update(Uint32& ticks) {
         }
     }*/
 
+    // Add anything waiting in reserve whose creation timer has hit 0 to the map
     std::map<GridElement*, int>::iterator resIt = reserve.begin();
     while(resIt != reserve.end()){
         if((*resIt).second ==0)
@@ -567,6 +601,7 @@ void MapManager::update(Uint32& ticks) {
             resIt++;
             reserve.erase(toErase);
         }
+        // if it's not time just tick down the timer
         else
         {
             (*resIt).second--;
@@ -582,6 +617,7 @@ void MapManager::update(Uint32& ticks) {
     }
 
     // This is a temp list used to store GridElements as we sort them by index
+    // Here we just create it and set its size to be the same as the main list
     std::vector<std::list<GridElement *> > tempVec;
     tempVec.reserve(mapWidth*mapHeight);
     for(int i=0; i < mapWidth*mapHeight; i++)
@@ -665,27 +701,29 @@ void MapManager::onCreate(const GameEvents::Event *e) {
     // If the requested location is legal
     else if(getIndexAt(worldToGrid(e->getPosition()))>0)
     {
-        // Add a new grid element
+        // If create is requested immediately, add it directly to the map
         if(c->getTimer()==0)
         {
             addGridElement(newGE = new GridElement(c->getSprite(), worldToGrid(e->getPosition()), c->getDir(), c->getStrat(), c->getTarget()));
 
         }
+        // otherwise store it until it's ready
         else {
             reserve.insert(std::pair<GridElement*, int>(newGE = new GridElement(c->getSprite(), worldToGrid(e->getPosition()), c->getDir(), c->getStrat(), c->getTarget()), c->getTimer()));
             newGE->getStrat()->suppress();
         }
+        // set it up if it's a bullet XXX TODO THE MAP SHOULDN'T BE HANDLING THIS
         if(c->getStrat() == BULLET_STRAT) {
             dynamic_cast<BulletStrategy*>(newGE->getStrat())->setSource(c->getSource());
         }
-        // And then alert everyone it's been created
+
+        // push a creation notification
     GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent("map", c->getSprite(), e->getPosition(), c->getDir(), c->getTarget(), c->getStrat()));
     }
 }
 
 
 /*********** Listener set up and forwarder ************/
-
 
 
 // Forwarding function creation events
