@@ -6,6 +6,7 @@
 #include "frameFactory.h"
 #include "gameEvents.h"
 #include "soundManager.h"
+#include "mapManager.h"
 
 GridElement::GridElement(const std::string& name, int stratNum) :
   Listener(),
@@ -14,54 +15,65 @@ GridElement::GridElement(const std::string& name, int stratNum) :
   gridSprite(name),
   gridPosition(95,105),
   gridVelocity(0,0),
+  moveDelta(0,0),
   maxHP(100),
   curHP(100),
   shootTimer(0),
-  map(MapManager::getInstance()),
   moveDir(),
   moveboxVertices(),
   myStrat(NULL),
   solid(Gamedata::getInstance().getXmlBool(name+"Solid"))
 {
-  //gridSprite.setPosition(map.getOrigin());//+Vector2f(-5,40));//-Vector2f(0,gridSprite.getH())+Vector2f(-5,40));
-  gridSprite.setPosition(map.gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
-  moveDir.reserve(8);
-  for(int i=0; i<8; ++i)
-    moveDir.push_back(false);
 
-  //fill in the hitbox vertices
+  // initially set all move states to false
+  moveDir.reserve(8);
+  for(int i=0; i<8; ++i) {
+    moveDir.push_back(false);
+  }
+
+  // Grab position from map
+  gridSprite.setPosition(MapManager::getInstance().gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
+
+  //fill in the movebox vertices
   moveboxVertices.reserve(4);
   Vector2f offset(gridSprite.getW() * 0.5, gridSprite.getH() * (2./3.));
-  offset += map.getOrigin();
+  offset += MapManager::getInstance().getOrigin();
 
   Vector2f topcorner(gridPosition);
-  moveboxVertices.push_back(topcorner);
-  moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(-gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
-  moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
-  moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(0,gridSprite.getH() * .5)));
+  moveboxVertices.push_back(topcorner); // middle top
+  moveboxVertices.push_back(topcorner + MapManager::getInstance().worldToGrid(MapManager::getInstance().getOrigin() + Vector2f(-gridSprite.getW() * .5,gridSprite.getH() * 0.25))); // left
+  moveboxVertices.push_back(topcorner + MapManager::getInstance().worldToGrid(MapManager::getInstance().getOrigin() + Vector2f(gridSprite.getW() * .5,gridSprite.getH() * 0.25))); // right
+  moveboxVertices.push_back(topcorner + MapManager::getInstance().worldToGrid(MapManager::getInstance().getOrigin() + Vector2f(0,gridSprite.getH() * .5))); // bottom
 
-
+  // Assign ourself an ID from MapManager::getInstance().
+  // XXX We shouldn't be referencing the MapManager::getInstance().for this. It should either be passed in or a static var
   std::ostringstream sstream;
-  sstream << map.getNumGridElements();
+  sstream << MapManager::getInstance().getNumGridElements();
   std::string tempname = std::string(gridSprite.getName()) + sstream.str();
+  setName(tempname);
+
+  // Assign a strategy
   switch(stratNum) {
       case(CHASE_STRAT):
-          myStrat = new ChaseStrategy(this,map.getPlayer());
+          myStrat = new ChaseStrategy(this,MapManager::getInstance().getPlayer());
           break;
       case(BULLET_STRAT):
           tempname = tempname + std::string("bullet");
           myStrat = new BulletStrategy(this,0);
           break;
       case(TURRET_STRAT):
-          myStrat = new TurretStrategy(this, map.getPlayer());
+          myStrat = new TurretStrategy(this, MapManager::getInstance().getPlayer());
           break;
       default:
           myStrat = NULL;
           break;
   }
-  setName(tempname);
-  if(myStrat) 
+  // initialize the strategy
+  if(myStrat) {
       myStrat->init();
+  }
+
+  // register with eventQueue
   registerListeners();
 }
 
@@ -72,41 +84,46 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, 
     gridSprite(name),
     gridPosition(pos),
     gridVelocity(),
+    moveDelta(0,0),
     maxHP(100),
     curHP(100),
     shootTimer(0),
-    map(MapManager::getInstance()),
     moveDir(),
     moveboxVertices(),
     myStrat(NULL),
     solid(Gamedata::getInstance().getXmlBool(name+"Solid"))
 {
-    gridSprite.setPosition(map.gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
 
+    // initially we are not moving
     moveDir.reserve(8);
     for(int i=0; i<8; i++)
     {
         moveDir.push_back(false);
     }
 
+    // set position
+    gridSprite.setPosition(MapManager::getInstance().gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
+
     // fill in hitbox vertices
   moveboxVertices.reserve(4);
   Vector2f offset(gridSprite.getW() * 0.5, gridSprite.getH() * (2./3.));
-  offset += map.getOrigin();
+  offset += MapManager::getInstance().getOrigin();
   Vector2f topcorner(gridPosition);
   moveboxVertices.push_back(topcorner);
-  moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(-gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
-  moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
-  moveboxVertices.push_back(topcorner + map.worldToGrid(map.getOrigin() + Vector2f(0,gridSprite.getH() * .5)));
+  moveboxVertices.push_back(topcorner + MapManager::getInstance().worldToGrid(MapManager::getInstance().getOrigin() + Vector2f(-gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
+  moveboxVertices.push_back(topcorner + MapManager::getInstance().worldToGrid(MapManager::getInstance().getOrigin() + Vector2f(gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
+  moveboxVertices.push_back(topcorner + MapManager::getInstance().worldToGrid(MapManager::getInstance().getOrigin() + Vector2f(0,gridSprite.getH() * .5)));
 
-
-
+  // Assign self id
   std::ostringstream sstream;
-  sstream << map.getNumGridElements();
+  sstream << MapManager::getInstance().getNumGridElements();
   std::string tempname = std::string(gridSprite.getName()) + sstream.str();
+  setName(tempname);
+
+  // Assign strategy
   switch(stratNum) {
       case(CHASE_STRAT):
-          myStrat = new ChaseStrategy(this,map.getPlayer());
+          myStrat = new ChaseStrategy(this,MapManager::getInstance().getPlayer());
           break;
       case(BULLET_STRAT):
           tempname = tempname + std::string("bullet");
@@ -116,15 +133,19 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, 
 	      myStrat = new BulletStrategy(this,dir);
           break;
       case(TURRET_STRAT):
-          myStrat = new TurretStrategy(this, map.getPlayer());
+          myStrat = new TurretStrategy(this, MapManager::getInstance().getPlayer());
           break;
       default:
           myStrat = NULL;
           break;
   }
-  setName(tempname);
-  if(myStrat) 
+
+  // Init strategy
+  if(myStrat) {
       myStrat->init();
+  }
+
+  // register with eventQueue
   registerListeners();
 }
 
@@ -135,23 +156,32 @@ GridElement::GridElement(const GridElement& g) :
   gridSprite(g.gridSprite),
   gridPosition(g.gridPosition),
   gridVelocity(g.gridVelocity),
+  moveDelta(0,0),
   maxHP(g.maxHP),
   curHP(g.curHP),
   shootTimer(0),
-  map(MapManager::getInstance()),
   moveDir(g.moveDir),
   moveboxVertices(g.moveboxVertices),
   myStrat((g.myStrat->clone())),
   solid(g.solid)
 {
   std::ostringstream sstream;
-  sstream << map.getNumGridElements();
+  sstream << MapManager::getInstance().getNumGridElements();
   std::string tempname = std::string(gridSprite.getName()) + sstream.str();
-  if(myStrat != NULL && myStrat->getType()==BULLET_STRAT) tempname = tempname + std::string("bullet");
+
+  // mark self as bullet
+  if(myStrat != NULL && myStrat->getType()==BULLET_STRAT) {
+    tempname = tempname + std::string("bullet");
+  }
   setName(tempname);
 
-    if(myStrat) myStrat->init();
-    registerListeners();
+  // init strat
+  if(myStrat) {
+    myStrat->init();
+  }
+
+  // register with eventQueue
+  registerListeners();
 }
 
 GridElement& GridElement::operator=(const GridElement& g) {
@@ -161,65 +191,78 @@ GridElement& GridElement::operator=(const GridElement& g) {
     gridSprite = MultiSprite(g.gridSprite);
     gridPosition = g.gridPosition;
     gridVelocity = g.gridVelocity;
+    moveDelta = Vector2f(0,0);
     maxHP = g.maxHP;
     curHP = g.curHP;
     moveDir = g.moveDir;
     moveboxVertices = g.moveboxVertices;
     myStrat = g.myStrat->clone();
+    solid = g.solid;
+
+  // name ourself
   std::ostringstream sstream;
-  sstream << map.getNumGridElements();
+  sstream << MapManager::getInstance().getNumGridElements();
   std::string tempname = std::string(gridSprite.getName()) + sstream.str();
     if(myStrat->getType()==BULLET_STRAT)
     {
         tempname= tempname+std::string("bullet");
     }
   setName(tempname);
-    registerListeners();
-    solid = g.solid;
-    return *this;
+
+  if(myStrat) {
+    myStrat->init();
+  }
+
+  registerListeners();
+
+  return *this;
 }
 
 void GridElement::setMoveboxVertex(int indx, Vector2f vert){
- moveboxVertices[indx] = vert;
+    moveboxVertices[indx] = vert;
 }
 
-
+// draw our sprite
 void GridElement::draw() const {
-  gridSprite.draw();
+    gridSprite.draw();
 }
 
 
 void GridElement::update(Uint32 ticks) {
 
-  if (getSprite().getVelocity() != Vector2f(0,0))
+  // if we're moving
+  if (getSprite().getVelocity() != Vector2f(0,0)) {
     getSprite().update(ticks);
-
-  Vector2f incr = gridVelocity * static_cast<float>(ticks) * 0.001;
-  float fticks = static_cast<float>(ticks);
-
-  //recieve validated movement from the map
-  Vector2f oldgridPos = gridPosition;
-  bool atEdge = false;
-  gridPosition = map.validateMovement(*this, incr, fticks, atEdge);
-
-//  incr = getSprite().getVelocity() * fticks * 0.001;
-//  getSprite().setPosition(getSprite().getPosition() + incr);
-
-  Vector2f diff = gridPosition - oldgridPos;
-  for(int i=0; i<4; ++i){
-    moveboxVertices[i] = moveboxVertices[i] + diff;
   }
 
-
-  gridSprite.setPosition(map.gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
-  // send off a move event
-  //if(incr[0] != 0.0 && incr[1] != 0.0) {
-    GameEvents::EventQueue::getInstance().push(new GameEvents::MoveEvent(getName(), getPosition(), incr));
-    //}
-  if(atEdge)
-    stop();
+  // calculate how far we're moving
+  float fticks = static_cast<float>(ticks);
+  moveDelta = gridVelocity * fticks * 0.001;
 }
 
+// Set our pos to pos + delta
+void GridElement::applyMoveDelta() {
+
+  // set our position to that
+  for(int i=0; i<4; ++i){
+    moveboxVertices[i] = moveboxVertices[i] + moveDelta;
+  }
+
+  // update our gridPosition
+  gridPosition += moveDelta;
+
+  // set gridSprite position to that
+  gridSprite.setPosition(MapManager::getInstance().gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
+
+  // fire off a move event
+  GameEvents::EventQueue::getInstance().push(new GameEvents::MoveEvent(getName(), getPosition(), moveDelta));
+
+  // reset move
+  moveDelta = (Vector2f(0,0));
+
+}
+
+// reset movement flags
 void GridElement::clearMoveDir() {
   for(int i=0; i<8; ++i)
     moveDir[i] = false;
@@ -321,9 +364,10 @@ void GridElement::stop() {
   gridVelocityY(0.);
 }
 
+// run at position
 void GridElement::moveTowards(Vector2f target){
-  Vector2f worldDir = target - map.gridToWorld(gridPosition);
-  Vector2f gridDir = map.worldToGrid(target) - gridPosition;
+  Vector2f worldDir = target - MapManager::getInstance().gridToWorld(gridPosition);
+  Vector2f gridDir = MapManager::getInstance().worldToGrid(target) - gridPosition;
   worldDir = worldDir.normalize();
   gridDir = gridDir.normalize();
 
@@ -349,7 +393,7 @@ void GridElement::shoot() {
         int i=0;
         for(i; i<moveDir.size(); ++i) { if(moveDir[i]) break; }
 
-        GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", map.gridToWorld(gridPosition), i, Vector2f(0,0), BULLET_STRAT));
+        GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", MapManager::getInstance().gridToWorld(gridPosition), i, Vector2f(0,0), BULLET_STRAT));
         SoundManager::getInstance()[1];
     }
 }
@@ -362,7 +406,7 @@ void GridElement::shoot(Vector2f target) {
 
         shootTimer = curTicks;
 
-        GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", map.gridToWorld(gridPosition), -1, target, BULLET_STRAT));
+        GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", MapManager::getInstance().gridToWorld(gridPosition), -1, target, BULLET_STRAT));
         SoundManager::getInstance()[1];
     }
 }

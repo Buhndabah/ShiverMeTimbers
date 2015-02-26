@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "strategy.h"
 #include "gridElement.h"
+#include <cmath>
 
 ChaseStrategy::ChaseStrategy(GridElement* g, GridElement* c) :
     Strategy(g, CHASE_STRAT),

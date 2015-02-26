@@ -29,8 +29,8 @@ public:
     const Tile& findTileAt(const Vector2f&) const;
 
 
-    void collideGridEles(int, GridElement&, Vector2f, Vector2f&, bool&, GridElement*& ) const;
-    Vector2f validateMovement(GridElement&,  Vector2f, float&, bool&) const;
+    void collideGridEles(int, GridElement*) const;
+    void validateMovement(GridElement*) const;
 
     int getW() const { return mapWidth;}
     int getH() const { return mapHeight;}
@@ -56,7 +56,7 @@ public:
     void reinit();
     
 private:
-    MapManager(const std::string& fn = "xml/xmlSpec/smallTest.xml");
+    MapManager(const std::string& fn = "xml/xmlSpec/416Final.xml");
 //    MapManager(const std::string& fn = "xml/xmlSpec/testCube.xml");
 //    MapManager(const std::string& fn = "xml/xmlSpec/416Final.xml");
 //    MapManager(const std::string& fn = "xml/xmlSpec/wuh.xml");
@@ -70,6 +70,8 @@ private:
 
     int numGridElements;
     GridElement* player;
+
+    Tile* dummyTile;
 
     /* Storage Structures */
 

@@ -5,7 +5,6 @@
 #include "vector2f.h"
 #include "listener.h"
 #include "multisprite.h"
-#include "mapManager.h"
 #include "strategy.h"
 
 enum dirs {
@@ -53,6 +52,10 @@ public:
   void setGridPosition(const Vector2f& pos) { gridPosition = pos; }
   const Vector2f& getGridVelocity() const   { return gridVelocity; }
   void setGridVelocity(const Vector2f& vel) { gridVelocity = vel; }
+  const Vector2f& getMoveDelta() const { return moveDelta; }
+  void setMoveDelta(const Vector2f& delta) { moveDelta = delta; }
+  
+  void applyMoveDelta();
 
   const Vector2f& getPosition() const { return gridSprite.getPosition(); }
 
@@ -106,10 +109,10 @@ private:
   MultiSprite gridSprite;
   Vector2f gridPosition;
   Vector2f gridVelocity;
+  Vector2f moveDelta;
   int maxHP;
   int curHP;
   unsigned int shootTimer;
-  const MapManager& map; //the grid the gridElement is attached to
   std::vector<bool> moveDir; //boolean vector telling the gridElement which direction it is moving in
   std::vector<Vector2f> moveboxVertices; //Vector2f vector of vertices for the movement hitbox
   Strategy* myStrat;

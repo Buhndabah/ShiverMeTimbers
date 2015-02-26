@@ -40,15 +40,25 @@ Tile& Tile::operator=(const Tile& rhs) {
     if(this == &rhs) return *this;
     
     id=rhs.id;
+    name = rhs.name;
 
     delete sprite;
-    name = rhs.name;
-    sprite = new Sprite(*(rhs.sprite));
+    if(rhs.sprite==NULL) {
+        sprite =NULL;
+    }
+    else {
+        sprite = new Sprite(*(rhs.sprite));
+    }
+
     collidable = rhs.collidable;
-    if(particleSys)
+    if(particleSys!=NULL) {
         delete particleSys;
-    if(rhs.particleSys) {
+    }
+    if(rhs.particleSys!=NULL) {
         particleSys = new ParticleSystem(*(rhs.particleSys));
+    }
+    else {
+        particleSys = NULL;
     }
     return *this;
 }
