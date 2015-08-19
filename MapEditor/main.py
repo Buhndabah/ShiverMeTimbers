@@ -77,7 +77,7 @@ def runGame(tiles):
         p.move(K_DOWN)
 
     # figure out where we're anchoring the cursor
-    center = (p.getCoords()[STRINGS.X], p.getCoords()[STRINGS.Y])
+    center = (p.coords[STRINGS.X], p.coords[STRINGS.Y])
 
     while True:
 
@@ -89,7 +89,6 @@ def runGame(tiles):
         drawLowerGrid()
 
         # draw currently selected tile type at cursor's loc
-        #pos = (p.getCoords()[STRINGS.X], p.getCoords()[STRINGS.Y]-p.getLevel()*VARS.getCellRise())
         image = tiles[curTile].getPic()
         drawWithOffset(image,center,(0,0))
 
@@ -156,12 +155,12 @@ def handleEvents(player,tiles,curTile):
 
             # move up one elevation
             elif event.key == K_t:
-                player.goUp()
+                player.level = player.level + 1
 
             # move down one elevation
             elif event.key == K_y:
-                if not (player.getLevel() == 0):
-                    player.goDown()
+                if not (player.level == 0):
+                    player.level = player.level - 1
             
             # move the cursor in direction
             elif event.key == K_LEFT or event.key==K_a:
@@ -280,7 +279,7 @@ def createLayer():
 def insertItem(player,curTile):
 
     pos = player.getMapPos()
-    drawPos = player.getCoords()
+    drawPos = player.coords
 
     nMaxX = not (pos[0] > E_VARS().getMapWidth()-1)
     nMinX = not (pos[0] < 0)
@@ -291,11 +290,11 @@ def insertItem(player,curTile):
 
     # check boundaries
     if nMaxX and nMinX and nHalfX and nMaxY and nMinY and nHalfY:
-        if player.getLevel() > len(MAP)-1:
-            for i in range(player.getLevel() - len(MAP)+1):
+        if player.level > len(MAP)-1:
+            for i in range(player.level - len(MAP)+1):
                 MAP.append(createLayer())
-        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["id"] = curTile
-        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["coord"] = drawPos
+        MAP[player.level][int(pos[1])][int(pos[0])]["id"] = curTile
+        MAP[player.level][int(pos[1])][int(pos[0])]["coord"] = drawPos
 
 
 
@@ -303,7 +302,7 @@ def insertItem(player,curTile):
 def removeItem(player):
 
     pos =player.getMapPos()
-    drawPos = player.getCoords()
+    drawPos = player.coords
 
     nMaxX = not (pos[0] > E_VARS().getMapWidth()-1)
     nMinX = not (pos[0] < 0)
@@ -311,13 +310,13 @@ def removeItem(player):
     nMaxY = not (pos[1] > E_VARS().getMapHeight()-1)
     nMinY = not (pos[1] < 0)
     nHalfY = not (pos[1] % 1.0 > 0)
-    nTooHigh = not (player.getLevel() > len(MAP) -1)
+    nTooHigh = not (player.level > len(MAP) -1)
 
     # check boundaries
     if nMaxX and nMinX and nHalfX and nMaxY and nMinY and nHalfY and nTooHigh:
-        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["id"] = 0
-        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["coord"] = drawPos
-        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["collidable"] = False
+        MAP[player.level][int(pos[1])][int(pos[0])]["id"] = 0
+        MAP[player.level][int(pos[1])][int(pos[0])]["coord"] = drawPos
+        MAP[player.level][int(pos[1])][int(pos[0])]["collidable"] = False
 
 
 
@@ -325,7 +324,7 @@ def removeItem(player):
 def setCollide(player):
 
     pos =player.getMapPos()
-    drawPos = player.getCoords()
+    drawPos = player.coords
 
     nMaxX = not (pos[0] > E_VARS().getMapWidth()-1)
     nMinX = not (pos[0] < 0)
@@ -333,13 +332,13 @@ def setCollide(player):
     nMaxY = not (pos[1] > E_VARS().getMapHeight()-1)
     nMinY = not (pos[1] < 0)
     nHalfY = not (pos[1] % 1.0 > 0)
-    nTooHigh = not (player.getLevel() > len(MAP) -1)
+    nTooHigh = not (player.level > len(MAP) -1)
 
     # check boundaries
     if nMaxX and nMinX and nHalfX and nMaxY and nMinY and nHalfY and nTooHigh:
-        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["coord"] = drawPos
-        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["collidable"] = not MAP[player.getLevel()][int(pos[1])][int(pos[0])]["collidable"]
-        print "set collidable to ", MAP[player.getLevel()][int(pos[1])][int(pos[0])]["collidable"]
+        MAP[player.level][int(pos[1])][int(pos[0])]["coord"] = drawPos
+        MAP[player.level][int(pos[1])][int(pos[0])]["collidable"] = not MAP[player.level][int(pos[1])][int(pos[0])]["collidable"]
+        print "set collidable to ", MAP[player.level][int(pos[1])][int(pos[0])]["collidable"]
     
 
 #--------------------------------------------------------------------------------
@@ -436,9 +435,9 @@ def drawUpperGrid(player):
 
         # down and left
         startX = E_VARS().getWinWidth()/2+x*E_VARS().getCellWidth()/2-OFFSET[0]
-        startY = E_VARS().getWinHeight()/2-E_VARS().getCellHeight()*E_VARS().getMapHeight()/2+x*E_VARS().getCellHeight()/2-player.getLevel()*E_VARS().getCellRise()-OFFSET[1]
+        startY = E_VARS().getWinHeight()/2-E_VARS().getCellHeight()*E_VARS().getMapHeight()/2+x*E_VARS().getCellHeight()/2-player.level*E_VARS().getCellRise()-OFFSET[1]
         endX = E_VARS().getWinWidth()/2-E_VARS().getMapWidth()*E_VARS().getCellWidth()/2+E_VARS().getCellWidth()/2*x-OFFSET[0]
-        endY = E_VARS().getWinHeight()/2+x*E_VARS().getCellHeight()/2-player.getLevel()*E_VARS().getCellRise()-OFFSET[1]
+        endY = E_VARS().getWinHeight()/2+x*E_VARS().getCellHeight()/2-player.level*E_VARS().getCellRise()-OFFSET[1]
 
         pygame.draw.line(DISPLAYSURF, 
                          COLORS.WHITE,
@@ -448,9 +447,9 @@ def drawUpperGrid(player):
         
         #down and right
         startX = E_VARS().getWinWidth()/2-x*E_VARS().getCellWidth()/2-OFFSET[0]
-        startY = E_VARS().getWinHeight()/2-E_VARS().getCellHeight()*E_VARS().getMapHeight()/2+x*E_VARS().getCellHeight()/2-player.getLevel()*E_VARS().getCellRise()-OFFSET[1]
+        startY = E_VARS().getWinHeight()/2-E_VARS().getCellHeight()*E_VARS().getMapHeight()/2+x*E_VARS().getCellHeight()/2-player.level*E_VARS().getCellRise()-OFFSET[1]
         endX = E_VARS().getWinWidth()/2+E_VARS().getMapHeight()*E_VARS().getCellWidth()/2-E_VARS().getCellWidth()/2*x-OFFSET[0]
-        endY = E_VARS().getWinHeight()/2+x*E_VARS().getCellHeight()/2-player.getLevel()*E_VARS().getCellRise()-OFFSET[1]
+        endY = E_VARS().getWinHeight()/2+x*E_VARS().getCellHeight()/2-player.level*E_VARS().getCellRise()-OFFSET[1]
 
         pygame.draw.line(DISPLAYSURF, 
                          COLORS.WHITE, 

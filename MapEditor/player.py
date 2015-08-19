@@ -30,16 +30,24 @@ class Player:
             self.__mapX=self.__mapX-0.5
             self.__mapY=self.__mapY+0.5
 
-    def goUp(self):
-        self.__level = self.__level+1
+    @property
+    def mapX(self):
+        return self.__mapX
 
-    def goDown(self):
-        self.__level = self.__level-1
+    @property
+    def mapY(self):
+        return self.__mapY
 
-    def getLevel(self):
+    @property
+    def level(self):
         return self.__level
-        
-    def getCoords(self):
+
+    @level.setter
+    def level(self, newVal):
+        self.__level = newVal
+
+    @property
+    def coords(self):
         return copy.copy(self.__coords)
 
     def getMapPos(self):
