@@ -5,8 +5,7 @@ from globals import E_VARS
 
 class Tile:
 
-    def __init__(self, env, name=None):
-        self.__vars=env
+    def __init__(self, name=None):
         if name:
             self.__path = name
             self.__pic = pygame.image.load(name)
@@ -14,7 +13,7 @@ class Tile:
             temp = self.__name.split('/')
             self.__name = temp[len(temp)-1]
         else:
-            self.__path = self.__vars.getPath() + "defaults/empty.png"
+            self.__path = E_VARS().getPath() + "defaults/empty.png"
             self.__pic = pygame.image.load(self.__path)
             self.__name= "empty"
     
@@ -39,12 +38,12 @@ class Tile:
 
 
     @staticmethod
-    def loadTiles(env):
+    def loadTiles():
         tileList=[]
-        listing = os.listdir(env.getPath())
-        tileList.append(Tile(env))
+        listing = os.listdir(E_VARS().getPath())
+        tileList.append(Tile())
         for infile in listing:
             if "defaults" not in infile:
-                newtile = env.getPath()+infile
-                tileList.append(Tile(env,newtile))
+                newtile = E_VARS().getPath()+infile
+                tileList.append(Tile(newtile))
         return tileList

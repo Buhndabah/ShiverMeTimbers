@@ -6,29 +6,28 @@ from globals import E_VARS,STRINGS,COLORS
 
 class Player:
 
-    def __init__(self,env):
-        self.__vars=env
+    def __init__(self):
         self.__mapX=0
         self.__mapY=0
         self.__level=0
-        self.__coords={STRINGS.X:self.__vars.getWinWidth()/2-self.__vars.getCellWidth()/2,STRINGS.Y:self.__vars.getWinHeight()/2-self.__vars.getCellHeight()*self.__vars.getMapHeight()/2}
+        self.__coords={STRINGS.X:E_VARS().getWinWidth()/2-E_VARS().getCellWidth()/2,STRINGS.Y:E_VARS().getWinHeight()/2-E_VARS().getCellHeight()*E_VARS().getMapHeight()/2}
         self.__direction=''    # used in movement, will also later be used in facing
 
     def move(self):
         if self.__direction==STRINGS.UP:
-            self.__coords[STRINGS.Y]=self.__coords[STRINGS.Y]-self.__vars.getCellHeight()/2
+            self.__coords[STRINGS.Y]=self.__coords[STRINGS.Y]-E_VARS().getCellHeight()/2
             self.__mapX=self.__mapX-0.5
             self.__mapY=self.__mapY-0.5
         elif self.__direction==STRINGS.DOWN:
-            self.__coords[STRINGS.Y]=self.__coords[STRINGS.Y]+self.__vars.getCellHeight()/2
+            self.__coords[STRINGS.Y]=self.__coords[STRINGS.Y]+E_VARS().getCellHeight()/2
             self.__mapX=self.__mapX+0.5
             self.__mapY=self.__mapY+0.5
         elif self.__direction==STRINGS.LEFT:
-            self.__coords[STRINGS.X]=self.__coords[STRINGS.X]-self.__vars.getCellWidth()/2
+            self.__coords[STRINGS.X]=self.__coords[STRINGS.X]-E_VARS().getCellWidth()/2
             self.__mapX=self.__mapX+0.5
             self.__mapY=self.__mapY-0.5
         elif self.__direction==STRINGS.RIGHT:
-            self.__coords[STRINGS.X]=self.__coords[STRINGS.X]+self.__vars.getCellWidth()/2
+            self.__coords[STRINGS.X]=self.__coords[STRINGS.X]+E_VARS().getCellWidth()/2
             self.__mapX=self.__mapX-0.5
             self.__mapY=self.__mapY+0.5
         self.__direction=''

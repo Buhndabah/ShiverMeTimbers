@@ -1,4 +1,12 @@
-class E_VARS:
+#Singleton storing information such as window size, fps, etc
+class E_VARS(object):
+
+    __instance=None
+
+    def __new__(cls):
+        if E_VARS.__instance is None:
+            E_VARS.__instance = object.__new__(cls)
+        return E_VARS.__instance
 
     def __init__(self):
         # environment vars

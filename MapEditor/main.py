@@ -17,29 +17,27 @@ OFFSET=[0,0]
 #array storing tile info
 MAP =[]
 
-VARS=E_VARS()
-
 #window for handling pop up dialogs
 WINDOW = Tkinter.Tk()
-WINDOW.geometry('+'+str(VARS.getWinWidth()/2)+'+'+str(VARS.getWinHeight()/2))
+WINDOW.geometry('+'+str(E_VARS().getWinWidth()/2)+'+'+str(E_VARS().getWinHeight()/2))
 WINDOW.wm_withdraw()
 
 def main():
-    global FPSCLOCK,DISPLAYSURF,BASICFONT,GRID,VARS
+    global FPSCLOCK,DISPLAYSURF,BASICFONT,GRID
     GRID=True
 
     pygame.init()
     pygame.key.set_repeat(250,250)
     pygame.display.set_caption('Editor')
 
-    DISPLAYSURF = pygame.display.set_mode((VARS.getWinWidth(),VARS.getWinHeight()))
+    DISPLAYSURF = pygame.display.set_mode((E_VARS().getWinWidth(),E_VARS().getWinHeight()))
     FPSCLOCK = pygame.time.Clock()
     BASICFONT = pygame.font.Font("freesansbold.ttf",18)
 
     # prompt for map size
     if not tkMessageBox.askyesno(title="Map Size", message="Use default map size?"):
         new_win = Tkinter.Tk()
-        new_win.geometry('+'+str(VARS.getWinWidth()/2)+'+'+str(VARS.getWinHeight()/2))
+        new_win.geometry('+'+str(E_VARS().getWinWidth()/2)+'+'+str(E_VARS().getWinHeight()/2))
 
         sizeChoiceX = tk.Entry(new_win)
         sizeChoiceX.pack()
@@ -58,7 +56,7 @@ def main():
         
 
     MAP.append(createLayer())
-    tiles = Tile.loadTiles(VARS)
+    tiles = Tile.loadTiles()
 
     runGame(tiles)
 
@@ -66,23 +64,20 @@ def main():
 #----------------------------------
 
 def setWinSize(size, window):
-    global VARS
-    VARS.setMapDim(size)
+    E_VARS().setMapDim(size)
     window.destroy()
 
 
 # Main game loop
 def runGame(tiles):
 
-    global VARS 
-
     # index of tile we're currently drawing
     curTile = 1
-    p = Player(VARS)
+    p = Player()
 
     #set cursor initial position to middle
     #on initialization the cursor's at map 0,0, the top corne
-    for i in range(0, VARS.getMapWidth()-1):
+    for i in range(0, E_VARS().getMapWidth()-1):
         p.setDir(K_DOWN)
 
     # figure out where we're anchoring the cursor
@@ -106,7 +101,7 @@ def runGame(tiles):
         drawUpperGrid(p)
 
         pygame.display.update()
-        FPSCLOCK.tick(VARS.getFPS())
+        FPSCLOCK.tick(E_VARS().getFPS())
 
 
 #-------------------------------------------
@@ -174,16 +169,16 @@ def handleEvents(player,tiles,curTile):
             
             # move the cursor in direction
             elif event.key == K_LEFT or event.key==K_a:
-                OFFSET[0] = OFFSET[0]-VARS.getCellWidth()/2
+                OFFSET[0] = OFFSET[0]-E_VARS().getCellWidth()/2
                 player.setDir(event.key)
             elif event.key == K_RIGHT or event.key == K_d:
-                OFFSET[0] = OFFSET[0] + VARS.getCellWidth()/2
+                OFFSET[0] = OFFSET[0] + E_VARS().getCellWidth()/2
                 player.setDir(event.key)
             elif event.key == K_UP or event.key == K_w:
-                OFFSET[1] = OFFSET[1] - VARS.getCellHeight()/2
+                OFFSET[1] = OFFSET[1] - E_VARS().getCellHeight()/2
                 player.setDir(event.key)
             elif event.key == K_DOWN or event.key == K_s:
-                OFFSET[1] = OFFSET[1] + VARS.getCellHeight()/2
+                OFFSET[1] = OFFSET[1] + E_VARS().getCellHeight()/2
                 player.setDir(event.key)
 
     return curTile
@@ -192,11 +187,9 @@ def handleEvents(player,tiles,curTile):
 
 def savePrompt(tiles):
 
-    global VARS
-
     # open a new window
     new_win = Tkinter.Tk()
-    new_win.geometry('+'+str(VARS.getWinWidth()/2)+'+'+str(VARS.getWinHeight()/2))
+    new_win.geometry('+'+str(E_VARS().getWinWidth()/2)+'+'+str(E_VARS().getWinHeight()/2))
 
     # create an entry field in it
     nameChoice = tk.Entry(new_win)
@@ -214,8 +207,6 @@ def savePrompt(tiles):
 # Write out to xml
 def printMap(tiles, fileName, window):
 
-   global VARS
-
    print("\nPrinting map to file\n")
 
    file = open('maps/'+fileName+'.xml','w')
@@ -225,11 +216,11 @@ def printMap(tiles, fileName, window):
    file.write("\" height=\"")
    file.write(str(len(MAP[0])))
    file.write("\" tilewidth=\"")
-   file.write(str(VARS.getCellWidth()))
+   file.write(str(E_VARS().getCellWidth()))
    file.write("\" tileheight=\"")
-   file.write(str(VARS.getCellHeight()))
+   file.write(str(E_VARS().getCellHeight()))
    file.write("\" tileRise=\"")
-   file.write(str(VARS.getCellRise()))
+   file.write(str(E_VARS().getCellRise()))
    file.write("\" weather=\"snow\">\n")
 
    i=0
@@ -260,7 +251,7 @@ def printMap(tiles, fileName, window):
                    file.write("\" collision=\"")
                    file.write(str(tile["collidable"]).lower())
                    file.write("\"/>\n")
-               if((i+1)%VARS.getMapWidth() is 0):
+               if((i+1)%E_VARS().getMapWidth() is 0):
                    file.write("\n")
                i=i+1
        file.write("\t</layer>\n")
@@ -277,11 +268,11 @@ def printMap(tiles, fileName, window):
 
 # Add a new layer full of empty tiles to the map
 def createLayer():
-    global VARS
+
     newLayer = []
-    for i in range(0,VARS.getMapHeight()):
+    for i in range(0,E_VARS().getMapHeight()):
         newLayer.append([])
-        for j in range(0,VARS.getMapWidth()):
+        for j in range(0,E_VARS().getMapWidth()):
             newLayer[i].append({"id": 0, "coord": {STRINGS.X:0, STRINGS.Y:0}, "collidable":NONCOLLIDABLE})
     return newLayer
 
@@ -292,15 +283,13 @@ def createLayer():
 # Place tile at cursor position
 def insertItem(player,curTile):
 
-    global VARS
-
     pos = player.getMapPos()
     drawPos = player.getCoords()
 
-    nMaxX = not (pos[0] > VARS.getMapWidth()-1)
+    nMaxX = not (pos[0] > E_VARS().getMapWidth()-1)
     nMinX = not (pos[0] < 0)
     nHalfX = not (pos[0] % 1.0 > 0)
-    nMaxY = not (pos[1] > VARS.getMapHeight()-1)
+    nMaxY = not (pos[1] > E_VARS().getMapHeight()-1)
     nMinY = not (pos[1] < 0)
     nHalfY = not (pos[1] % 1.0 > 0)
 
@@ -317,15 +306,13 @@ def insertItem(player,curTile):
 # Remove tile at cursor position
 def removeItem(player):
 
-    global VARS
-
     pos =player.getMapPos()
     drawPos = player.getCoords()
 
-    nMaxX = not (pos[0] > VARS.getMapWidth()-1)
+    nMaxX = not (pos[0] > E_VARS().getMapWidth()-1)
     nMinX = not (pos[0] < 0)
     nHalfX = not (pos[0] % 1.0 > 0)
-    nMaxY = not (pos[1] > VARS.getMapHeight()-1)
+    nMaxY = not (pos[1] > E_VARS().getMapHeight()-1)
     nMinY = not (pos[1] < 0)
     nHalfY = not (pos[1] % 1.0 > 0)
     nTooHigh = not (player.getLevel() > len(MAP) -1)
@@ -344,10 +331,10 @@ def setCollide(player):
     pos =player.getMapPos()
     drawPos = player.getCoords()
 
-    nMaxX = not (pos[0] > VARS.getMapWidth()-1)
+    nMaxX = not (pos[0] > E_VARS().getMapWidth()-1)
     nMinX = not (pos[0] < 0)
     nHalfX = not (pos[0] % 1.0 > 0)
-    nMaxY = not (pos[1] > VARS.getMapHeight()-1)
+    nMaxY = not (pos[1] > E_VARS().getMapHeight()-1)
     nMinY = not (pos[1] < 0)
     nHalfY = not (pos[1] % 1.0 > 0)
     nTooHigh = not (player.getLevel() > len(MAP) -1)
@@ -365,38 +352,36 @@ def setCollide(player):
 # Draw the map
 def fillTiles(tiles,player):
 
-    global VARS
-
     # finding the index for draw order
     num=0
     mapX=0
     mapY=0
 
     # For every row
-    for i in range(VARS.getMapWidth()+VARS.getMapHeight()-1):
+    for i in range(E_VARS().getMapWidth()+E_VARS().getMapHeight()-1):
 
         # and every elevation
         for k in range(len(MAP)):
 
-            if(i < VARS.getMapWidth()):    # top half of diamond
+            if(i < E_VARS().getMapWidth()):    # top half of diamond
                 num=i+1
 
-            elif i is VARS.getMapWidth():  # middle bit
-                num = VARS.getMapWidth()-1
+            elif i is E_VARS().getMapWidth():  # middle bit
+                num = E_VARS().getMapWidth()-1
 
-            elif i > VARS.getMapWidth():   # bottom half
-                num = VARS.getMapWidth() - i%VARS.getMapWidth()-1
+            elif i > E_VARS().getMapWidth():   # bottom half
+                num = E_VARS().getMapWidth() - i%E_VARS().getMapWidth()-1
     
             # draw the appropriate number of tiles
             for j in range(num):
 
                 # calculate the coordinates
-                if i < VARS.getMapWidth():
-                    mapY = (i + (j*(VARS.getMapWidth()-1))) % VARS.getMapWidth()
-                    mapX = (i + (j*(VARS.getMapWidth()-1))) / VARS.getMapWidth()
+                if i < E_VARS().getMapWidth():
+                    mapY = (i + (j*(E_VARS().getMapWidth()-1))) % E_VARS().getMapWidth()
+                    mapX = (i + (j*(E_VARS().getMapWidth()-1))) / E_VARS().getMapWidth()
                 else:
-                    mapY = (i + ((i+1)%VARS.getMapWidth())*(VARS.getMapWidth()-1) + j*(VARS.getMapWidth()-1)) % VARS.getMapWidth()
-                    mapX =(i + ((i+1)%VARS.getMapWidth())*(VARS.getMapWidth()-1) + j*(VARS.getMapWidth()-1)) / VARS.getMapWidth()
+                    mapY = (i + ((i+1)%E_VARS().getMapWidth())*(E_VARS().getMapWidth()-1) + j*(E_VARS().getMapWidth()-1)) % E_VARS().getMapWidth()
+                    mapX =(i + ((i+1)%E_VARS().getMapWidth())*(E_VARS().getMapWidth()-1) + j*(E_VARS().getMapWidth()-1)) / E_VARS().getMapWidth()
 
                 # if there's a tile here (nonblank)
                 if MAP[k][mapY][mapX] is not 0:
@@ -405,10 +390,10 @@ def fillTiles(tiles,player):
                     colored = item.copy()
                     if MAP[k][mapY][mapX]["collidable"] is True:
                         Tile.color_surface(colored,0,155,155)
-                        drawWithOffset(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*VARS.getCellRise()),(OFFSET[0], OFFSET[1]))
+                        drawWithOffset(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS().getCellRise()),(OFFSET[0], OFFSET[1]))
                     else:
                         Tile.color_surface(colored,155,155,0)
-                        drawWithOffset(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*VARS.getCellRise()),(OFFSET[0], OFFSET[1]))
+                        drawWithOffset(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS().getCellRise()),(OFFSET[0], OFFSET[1]))
 
 
 #-------------------------------------------------------------------------------------------------------
@@ -417,15 +402,15 @@ def fillTiles(tiles,player):
 # base grid that doesn't move
 def drawLowerGrid():
            
-    global OFFSET,VARS
+    global OFFSET
 
-    for x in range(0,VARS.getMapWidth()+1):
+    for x in range(0,E_VARS().getMapWidth()+1):
 
         # down and left
-        startX = VARS.getWinWidth()/2+x*VARS.getCellWidth()/2-OFFSET[0]
-        startY = VARS.getWinHeight()/2-VARS.getCellHeight()*VARS.getMapHeight()/2+x*VARS.getCellHeight()/2-OFFSET[1]
-        endX = VARS.getWinWidth()/2-VARS.getMapWidth()*VARS.getCellWidth()/2+VARS.getCellWidth()/2*x-OFFSET[0]
-        endY = VARS.getWinHeight()/2+x*VARS.getCellHeight()/2-OFFSET[1]
+        startX = E_VARS().getWinWidth()/2+x*E_VARS().getCellWidth()/2-OFFSET[0]
+        startY = E_VARS().getWinHeight()/2-E_VARS().getCellHeight()*E_VARS().getMapHeight()/2+x*E_VARS().getCellHeight()/2-OFFSET[1]
+        endX = E_VARS().getWinWidth()/2-E_VARS().getMapWidth()*E_VARS().getCellWidth()/2+E_VARS().getCellWidth()/2*x-OFFSET[0]
+        endY = E_VARS().getWinHeight()/2+x*E_VARS().getCellHeight()/2-OFFSET[1]
 
         pygame.draw.line(DISPLAYSURF, 
                          COLORS.BLACK,
@@ -434,10 +419,10 @@ def drawLowerGrid():
                          1)
         
         #down and right
-        startX = VARS.getWinWidth()/2-x*VARS.getCellWidth()/2-OFFSET[0]
-        startY = VARS.getWinHeight()/2-VARS.getCellHeight()*VARS.getMapHeight()/2+x*VARS.getCellHeight()/2-OFFSET[1]
-        endX = VARS.getWinWidth()/2+VARS.getMapHeight()*VARS.getCellWidth()/2-VARS.getCellWidth()/2*x-OFFSET[0]
-        endY = VARS.getWinHeight()/2+x*VARS.getCellHeight()/2-OFFSET[1]
+        startX = E_VARS().getWinWidth()/2-x*E_VARS().getCellWidth()/2-OFFSET[0]
+        startY = E_VARS().getWinHeight()/2-E_VARS().getCellHeight()*E_VARS().getMapHeight()/2+x*E_VARS().getCellHeight()/2-OFFSET[1]
+        endX = E_VARS().getWinWidth()/2+E_VARS().getMapHeight()*E_VARS().getCellWidth()/2-E_VARS().getCellWidth()/2*x-OFFSET[0]
+        endY = E_VARS().getWinHeight()/2+x*E_VARS().getCellHeight()/2-OFFSET[1]
 
         pygame.draw.line(DISPLAYSURF, 
                          COLORS.BLACK, 
@@ -449,15 +434,15 @@ def drawLowerGrid():
 # grid tied to player level
 def drawUpperGrid(player):
 
-    global OFFSET,VARS
+    global OFFSET
 
-    for x in range(0,VARS.getMapWidth()+1):
+    for x in range(0,E_VARS().getMapWidth()+1):
 
         # down and left
-        startX = VARS.getWinWidth()/2+x*VARS.getCellWidth()/2-OFFSET[0]
-        startY = VARS.getWinHeight()/2-VARS.getCellHeight()*VARS.getMapHeight()/2+x*VARS.getCellHeight()/2-player.getLevel()*VARS.getCellRise()-OFFSET[1]
-        endX = VARS.getWinWidth()/2-VARS.getMapWidth()*VARS.getCellWidth()/2+VARS.getCellWidth()/2*x-OFFSET[0]
-        endY = VARS.getWinHeight()/2+x*VARS.getCellHeight()/2-player.getLevel()*VARS.getCellRise()-OFFSET[1]
+        startX = E_VARS().getWinWidth()/2+x*E_VARS().getCellWidth()/2-OFFSET[0]
+        startY = E_VARS().getWinHeight()/2-E_VARS().getCellHeight()*E_VARS().getMapHeight()/2+x*E_VARS().getCellHeight()/2-player.getLevel()*E_VARS().getCellRise()-OFFSET[1]
+        endX = E_VARS().getWinWidth()/2-E_VARS().getMapWidth()*E_VARS().getCellWidth()/2+E_VARS().getCellWidth()/2*x-OFFSET[0]
+        endY = E_VARS().getWinHeight()/2+x*E_VARS().getCellHeight()/2-player.getLevel()*E_VARS().getCellRise()-OFFSET[1]
 
         pygame.draw.line(DISPLAYSURF, 
                          COLORS.WHITE,
@@ -466,10 +451,10 @@ def drawUpperGrid(player):
                          1)
         
         #down and right
-        startX = VARS.getWinWidth()/2-x*VARS.getCellWidth()/2-OFFSET[0]
-        startY = VARS.getWinHeight()/2-VARS.getCellHeight()*VARS.getMapHeight()/2+x*VARS.getCellHeight()/2-player.getLevel()*VARS.getCellRise()-OFFSET[1]
-        endX = VARS.getWinWidth()/2+VARS.getMapHeight()*VARS.getCellWidth()/2-VARS.getCellWidth()/2*x-OFFSET[0]
-        endY = VARS.getWinHeight()/2+x*VARS.getCellHeight()/2-player.getLevel()*VARS.getCellRise()-OFFSET[1]
+        startX = E_VARS().getWinWidth()/2-x*E_VARS().getCellWidth()/2-OFFSET[0]
+        startY = E_VARS().getWinHeight()/2-E_VARS().getCellHeight()*E_VARS().getMapHeight()/2+x*E_VARS().getCellHeight()/2-player.getLevel()*E_VARS().getCellRise()-OFFSET[1]
+        endX = E_VARS().getWinWidth()/2+E_VARS().getMapHeight()*E_VARS().getCellWidth()/2-E_VARS().getCellWidth()/2*x-OFFSET[0]
+        endY = E_VARS().getWinHeight()/2+x*E_VARS().getCellHeight()/2-player.getLevel()*E_VARS().getCellRise()-OFFSET[1]
 
         pygame.draw.line(DISPLAYSURF, 
                          COLORS.WHITE, 
