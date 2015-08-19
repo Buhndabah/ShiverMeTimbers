@@ -60,7 +60,7 @@ def main():
 #----------------------------------
 
 def setWinSize(size, window):
-    E_VARS().setMapDim(size)
+    E_VARS().mapDim = size
     window.destroy()
 
 

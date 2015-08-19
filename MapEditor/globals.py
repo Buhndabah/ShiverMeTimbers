@@ -52,22 +52,14 @@ class E_VARS(object):
     def PATH(self):
         return self.__PATH
 
-    def getMapDim(self):
+    @property
+    def mapDim(self):
         return (self.__MAPWIDTH,self.__MAPHEIGHT)
-    def getCellDim(self):
-        return (self.__CELLWIDTH, self.__CELLHEIGHT,self.__CELLRISE)
-    def getWinDim(self):
-        return (self.__W_WIDTH,self.__W_HEIGHT)
-    def setWinDim(self,newDim):
-        self.__W_WIDTH=newDim[0]
-        self.__W_HEIGHT=newDim[1]
-    def setCellDim(self, newDim):
-        self.__CELLWIDTH=newDim[0]
-        self.__CELLHEIGHT=newDim[1]
-        self.__CELLRISE=newDim[2]
-    def setMapDim(self,newDim):
-        self.__MAPWIDTH=newDim[0]
-        self.__MAPHEIGHT=newDim[1]
+
+    @mapDim.setter
+    def mapDim(self,newDim):
+        MAPWIDTH = newDim[0]
+        MAPHEIGHT = newDim[1]
     
 class COLORS:
     # RGB vals
