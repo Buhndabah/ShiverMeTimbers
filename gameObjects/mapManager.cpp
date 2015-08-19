@@ -184,15 +184,7 @@ void MapManager::addGridElement(GridElement* gridE) {
     // XXX why are we converting grid to world then world to grid here?
     
     // find which is further a full length on either side? (???)
-    int index = std::max(getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]))),
-			 getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(diffX,0))));
-
-    // now we're going half way on each side? (?????)
-    index = std::max(index,
-                     getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(diffX/2.,0))));
-    index = std::max(index, 
-                     getIndexAt(worldToGrid(gridToWorld(gridE->getMoveboxVertices()[3]) + Vector2f(-diffX/2.,0))));
-
+    int index = getIndexAt(gridE->getMoveboxVertices()[3] + Vector2f(diffX,0));
 
     // THIS PART BREAKS
     try{ gridElements.at(index).push_back(gridE); }
@@ -515,8 +507,7 @@ void MapManager::drawGridElements(int index) const {
     {
 
         /* If enabled will draw a box around the sprite boundaries */
-#define HITBOX
-        #ifdef HITBOX
+#ifdef HITBOX
         SDL_Rect rect;
         Uint32 color;
                  
@@ -565,7 +556,7 @@ void MapManager::drawGridElements(int index) const {
             SDL_FillRect(IOManager::getInstance().getScreen(), &mb, color2);
 	} 
          
-        #endif
+#endif
 
     }
 }
@@ -632,7 +623,9 @@ void MapManager::update(Uint32& ticks) {
             (*l_it)->applyMoveDelta();
 
             // put it into the temp vector at its assigned position
- 	    int index = getIndexAt((*l_it)->getMoveboxVertices()[3]);
+ 	    //int index = getIndexAt((*l_it)->getMoveboxVertices()[3]);
+            float diffX = gridToWorld((*l_it)->getMoveboxVertices()[2])[0] - gridToWorld((*l_it)->getMoveboxVertices()[3])[0];
+ 	    int index = getIndexAt((*l_it)->getMoveboxVertices()[3] + Vector2f(diffX/2, 0));
 
             try {tempVec[index].push_back(*l_it); }
             catch(const std::out_of_range& e) {
@@ -641,7 +634,7 @@ void MapManager::update(Uint32& ticks) {
 	}
     }
 
-    // We've updated everything, clear out the gridElement list
+    // We've updated everything, clear out the main list
     for(std::vector<std::list<GridElement*> >::iterator it=gridElements.begin(); it!=gridElements.end(); ++it){
 	(*it).clear();
     }
