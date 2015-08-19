@@ -4,12 +4,6 @@ from pygame.locals import *
 from globals import E_VARS
 
 class Tile:
-    
-    #private vars
-    __path = ''
-    __pic = ''
-    __name = ''
-    __vars = 0
 
     def __init__(self, env, name=None):
         self.__vars=env

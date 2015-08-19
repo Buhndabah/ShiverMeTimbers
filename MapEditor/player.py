@@ -5,14 +5,6 @@ from pygame.locals import *
 from globals import E_VARS,STRINGS,COLORS
 
 class Player:
-    
-    #private vars
-    __coords={}
-    __direction=''    # used in movement, will also later be used in facing
-    __mapX=0
-    __mapY=0
-    __level=0
-    __vars=0
 
     def __init__(self,env):
         self.__vars=env
@@ -20,6 +12,7 @@ class Player:
         self.__mapY=0
         self.__level=0
         self.__coords={STRINGS.X:self.__vars.getWinWidth()/2-self.__vars.getCellWidth()/2,STRINGS.Y:self.__vars.getWinHeight()/2-self.__vars.getCellHeight()*self.__vars.getMapHeight()/2}
+        self.__direction=''    # used in movement, will also later be used in facing
 
     def move(self):
         if self.__direction==STRINGS.UP:
