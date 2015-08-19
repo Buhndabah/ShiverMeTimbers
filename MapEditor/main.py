@@ -7,10 +7,8 @@ from globals import STRINGS
 from globals import COLORS
 from player import Player
 from tile import Tile
-from popupWindow import popupWindow
 
 # index of tile we're currently drawing
-TODRAW = 1
 COLLIDABLE=True
 NONCOLLIDABLE=False
 
@@ -26,17 +24,12 @@ WINDOW = Tkinter.Tk()
 WINDOW.geometry('+'+str(VARS.getWinWidth()/2)+'+'+str(VARS.getWinHeight()/2))
 WINDOW.wm_withdraw()
 
-# keep running?
-QUIT_GAME = False
-
-
-
 def main():
     global FPSCLOCK,DISPLAYSURF,BASICFONT,GRID,VARS
     GRID=True
 
     pygame.init()
-    pygame.key.set_repeat(2,1000)
+    pygame.key.set_repeat(250,250)
     pygame.display.set_caption('Editor')
 
     DISPLAYSURF = pygame.display.set_mode((VARS.getWinWidth(),VARS.getWinHeight()))
@@ -81,7 +74,10 @@ def setWinSize(size, window):
 # Main game loop
 def runGame(tiles):
 
-    global TODRAW,VARS 
+    global VARS 
+
+    # index of tile we're currently drawing
+    curTile = 1
     p = Player(VARS)
 
     #set cursor initial position to middle
@@ -92,15 +88,9 @@ def runGame(tiles):
     # figure out where we're anchoring the cursor
     center = (p.getCoords()[STRINGS.X], p.getCoords()[STRINGS.Y])
 
-    
-
     while True:
-    
-        # time to shut down
-        if QUIT_GAME:
-            terminate()
 
-        handleEvents(p,tiles)
+        curTile = handleEvents(p,tiles,curTile)
       
         #draw background, placed tiles, and static grid 
         DISPLAYSURF.fill(COLORS.BGCOLOR)
@@ -109,7 +99,7 @@ def runGame(tiles):
 
         # draw currently selected tile type at cursor's loc
         #pos = (p.getCoords()[STRINGS.X], p.getCoords()[STRINGS.Y]-p.getLevel()*VARS.getCellRise())
-        image = tiles[TODRAW].getPic()
+        image = tiles[curTile].getPic()
         drawWithOffset(image,center,(0,0))
 
         #make tile grid
@@ -126,16 +116,14 @@ def drawWithOffset(image,pos,offset) :
 
 
 # Handle keyboard input
-def handleEvents(player,tiles):
-    global TODRAW
-    global QUIT_GAME
+def handleEvents(player,tiles,curTile):
     global WINDOW
 
     for event in pygame.event.get():
 
         #exit editor
         if event.type == QUIT: 
-            QUIT_GAME = True
+            terminate()
 
         #key press received
         elif event.type == KEYDOWN:
@@ -144,13 +132,14 @@ def handleEvents(player,tiles):
             if event.key == K_ESCAPE:
                 if tkMessageBox.askyesno(title="Save?", message="Do you want to save your changes before exiting?"):
                     savePrompt(tiles)
-                QUIT_GAME = True
+                terminate()
 
             # Map Editing functions
+            #----------------------
 
             # place the selected tile type at the cursor
             elif event.key == K_RETURN:
-                insertItem(player)
+                insertItem(player,curTile)
 
             # if a tile exists at the cursor, delete it
             elif event.key == K_BACKSPACE:
@@ -162,13 +151,13 @@ def handleEvents(player,tiles):
 
             # scroll back one tile type
             elif event.key == K_z:
-                if TODRAW > 0:
-                    TODRAW = TODRAW - 1
+                if curTile > 0:
+                    curTile = curTile-1
 
             # scroll forward one tile type
             elif event.key == K_x:
-                if TODRAW <  len(tiles)-1:
-                    TODRAW = TODRAW + 1
+                if curTile <  len(tiles)-1:
+                    curTile = curTile+1
 
             # save the map to file
             elif event.key == K_m:
@@ -184,17 +173,20 @@ def handleEvents(player,tiles):
                     player.goDown()
             
             # move the cursor in direction
-            else:                       
-                if event.key == K_LEFT or event.key==K_a:
-                    OFFSET[0] = OFFSET[0]-VARS.getCellWidth()/2
-                elif event.key == K_RIGHT or event.key == K_d:
-                    OFFSET[0] = OFFSET[0] + VARS.getCellWidth()/2
-                elif event.key == K_UP or event.key == K_w:
-                    OFFSET[1] = OFFSET[1] - VARS.getCellHeight()/2
-                elif event.key == K_DOWN or event.key == K_s:
-                    OFFSET[1] = OFFSET[1] + VARS.getCellHeight()/2
+            elif event.key == K_LEFT or event.key==K_a:
+                OFFSET[0] = OFFSET[0]-VARS.getCellWidth()/2
+                player.setDir(event.key)
+            elif event.key == K_RIGHT or event.key == K_d:
+                OFFSET[0] = OFFSET[0] + VARS.getCellWidth()/2
+                player.setDir(event.key)
+            elif event.key == K_UP or event.key == K_w:
+                OFFSET[1] = OFFSET[1] - VARS.getCellHeight()/2
+                player.setDir(event.key)
+            elif event.key == K_DOWN or event.key == K_s:
+                OFFSET[1] = OFFSET[1] + VARS.getCellHeight()/2
                 player.setDir(event.key)
 
+    return curTile
 
 #-------------------------------------------
 
@@ -220,7 +212,6 @@ def savePrompt(tiles):
     new_win.wait_window(nameChoice)
 
 # Write out to xml
-# XXX TODO currently this always print to a file named "test.xml"
 def printMap(tiles, fileName, window):
 
    global VARS
@@ -299,7 +290,7 @@ def createLayer():
 
 
 # Place tile at cursor position
-def insertItem(player):
+def insertItem(player,curTile):
 
     global VARS
 
@@ -318,7 +309,7 @@ def insertItem(player):
         if player.getLevel() > len(MAP)-1:
             for i in range(player.getLevel() - len(MAP)+1):
                 MAP.append(createLayer())
-        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["id"] = TODRAW
+        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["id"] = curTile
         MAP[player.getLevel()][int(pos[1])][int(pos[0])]["coord"] = drawPos
 
 

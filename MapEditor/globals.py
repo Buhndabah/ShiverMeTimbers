@@ -14,7 +14,6 @@ class E_VARS:
         #assert W_WIDTH%CELLWIDTH==0, "Window width must be a multiple of cell size."
         #assert W_HEIGHT%CELLHEIGHT==0, "Window height must be a multiple of cell size."
     
-        #Offset needed to tile current tileset
         self.__PATH = 'isoTiles/'
 
     def getFPS(self):

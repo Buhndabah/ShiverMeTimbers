@@ -38,6 +38,7 @@ class Player:
             self.__coords[STRINGS.X]=self.__coords[STRINGS.X]+self.__vars.getCellWidth()/2
             self.__mapX=self.__mapX-0.5
             self.__mapY=self.__mapY+0.5
+        self.__direction=''
 
     def goUp(self):
         self.__level = self.__level+1
