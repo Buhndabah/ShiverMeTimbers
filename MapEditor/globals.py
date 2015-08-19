@@ -24,33 +24,40 @@ class E_VARS(object):
     
         self.__PATH = 'isoTiles/'
 
-    def getFPS(self):
+    @property
+    def FPS(self):
         return self.__FPS
-    def getWinDim(self):
-        return (self.__W_WIDTH,self.__W_HEIGHT)
-    def getWinWidth(self):
+    @property
+    def W_WIDTH(self):
         return self.__W_WIDTH
-    def getWinHeight(self):
+    @property
+    def W_HEIGHT(self):
         return self.__W_HEIGHT
-    def getCellDim(self):
-        return (self.__CELLWIDTH, self.__CELLHEIGHT,self.__CELLRISE)
-    def getCellWidth(self):
+    @property
+    def CELLWIDTH(self):
         return self.__CELLWIDTH
-    def getCellHeight(self):
+    @property
+    def CELLHEIGHT(self):
         return self.__CELLHEIGHT
-    def getCellRise(self):
+    @property
+    def CELLRISE(self):
         return self.__CELLRISE
-    def getMapDim(self):
-        return (self.__MAPWIDTH,self.__MAPHEIGHT)
-    def getMapWidth(self):
+    @property
+    def MAPWIDTH(self):
         return self.__MAPWIDTH
-    def getMapHeight(self):
+    @property
+    def MAPHEIGHT(self):
         return self.__MAPHEIGHT
-    def getPath(self):
+    @property
+    def PATH(self):
         return self.__PATH
 
-    def setFPS(self, fps):
-        self.__FPS=fps
+    def getMapDim(self):
+        return (self.__MAPWIDTH,self.__MAPHEIGHT)
+    def getCellDim(self):
+        return (self.__CELLWIDTH, self.__CELLHEIGHT,self.__CELLRISE)
+    def getWinDim(self):
+        return (self.__W_WIDTH,self.__W_HEIGHT)
     def setWinDim(self,newDim):
         self.__W_WIDTH=newDim[0]
         self.__W_HEIGHT=newDim[1]

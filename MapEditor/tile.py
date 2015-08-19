@@ -13,7 +13,7 @@ class Tile:
             temp = self.__name.split('/')
             self.__name = temp[len(temp)-1]
         else:
-            self.__path = E_VARS().getPath() + "defaults/empty.png"
+            self.__path = E_VARS().PATH + "defaults/empty.png"
             self.__pic = pygame.image.load(self.__path)
             self.__name= "empty"
     
@@ -48,10 +48,10 @@ class Tile:
     @staticmethod
     def loadTiles():
         tileList=[]
-        listing = os.listdir(E_VARS().getPath())
+        listing = os.listdir(E_VARS().PATH)
         tileList.append(Tile())
         for infile in listing:
             if "defaults" not in infile:
-                newtile = E_VARS().getPath()+infile
+                newtile = E_VARS().PATH+infile
                 tileList.append(Tile(newtile))
         return tileList
