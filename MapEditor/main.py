@@ -19,14 +19,14 @@ WINDOW.geometry('+'+str(E_VARS().W_WIDTH/2)+'+'+str(E_VARS().W_HEIGHT/2))
 WINDOW.wm_withdraw()
 
 def main():
-    global FPSCLOCK,DISPLAYSURF,BASICFONT,GRID
+    global FPSCLOCK,BASICFONT,GRID
     GRID=True
 
     pygame.init()
     pygame.key.set_repeat(250,250)
     pygame.display.set_caption('Editor')
 
-    DISPLAYSURF = pygame.display.set_mode((E_VARS().W_WIDTH,E_VARS().W_HEIGHT))
+    dispSurf = pygame.display.set_mode((E_VARS().W_WIDTH,E_VARS().W_HEIGHT))
     FPSCLOCK = pygame.time.Clock()
     BASICFONT = pygame.font.Font("freesansbold.ttf",18)
 
@@ -54,7 +54,7 @@ def main():
     MAP.append(createLayer())
     tiles = Tile.loadTiles()
 
-    runGame(tiles)
+    runGame(tiles,dispSurf)
 
 
 #----------------------------------
@@ -65,7 +65,7 @@ def setWinSize(size, window):
 
 
 # Main game loop
-def runGame(tiles):
+def runGame(tiles,dispSurf):
 
     # index of tile we're currently drawing
     curTile = 1
@@ -84,16 +84,16 @@ def runGame(tiles):
         curTile = handleEvents(p,tiles,curTile)
       
         #draw background, placed tiles, and static grid 
-        DISPLAYSURF.fill(COLORS.BGCOLOR)
-        fillTiles(tiles,p)
-        drawLowerGrid()
+        dispSurf.fill(COLORS.BGCOLOR)
+        fillTiles(tiles,p,dispSurf)
+        drawLowerGrid(dispSurf)
 
         # draw currently selected tile type at cursor's loc
         image = tiles[curTile].pic
-        drawWithOffset(image,center,(0,0))
+        drawWithOffset(image,center,(0,0),dispSurf)
 
         #make tile grid
-        drawUpperGrid(p)
+        drawUpperGrid(p,dispSurf)
 
         pygame.display.update()
         FPSCLOCK.tick(E_VARS().FPS)
@@ -101,8 +101,8 @@ def runGame(tiles):
 
 #-------------------------------------------
 
-def drawWithOffset(image,pos,offset) :
-    DISPLAYSURF.blit(image,(pos[0]-offset[0], pos[1]-offset[1]))
+def drawWithOffset(image,pos,offset,dispSurf) :
+    dispSurf.blit(image,(pos[0]-offset[0], pos[1]-offset[1]))
 
 
 # Handle keyboard input
@@ -345,7 +345,7 @@ def setCollide(player):
 
 
 # Draw the map
-def fillTiles(tiles,player):
+def fillTiles(tiles,player,dispSurf):
 
     # finding the index for draw order
     num=0
@@ -385,17 +385,17 @@ def fillTiles(tiles,player):
                     colored = item.copy()
                     if MAP[k][mapY][mapX]["collidable"] is True:
                         Tile.color_surface(colored,0,155,155)
-                        drawWithOffset(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS().CELLRISE),(OFFSET[0], OFFSET[1]))
+                        drawWithOffset(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS().CELLRISE),(OFFSET[0], OFFSET[1]),dispSurf)
                     else:
                         Tile.color_surface(colored,155,155,0)
-                        drawWithOffset(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS().CELLRISE),(OFFSET[0], OFFSET[1]))
+                        drawWithOffset(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS().CELLRISE),(OFFSET[0], OFFSET[1]),dispSurf)
 
 
 #-------------------------------------------------------------------------------------------------------
 
 
 # base grid that doesn't move
-def drawLowerGrid():
+def drawLowerGrid(dispSurf):
            
     global OFFSET
 
@@ -407,7 +407,7 @@ def drawLowerGrid():
         endX = E_VARS().W_WIDTH/2-E_VARS().MAPWIDTH*E_VARS().CELLWIDTH/2+E_VARS().CELLWIDTH/2*x-OFFSET[0]
         endY = E_VARS().W_HEIGHT/2+x*E_VARS().CELLHEIGHT/2-OFFSET[1]
 
-        pygame.draw.line(DISPLAYSURF, 
+        pygame.draw.line(dispSurf, 
                          COLORS.BLACK,
                         (startX, startY),
                         (endX, endY),
@@ -419,7 +419,7 @@ def drawLowerGrid():
         endX = E_VARS().W_WIDTH/2+E_VARS().MAPHEIGHT*E_VARS().CELLWIDTH/2-E_VARS().CELLWIDTH/2*x-OFFSET[0]
         endY = E_VARS().W_HEIGHT/2+x*E_VARS().CELLHEIGHT/2-OFFSET[1]
 
-        pygame.draw.line(DISPLAYSURF, 
+        pygame.draw.line(dispSurf, 
                          COLORS.BLACK, 
                         (startX, startY),
                         (endX, endY),
@@ -427,7 +427,7 @@ def drawLowerGrid():
         
 
 # grid tied to player level
-def drawUpperGrid(player):
+def drawUpperGrid(player,dispSurf):
 
     global OFFSET
 
@@ -439,7 +439,7 @@ def drawUpperGrid(player):
         endX = E_VARS().W_WIDTH/2-E_VARS().MAPWIDTH*E_VARS().CELLWIDTH/2+E_VARS().CELLWIDTH/2*x-OFFSET[0]
         endY = E_VARS().W_HEIGHT/2+x*E_VARS().CELLHEIGHT/2-player.level*E_VARS().CELLRISE-OFFSET[1]
 
-        pygame.draw.line(DISPLAYSURF, 
+        pygame.draw.line(dispSurf, 
                          COLORS.WHITE,
                         (startX, startY), 
                         (endX, endY),
@@ -451,7 +451,7 @@ def drawUpperGrid(player):
         endX = E_VARS().W_WIDTH/2+E_VARS().MAPHEIGHT*E_VARS().CELLWIDTH/2-E_VARS().CELLWIDTH/2*x-OFFSET[0]
         endY = E_VARS().W_HEIGHT/2+x*E_VARS().CELLHEIGHT/2-player.level*E_VARS().CELLRISE-OFFSET[1]
 
-        pygame.draw.line(DISPLAYSURF, 
+        pygame.draw.line(dispSurf, 
                          COLORS.WHITE, 
                         (startX, startY),
                         (endX, endY),
