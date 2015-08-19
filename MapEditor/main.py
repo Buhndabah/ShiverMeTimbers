@@ -8,10 +8,6 @@ from globals import COLORS
 from player import Player
 from tile import Tile
 
-# index of tile we're currently drawing
-COLLIDABLE=True
-NONCOLLIDABLE=False
-
 OFFSET=[0,0]
 
 #array storing tile info
@@ -78,7 +74,7 @@ def runGame(tiles):
     #set cursor initial position to middle
     #on initialization the cursor's at map 0,0, the top corne
     for i in range(0, E_VARS().getMapWidth()-1):
-        p.setDir(K_DOWN)
+        p.move(K_DOWN)
 
     # figure out where we're anchoring the cursor
     center = (p.getCoords()[STRINGS.X], p.getCoords()[STRINGS.Y])
@@ -170,16 +166,16 @@ def handleEvents(player,tiles,curTile):
             # move the cursor in direction
             elif event.key == K_LEFT or event.key==K_a:
                 OFFSET[0] = OFFSET[0]-E_VARS().getCellWidth()/2
-                player.setDir(event.key)
+                player.move(event.key)
             elif event.key == K_RIGHT or event.key == K_d:
                 OFFSET[0] = OFFSET[0] + E_VARS().getCellWidth()/2
-                player.setDir(event.key)
+                player.move(event.key)
             elif event.key == K_UP or event.key == K_w:
                 OFFSET[1] = OFFSET[1] - E_VARS().getCellHeight()/2
-                player.setDir(event.key)
+                player.move(event.key)
             elif event.key == K_DOWN or event.key == K_s:
                 OFFSET[1] = OFFSET[1] + E_VARS().getCellHeight()/2
-                player.setDir(event.key)
+                player.move(event.key)
 
     return curTile
 
@@ -273,7 +269,7 @@ def createLayer():
     for i in range(0,E_VARS().getMapHeight()):
         newLayer.append([])
         for j in range(0,E_VARS().getMapWidth()):
-            newLayer[i].append({"id": 0, "coord": {STRINGS.X:0, STRINGS.Y:0}, "collidable":NONCOLLIDABLE})
+            newLayer[i].append({"id": 0, "coord": {STRINGS.X:0, STRINGS.Y:0}, "collidable":False})
     return newLayer
 
 
@@ -321,7 +317,7 @@ def removeItem(player):
     if nMaxX and nMinX and nHalfX and nMaxY and nMinY and nHalfY and nTooHigh:
         MAP[player.getLevel()][int(pos[1])][int(pos[0])]["id"] = 0
         MAP[player.getLevel()][int(pos[1])][int(pos[0])]["coord"] = drawPos
-        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["collidale"] = NONCOLLIDABLE
+        MAP[player.getLevel()][int(pos[1])][int(pos[0])]["collidable"] = False
 
 
 
