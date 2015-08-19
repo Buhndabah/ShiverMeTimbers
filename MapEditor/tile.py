@@ -17,17 +17,25 @@ class Tile:
             self.__pic = pygame.image.load(self.__path)
             self.__name= "empty"
     
-    def getPic(self):
+    @property
+    def path(self):
+        return self.__path
+
+    @property
+    def pic(self):
         return self.__pic
 
-    def getName(self):
+    @property
+    def name(self):
         return self.__name
 
-    def getWidth(self):
-        return self.__pic.get_width()
+    @property
+    def width(self):
+        return self.__width
 
-    def getHeight(self):
-        return self.__pic.get_height()
+    @property
+    def height(self):
+        return self.__height
 
     @staticmethod
     def color_surface(surface, r, g, b):

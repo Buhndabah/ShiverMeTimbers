@@ -89,7 +89,7 @@ def runGame(tiles):
         drawLowerGrid()
 
         # draw currently selected tile type at cursor's loc
-        image = tiles[curTile].getPic()
+        image = tiles[curTile].pic
         drawWithOffset(image,center,(0,0))
 
         #make tile grid
@@ -224,7 +224,7 @@ def printMap(tiles, fileName, window):
        file.write("\t\t<tile id=\"")
        file.write(str(i))
        file.write("\" name=\"")
-       file.write(tile.getName())
+       file.write(tile.name)
        file.write("\"/>\n")
        i=i+1
    file.write("\t</tileset>\n")
@@ -380,7 +380,7 @@ def fillTiles(tiles,player):
 
                 # if there's a tile here (nonblank)
                 if MAP[k][mapY][mapX] is not 0:
-                    item = tiles[MAP[k][mapY][mapX]["id"]].getPic()
+                    item = tiles[MAP[k][mapY][mapX]["id"]].pic
                     item.convert_alpha()
                     colored = item.copy()
                     if MAP[k][mapY][mapX]["collidable"] is True:
