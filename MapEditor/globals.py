@@ -1,3 +1,5 @@
+import pygame
+
 #Singleton storing information such as window size, fps, etc
 class E_VARS(object):
 
@@ -11,8 +13,6 @@ class E_VARS(object):
     def __init__(self):
         # environment vars
         self.__FPS=60 # frames per second
-        self.__W_HEIGHT=900# height of window
-        self.__W_WIDTH=1440# width of window
         self.__CELLWIDTH=128
         self.__CELLHEIGHT=64
         self.__CELLRISE=49
@@ -29,10 +29,10 @@ class E_VARS(object):
         return self.__FPS
     @property
     def W_WIDTH(self):
-        return self.__W_WIDTH
+        return pygame.display.Info().current_w
     @property
     def W_HEIGHT(self):
-        return self.__W_HEIGHT
+        return pygame.display.Info().current_h
     @property
     def CELLWIDTH(self):
         return self.__CELLWIDTH

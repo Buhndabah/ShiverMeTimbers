@@ -14,9 +14,6 @@ OFFSET=[0,0]
 MAP =[]
 
 #window for handling pop up dialogs
-WINDOW = Tkinter.Tk()
-WINDOW.geometry('+'+str(E_VARS().W_WIDTH/2)+'+'+str(E_VARS().W_HEIGHT/2))
-WINDOW.wm_withdraw()
 
 def main():
     global FPSCLOCK,BASICFONT,GRID
@@ -26,7 +23,10 @@ def main():
     pygame.key.set_repeat(250,250)
     pygame.display.set_caption('Editor')
 
-    dispSurf = pygame.display.set_mode((E_VARS().W_WIDTH,E_VARS().W_HEIGHT))
+    dispSurf = pygame.display.set_mode([0,0],pygame.RESIZABLE)
+    WINDOW = Tkinter.Tk()
+    WINDOW.geometry('+'+str(E_VARS().W_WIDTH/2)+'+'+str(E_VARS().W_HEIGHT/2))
+    WINDOW.wm_withdraw()
     FPSCLOCK = pygame.time.Clock()
     BASICFONT = pygame.font.Font("freesansbold.ttf",18)
 
@@ -107,7 +107,6 @@ def drawWithOffset(image,pos,offset,dispSurf) :
 
 # Handle keyboard input
 def handleEvents(player,tiles,curTile):
-    global WINDOW
 
     for event in pygame.event.get():
 
@@ -155,11 +154,13 @@ def handleEvents(player,tiles,curTile):
 
             # move up one elevation
             elif event.key == K_t:
+                OFFSET[1] = OFFSET[1] - E_VARS().CELLRISE
                 player.level = player.level + 1
 
             # move down one elevation
             elif event.key == K_y:
                 if not (player.level == 0):
+                    OFFSET[1] = OFFSET[1] + E_VARS().CELLRISE
                     player.level = player.level - 1
             
             # move the cursor in direction
