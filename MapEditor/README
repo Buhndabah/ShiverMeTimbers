@@ -1,9 +1,11 @@
 DEPENDANCIES: Python 2.X, Pygame, NumPy
 
-w / up = up one half tile
-s / down = down one half tile
-a / left = left one half tile
-d / right = right one half tile
+w  = up one half tile
+s  = down one half tile
+a  = left one half tile
+d  = right one half tile
+
+up/down/left/right = shift view
 
 x = next tile
 z = previous tile
