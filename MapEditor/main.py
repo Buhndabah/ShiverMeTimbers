@@ -94,6 +94,7 @@ def runGame(tiles,dispSurf):
 
         pygame.display.update()
         FPSCLOCK.tick(E_VARS().FPS)
+        print "FRAMERATE:",FPSCLOCK.get_fps()
 
 
 #-------------------------------------------
@@ -104,6 +105,8 @@ def drawWithOffset(image,pos,offset,dispSurf) :
 # Handle keyboard input
 def handleEvents(player,tiles,curTile):
 
+    keys = []
+
     for event in pygame.event.get():
 
         #exit editor
@@ -112,72 +115,75 @@ def handleEvents(player,tiles,curTile):
 
         #key press received
         elif event.type == KEYDOWN:
+            if event.key not in keys:
+                keys.append(event.key)
 
-            #exit program
-            if event.key == K_ESCAPE:
-                if tkMessageBox.askyesno(title="Save?", message="Do you want to save your changes before exiting?"):
-                    savePrompt(tiles)
-                terminate()
+    for key in keys:
+        #exit program
+        if key == K_ESCAPE:
+            if tkMessageBox.askyesno(title="Save?", message="Do you want to save your changes before exiting?"):
+                savePrompt(tiles)
+            terminate()
 
             # Map Editing functions
             #----------------------
 
-            # place the selected tile type at the cursor
-            elif event.key == K_RETURN:
-                insertItem(player,curTile)
+        # place the selected tile type at the cursor
+        elif key == K_RETURN:
+            insertItem(player,curTile)
 
-            # if a tile exists at the cursor, delete it
-            elif event.key == K_BACKSPACE:
-                removeItem(player)
+        # if a tile exists at the cursor, delete it
+        elif key == K_BACKSPACE:
+            removeItem(player)
 
-            # turn on the collision map
-            elif event.key == K_c:
-                setCollide(player)
+        # turn on the collision map
+        elif key == K_c:
+            setCollide(player)
 
-            # scroll back one tile type
-            elif event.key == K_z:
-                if curTile > 0:
-                    curTile = curTile-1
+        # scroll back one tile type
+        elif key == K_z:
+            if curTile > 0:
+                curTile = curTile-1
 
-            # scroll forward one tile type
-            elif event.key == K_x:
-                if curTile <  len(tiles)-1:
-                    curTile = curTile+1
+        # scroll forward one tile type
+        elif key == K_x:
+            if curTile <  len(tiles)-1:
+                curTile = curTile+1
 
-            # save the map to file
-            elif event.key == K_m:
-                savePrompt(tiles)
+        # save the map to file
+        elif key == K_m:
+            savePrompt(tiles)
 
-            # move up one elevation
-            elif event.key == K_t:
-                OFFSET[1] = OFFSET[1] - E_VARS().CELLRISE
-                player.level = player.level + 1
+        # move up one elevation
+        elif key == K_t:
+            OFFSET[1] = OFFSET[1] - E_VARS().CELLRISE
+            player.level = player.level + 1
 
-            # move down one elevation
-            elif event.key == K_y:
-                if not (player.level == 0):
-                    OFFSET[1] = OFFSET[1] + E_VARS().CELLRISE
-                    player.level = player.level - 1
+        # move down one elevation
+        elif key == K_y:
+            if not (player.level == 0):
+                OFFSET[1] = OFFSET[1] + E_VARS().CELLRISE
+                player.level = player.level - 1
             
-            # move the cursor in direction
-            elif event.key==K_a:
-                player.move(event.key)
-            elif event.key == K_d:
-                player.move(event.key)
-            elif event.key == K_w:
-                player.move(event.key)
-            elif event.key == K_s:
-                player.move(event.key)
+        # move the cursor in direction
+        elif key==K_a:
+            player.move(key)
+        elif key == K_d:
+            player.move(key)
+        elif key == K_w:
+            player.move(key)
+        elif key == K_s:
+            player.move(key)
 
-            #shift the screen
-            elif event.key == K_LEFT:
-                OFFSET[0] = OFFSET[0]-E_VARS().CELLWIDTH/2
-            elif event.key == K_RIGHT:
-                OFFSET[0] = OFFSET[0] + E_VARS().CELLWIDTH/2
-            elif event.key == K_UP:
-                OFFSET[1] = OFFSET[1] - E_VARS().CELLHEIGHT/2
-            elif event.key == K_DOWN:
-                OFFSET[1] = OFFSET[1] + E_VARS().CELLHEIGHT/2
+        #shift the screen
+        elif key == K_LEFT:
+            OFFSET[0] = OFFSET[0]-E_VARS().CELLWIDTH/2
+        elif key == K_RIGHT:
+            OFFSET[0] = OFFSET[0] + E_VARS().CELLWIDTH/2
+        elif key == K_UP:
+            OFFSET[1] = OFFSET[1] - E_VARS().CELLHEIGHT/2
+        elif key == K_DOWN:
+            OFFSET[1] = OFFSET[1] + E_VARS().CELLHEIGHT/2
 
     return curTile
 
@@ -210,9 +216,9 @@ def printMap(tiles, fileName, window):
    file = open('maps/'+fileName+'.xml','w')
    file.write("<?xml version=\"1.0\"?>\n")
    file.write("<map width=\"")
-   file.write(str(len(MAP[0][0])))
+   file.write(str(E_VARS().MAPWIDTH))
    file.write("\" height=\"")
-   file.write(str(len(MAP[0])))
+   file.write(str(E_VARS().MAPHEIGHT))
    file.write("\" tilewidth=\"")
    file.write(str(E_VARS().CELLWIDTH))
    file.write("\" tileheight=\"")
@@ -232,28 +238,28 @@ def printMap(tiles, fileName, window):
        i=i+1
    file.write("\t</tileset>\n")
     
-   j=0
+   layerNum=0
    for layer in MAP:
        file.write("\t<layer name=\"")
-       file.write(str(j))
+       file.write(str(layerNum))
        file.write("\">\n")
-       for tileList in layer:
-            i=0
-            for tile in tileList:
-               file.write("\t\t<element id=\"")
-               if(tile is 0):
-                   file.write(str(0))
-                   file.write("\" collision=\"false\"/>\n")
-               else:
-                   file.write(str(tile["id"]))
-                   file.write("\" collision=\"")
-                   file.write(str(tile["collidable"]).lower())
-                   file.write("\"/>\n")
-               if((i+1)%E_VARS().MAPWIDTH is 0):
-                   file.write("\n")
-               i=i+1
+       rowPos=0
+       for tile in layer:
+            file.write("\t\t<element id=\"")
+            if(tile is 0):
+                file.write(str(0))
+                file.write("\" collision=\"false\"/>\n")
+            else:
+                file.write(str(tile["id"]))
+                file.write("\" collision=\"")
+                file.write(str(tile["collidable"]).lower())
+                file.write("\"/>\n")
+            if((rowPos+1)%E_VARS().MAPWIDTH is 0):
+                rowPos=0
+                file.write("\n")
+            rowPos=rowPos+1
        file.write("\t</layer>\n")
-       j=j+1
+       layerNum=layerNum+1
    file.write("</map>")
    file.close()
 
@@ -268,10 +274,8 @@ def printMap(tiles, fileName, window):
 def createLayer():
 
     newLayer = []
-    for i in range(0,E_VARS().MAPHEIGHT):
-        newLayer.append([])
-        for j in range(0,E_VARS().MAPWIDTH):
-            newLayer[i].append({"id": 0, "coord": {STRINGS.X:0, STRINGS.Y:0}, "collidable":False})
+    for i in range(0,E_VARS().MAPHEIGHT*E_VARS().MAPWIDTH):
+        newLayer.append({"id": 0, "coord": {STRINGS.X:0, STRINGS.Y:0}, "collidable":False})
     return newLayer
 
 
@@ -296,8 +300,8 @@ def insertItem(player,curTile):
         if player.level > len(MAP)-1:
             for i in range(player.level - len(MAP)+1):
                 MAP.append(createLayer())
-        MAP[player.level][int(pos[1])][int(pos[0])]["id"] = curTile
-        MAP[player.level][int(pos[1])][int(pos[0])]["coord"] = drawPos
+        MAP[player.level][int(pos[1])*E_VARS().MAPWIDTH+int(pos[0])]["id"] = curTile
+        MAP[player.level][int(pos[1])*E_VARS().MAPWIDTH+int(pos[0])]["coord"] = drawPos
 
 
 
@@ -317,9 +321,9 @@ def removeItem(player):
 
     # check boundaries
     if nMaxX and nMinX and nHalfX and nMaxY and nMinY and nHalfY and nTooHigh:
-        MAP[player.level][int(pos[1])][int(pos[0])]["id"] = 0
-        MAP[player.level][int(pos[1])][int(pos[0])]["coord"] = drawPos
-        MAP[player.level][int(pos[1])][int(pos[0])]["collidable"] = False
+        MAP[player.level][int(pos[1])*E_VARS().MAPWIDTH+int(pos[0])]["id"] = 0
+        MAP[player.level][int(pos[1])*E_VARS().MAPWIDTH+int(pos[0])]["coord"] = drawPos
+        MAP[player.level][int(pos[1])*E_VARS().MAPWIDTH+int(pos[0])]["collidable"] = False
 
 
 
@@ -339,9 +343,9 @@ def setCollide(player):
 
     # check boundaries
     if nMaxX and nMinX and nHalfX and nMaxY and nMinY and nHalfY and nTooHigh:
-        MAP[player.level][int(pos[1])][int(pos[0])]["coord"] = drawPos
-        MAP[player.level][int(pos[1])][int(pos[0])]["collidable"] = not MAP[player.level][int(pos[1])][int(pos[0])]["collidable"]
-        print "set collidable to ", MAP[player.level][int(pos[1])][int(pos[0])]["collidable"]
+        MAP[player.level][int(pos[1])*E_VARS().MAPWIDTH+int(pos[0])]["coord"] = drawPos
+        MAP[player.level][int(pos[1])*E_VARS().MAPWIDTH+int(pos[0])]["collidable"] = not MAP[player.level][int(pos[1])*E_VARS().MAPWIDTH+int(pos[0])]["collidable"]
+        print "set collidable to ", MAP[player.level][int(pos[1])*E_VARS().MAPWIDTH+int(pos[0])]["collidable"]
     
 
 #--------------------------------------------------------------------------------
@@ -355,44 +359,16 @@ def fillTiles(tiles,player,dispSurf):
     mapX=0
     mapY=0
 
-    # For every row
-    for i in range(E_VARS().MAPWIDTH+E_VARS().MAPHEIGHT-1):
+    mapWidth = E_VARS().MAPWIDTH
+    mapHeight = E_VARS().MAPHEIGHT
 
-        # and every elevation
-        for k in range(len(MAP)):
-
-            if(i < E_VARS().MAPWIDTH):    # top half of diamond
-                num=i+1
-
-            elif i is E_VARS().MAPWIDTH:  # middle bit
-                num = E_VARS().MAPWIDTH-1
-
-            elif i > E_VARS().MAPWIDTH:   # bottom half
-                num = E_VARS().MAPWIDTH - i%E_VARS().MAPWIDTH-1
-    
-            # draw the appropriate number of tiles
-            for j in range(num):
-
-                # calculate the coordinates
-                if i < E_VARS().MAPWIDTH:
-                    mapY = (i + (j*(E_VARS().MAPWIDTH-1))) % E_VARS().MAPWIDTH
-                    mapX = (i + (j*(E_VARS().MAPWIDTH-1))) / E_VARS().MAPWIDTH
-                else:
-                    mapY = (i + ((i+1)%E_VARS().MAPWIDTH)*(E_VARS().MAPWIDTH-1) + j*(E_VARS().MAPWIDTH-1)) % E_VARS().MAPWIDTH
-                    mapX =(i + ((i+1)%E_VARS().MAPWIDTH)*(E_VARS().MAPWIDTH-1) + j*(E_VARS().MAPWIDTH-1)) / E_VARS().MAPWIDTH
-
-                # if there's a tile here (nonblank)
-                if MAP[k][mapY][mapX] is not 0:
-                    item = tiles[MAP[k][mapY][mapX]["id"]].pic
-                    item.convert_alpha()
-                    colored = item.copy()
-                    if MAP[k][mapY][mapX]["collidable"] is True:
-                        Tile.color_surface(colored,0,155,155)
-                        drawWithOffset(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS().CELLRISE),(OFFSET[0], OFFSET[1]),dispSurf)
-                    else:
-                        Tile.color_surface(colored,155,155,0)
-                        drawWithOffset(colored, (MAP[k][mapY][mapX]["coord"][STRINGS.X], MAP[k][mapY][mapX]["coord"][STRINGS.Y]-k*E_VARS().CELLRISE),(OFFSET[0], OFFSET[1]),dispSurf)
-
+    for layer in xrange(len(MAP)):
+        for tileNum in xrange(mapHeight*mapWidth):
+            tile = MAP[layer][tileNum]
+            if tile != 0:
+                item = tiles[tile["id"]].pic
+                drawWithOffset(item, (tile["coord"][STRINGS.X], tile["coord"][STRINGS.Y]-layer*E_VARS().CELLRISE),(OFFSET[0], OFFSET[1]),dispSurf)
+                    
 
 #-------------------------------------------------------------------------------------------------------
 

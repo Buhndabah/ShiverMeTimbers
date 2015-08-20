@@ -44,7 +44,6 @@ class Tile:
         arr[:,:,1] = arr[:,:,1] - g
         arr[:,:,2] = arr[:,:,2] - b
 
-
     @staticmethod
     def loadTiles():
         tileList=[]

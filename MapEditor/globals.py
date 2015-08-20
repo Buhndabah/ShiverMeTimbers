@@ -68,8 +68,8 @@ class E_VARS(object):
 
     @mapDim.setter
     def mapDim(self,newDim):
-        MAPWIDTH = newDim[0]
-        MAPHEIGHT = newDim[1]
+        self.__MAPWIDTH = newDim[0]
+        self.__MAPHEIGHT = newDim[1]
     
 class COLORS:
     # RGB vals
