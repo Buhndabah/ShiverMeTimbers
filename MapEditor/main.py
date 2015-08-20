@@ -90,7 +90,7 @@ def runGame(tiles,dispSurf):
 
         # draw currently selected tile type at cursor's loc
         image = tiles[curTile].pic
-        drawWithOffset(image,(p.coords[STRINGS.X], p.coords[STRINGS.Y]),OFFSET,dispSurf)
+        drawWithOffset(image,(p.coords[STRINGS.X], p.coords[STRINGS.Y]),(OFFSET[0],OFFSET[1]+(p.level * E_VARS().CELLRISE)),dispSurf)
 
         #make tile grid
         drawUpperGrid(p,dispSurf)
