@@ -76,9 +76,6 @@ def runGame(tiles,dispSurf):
     for i in range(0, E_VARS().MAPWIDTH-1):
         p.move(K_DOWN)
 
-    # figure out where we're anchoring the cursor
-    center = (p.coords[STRINGS.X], p.coords[STRINGS.Y])
-
     while True:
 
         curTile = handleEvents(p,tiles,curTile)
