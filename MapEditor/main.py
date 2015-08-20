@@ -90,7 +90,7 @@ def runGame(tiles,dispSurf):
 
         # draw currently selected tile type at cursor's loc
         image = tiles[curTile].pic
-        drawWithOffset(image,center,(0,0),dispSurf)
+        drawWithOffset(image,(p.coords[STRINGS.X], p.coords[STRINGS.Y]),OFFSET,dispSurf)
 
         #make tile grid
         drawUpperGrid(p,dispSurf)
@@ -103,7 +103,6 @@ def runGame(tiles,dispSurf):
 
 def drawWithOffset(image,pos,offset,dispSurf) :
     dispSurf.blit(image,(pos[0]-offset[0], pos[1]-offset[1]))
-
 
 # Handle keyboard input
 def handleEvents(player,tiles,curTile):
@@ -164,18 +163,24 @@ def handleEvents(player,tiles,curTile):
                     player.level = player.level - 1
             
             # move the cursor in direction
-            elif event.key == K_LEFT or event.key==K_a:
+            elif event.key==K_a:
+                player.move(event.key)
+            elif event.key == K_d:
+                player.move(event.key)
+            elif event.key == K_w:
+                player.move(event.key)
+            elif event.key == K_s:
+                player.move(event.key)
+
+            #shift the screen
+            elif event.key == K_LEFT:
                 OFFSET[0] = OFFSET[0]-E_VARS().CELLWIDTH/2
-                player.move(event.key)
-            elif event.key == K_RIGHT or event.key == K_d:
+            elif event.key == K_RIGHT:
                 OFFSET[0] = OFFSET[0] + E_VARS().CELLWIDTH/2
-                player.move(event.key)
-            elif event.key == K_UP or event.key == K_w:
+            elif event.key == K_UP:
                 OFFSET[1] = OFFSET[1] - E_VARS().CELLHEIGHT/2
-                player.move(event.key)
-            elif event.key == K_DOWN or event.key == K_s:
+            elif event.key == K_DOWN:
                 OFFSET[1] = OFFSET[1] + E_VARS().CELLHEIGHT/2
-                player.move(event.key)
 
     return curTile
 
