@@ -1,5 +1,4 @@
 #include <sstream>
-#include "ioManager.h"
 #include "viewport.h"
 
 Viewport& Viewport::getInstance() {
