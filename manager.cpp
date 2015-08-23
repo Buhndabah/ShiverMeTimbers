@@ -29,9 +29,9 @@ Manager::Manager() :
   hud(HUD::getInstance()),
 
   gameOver(false),
-  restart(0)
-{
-  if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+  restart(0) {
+
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO) != 0) {
     throw std::string("Unable to initialize SDL: ");
   }
 
@@ -61,10 +61,6 @@ Manager::Manager() :
 
 
 void Manager::draw() const {
-
-// fill background with some color
-  Uint32 backColor = SDL_MapRGB(screen->format, 100,100,100);
-  SDL_FillRect(screen, NULL, backColor);
 
 // draw background, map, view, then hud
   world.draw();
