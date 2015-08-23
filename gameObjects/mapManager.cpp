@@ -1,3 +1,5 @@
+#define HITBOX
+
 #include <algorithm>
 #include <sstream>
 #include <SDL/SDL.h>
@@ -630,8 +632,7 @@ void MapManager::update(Uint32& ticks) {
 
             // put it into the temp vector at its assigned position
  	    //int index = getIndexAt((*l_it)->getMoveboxVertices()[3]);
-            float diffX = gridToWorld((*l_it)->getMoveboxVertices()[2])[0] - gridToWorld((*l_it)->getMoveboxVertices()[3])[0];
- 	    int index = getIndexAt((*l_it)->getMoveboxVertices()[3] + Vector2f(diffX/2, 0));
+            int index = getIndexAt(worldToGrid((*l_it)->getPosition()+Vector2f((*l_it)->getSprite().getW(),(*l_it)->getSprite().getH())));
 
             try {tempVec[index].push_back(*l_it); }
             catch(const std::out_of_range& e) {
@@ -665,7 +666,7 @@ int MapManager::getIndexAt(const Vector2f& coord) const {
     if(indexX >= mapWidth)  { return -3; }
     if(indexY >= mapHeight) { return -4; }
 
-    return indexX+(indexY*mapHeight);
+    return indexX+(indexY*mapHeight)+1;
 }
 
 // Spit out what the parser is storing
