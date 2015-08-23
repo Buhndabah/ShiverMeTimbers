@@ -466,23 +466,26 @@ void MapManager::validateMovement(GridElement* g) const{
 void MapManager::draw() const {
     int max=0;
     int index;
-        // For each tile in each layer, draw
+        
+        // for each row
         for(int i=0; i<mapWidth+mapHeight-1; ++i)
          {
+            if(i<mapWidth) // top half of diamond
+            {
+                max = i+1;
+            }
+            else if(i==mapWidth) // middle row
+            {
+                max= mapWidth-1;
+            }
+            else if(i>mapWidth) // bottom half of diamond
+            {
+                max = mapWidth - i%mapWidth-1;
+            }
+            // for each layer
             for(std::list<std::vector<Tile>  >::const_iterator it = mapLayers.begin(); it!=mapLayers.end(); ++it)
             {  
-             if(i<mapWidth) // top half of diamond
-             {
-                max = i+1;
-             }
-             else if(i==mapWidth) // middle row
-             {
-                 max= mapWidth-1;
-             }
-             else if(i>mapWidth) // bottom half of diamond
-             {
-                max = mapWidth - i%mapWidth-1;
-             }
+             // for each tile in the row
              for(int j=0;j<max; ++j)
              {
                  if(i < mapWidth)   // increasing row lengths
@@ -494,8 +497,9 @@ void MapManager::draw() const {
                     index = i+ ((i+1)%mapWidth)*(mapWidth-1) +(j*(mapWidth-1));
                  }
                 (*it)[index].draw();
-                if(it==(mapLayers.begin()))
+                if(it==(mapLayers.begin())) {
                     drawGridElements(index);
+                }
              }
          }
     }
