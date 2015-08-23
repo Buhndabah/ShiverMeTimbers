@@ -17,7 +17,7 @@ IOManager::IOManager( ) :
   DEFAULT_COLOR(gdata.getXmlStr("defaultColor") ),
   MAX_STRING_SIZE( gdata.getXmlInt("maxStringSize") ),
     // The 3rd and 4th parameters are just as important as the first 2!
-    screen(SDL_SetVideoMode(viewWidth, viewHeight, 32, SDL_DOUBLEBUF)),
+    screen(SDL_SetVideoMode(viewWidth, viewHeight, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_ANYFORMAT)),
     fonts(), 
     colors(),
     title( gdata.getXmlStr("screenTitle") ),
