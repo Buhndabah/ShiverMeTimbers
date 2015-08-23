@@ -451,6 +451,21 @@ void MapManager::validateMovement(GridElement* g) const{
         g->setMoveDelta(Vector2f(0,0));
         collision = true;
     }
+    tile = findTileAt(worldToGrid(g->getPosition()+Vector2f(0,g->getSprite().getH()))+delta);
+    if( (tile.getName().compare(std::string("uninitialized tile")) ==0) ||
+        (!tile.isCollidable())) {
+        std::cerr << " bottom left " << getIndexAt(worldToGrid(g->getPosition()+Vector2f(0,g->getSprite().getH())))<< std::endl;
+        g->setMoveDelta(Vector2f(0,0));
+        collision = true;
+    }
+    tile = findTileAt(worldToGrid(g->getPosition()+Vector2f(g->getSprite().getW(),g->getSprite().getH()))+delta);
+    if( (tile.getName().compare(std::string("uninitialized tile")) ==0) ||
+        (!tile.isCollidable())) {
+        std::cerr << " bottom right " << getIndexAt(worldToGrid(g->getPosition()+Vector2f(g->getSprite().getW(),g->getSprite().getH())))<< std::endl;
+        g->setMoveDelta(Vector2f(0,0));
+        collision = true;
+    }
+
 
     for(int i=0; i < mapWidth * mapHeight; ++i){
 	collideGridEles(i,g);
