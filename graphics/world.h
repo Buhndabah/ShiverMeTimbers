@@ -1,5 +1,4 @@
 #include <string>
-#include "ioManager.h"
 #include "frame.h"
 #include "viewport.h"
 
@@ -10,7 +9,6 @@ public:
   void update();
   void draw() const;
 private:
-  const IOManager& io;
   Frame* const frame;
   int factor;
   unsigned frameWidth;

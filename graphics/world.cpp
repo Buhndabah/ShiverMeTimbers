@@ -3,7 +3,6 @@
 #include "frameFactory.h"
 
 World::World(const std::string& name, int fact) : 
-  io( IOManager::getInstance() ),
   frame( FrameFactory::getInstance().getFrame(name) ),
   factor(fact),
     frameWidth( frame->getWidth() ),
