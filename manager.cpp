@@ -37,6 +37,8 @@ Manager::Manager() :
 
   atexit(SDL_Quit);
 
+// init sound
+  SoundManager::getInstance();
 
 // Add player to map
   player = new GridElement("coolyeti"); // deleted by the mapManager
@@ -51,9 +53,6 @@ Manager::Manager() :
   map.addGridElement(test = new GridElement("icecream", Vector2f(650,650), 0, TURRET_STRAT));
   hud.addHealthBar(test->getName(), Vector2f(0,-10));
 #endif
-
-// init sound
-  SoundManager::getInstance();
 
 // set up listeners
   registerListeners();
@@ -267,6 +266,7 @@ bool Manager::play() {
   return restart == YES ? true : false;
 }
 
+// reset everything
 void Manager::reinit() {
     GameEvents::EventQueue::getInstance().reinit();
     map.reinit();

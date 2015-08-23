@@ -36,6 +36,7 @@ MapManager::MapManager(const std::string& fn) :
     mapHeight(),
     weather()
 {
+    // load map into parser
     parser.parse(fn);
 
     // Read in map constants
@@ -69,6 +70,7 @@ MapManager::MapManager(const std::string& fn) :
         gridElements.push_back( std::list<GridElement* >());
     }
 
+    // Empty tile, used in error handling
     dummyTile = new Tile();
 
     createTiles();
