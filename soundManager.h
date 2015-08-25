@@ -17,8 +17,6 @@ private:
     int currentSound;
     Mix_Music *music;
 
-    int audioRate;
-    int audioChannels;
     int audioBuffers;
     std::vector<Mix_Chunk*> sounds;
     std::vector<int> channels;

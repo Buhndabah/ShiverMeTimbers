@@ -23,8 +23,6 @@ SoundManager::SoundManager() :
     volume(SDL_MIX_MAXVOLUME),
     currentSound(-1),
     music(NULL),
-    audioRate(22050),
-    audioChannels(4),
     audioBuffers(4096),
     sounds(),
     channels(),
@@ -33,17 +31,28 @@ SoundManager::SoundManager() :
     stepWaitTime(500),
     stepLastPlayed(0)
 {
-        if(Mix_OpenAudio(audioRate, MIX_DEFAULT_FORMAT, audioChannels, audioBuffers))
+        if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 4, audioBuffers))
         {
+            std::cerr << "audio open" << std::endl;
             throw std::string("Unable to open audio");
         }
         music = Mix_LoadMUS("resources/sounds/freezeezy.wav");
-        //music = Mix_LoadMUS("resources/sounds/trololo.mp3");
-        //if(!music) throw std::string("Couldn't load trololo.mp3 ")+Mix_GetError();
-        if(!music) throw std::string("Couldn't load explosion.wav")+Mix_GetError();
+        if(!music) {
+            std::cerr << "freez" << std::endl; 
+            throw std::string(Mix_GetError());
+        }
         startMusic();
-        sounds.push_back( Mix_LoadWAV("resources/sounds/snowstep.wav"));
-        sounds.push_back( Mix_LoadWAV("resources/sounds/snowthrow.wav"));
+        Mix_Chunk *check=NULL;
+        sounds.push_back( check = Mix_LoadWAV("resources/sounds/snowstep.wav"));
+        if(!check) {
+            std::cerr << "step" << std::endl;
+            throw std::string(Mix_GetError());
+        }
+        sounds.push_back( check = Mix_LoadWAV("resources/sounds/snowthrow.wav"));
+        if(!check) {
+            std::cerr << "throw" << std::endl;
+            throw std::string(Mix_GetError());
+        }
         for(unsigned int i=0; i< sounds.size(); ++i) channels.push_back(i);
 }
 

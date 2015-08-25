@@ -17,6 +17,7 @@ Manager::~Manager() {
 }
 
 Manager::Manager() :
+  sdlInitSuccess(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO)),
   env( SDL_putenv(const_cast<char*>("SDL_VIDEO_CENTERED=center")) ),
   io( IOManager::getInstance() ),
   clock(Clock::getInstance() ),
@@ -31,8 +32,8 @@ Manager::Manager() :
   gameOver(false),
   restart(0) {
 
-  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO) != 0) {
-    throw std::string("Unable to initialize SDL: ");
+  if (SDL_WasInit(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != (SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER)) {
+    throw std::string(SDL_GetError());
   }
 
   atexit(SDL_Quit);

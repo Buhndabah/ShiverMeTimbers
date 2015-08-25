@@ -27,6 +27,7 @@ public:
   virtual void onGameEnd(const GameEvents::Event*);
 
 private:
+  const int sdlInitSuccess;
   const bool env;
   const IOManager& io;
   Clock& clock;
