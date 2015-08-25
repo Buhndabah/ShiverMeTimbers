@@ -36,6 +36,7 @@ MapManager::MapManager(const std::string& fn) :
     tileRise(),
     mapWidth(),
     mapHeight(),
+    origin(),
     weather()
 {
     // load map into parser
@@ -81,8 +82,35 @@ MapManager::MapManager(const std::string& fn) :
     // Fill in map structure
     createLayers();
 
+    // coordinate of first tile on bottom layer
+    origin = ( (*(*mapLayers.begin()).begin()).getCoord()) + Vector2f(tileWidth/2,0);
+
     // Register with the events we care about
     registerListeners();
+}
+
+MapManager::~MapManager() {
+
+    // dump all of our allocated lists
+    std::list<GridElement*> list;
+    while (!gridElements.empty())
+    {
+        list=gridElements.front();
+        while(!list.empty())
+        {
+            delete list.front();
+            list.erase(list.begin());
+        }
+        gridElements.erase(gridElements.begin());
+    }
+    while(!reserve.empty())
+    {
+        GridElement* temp = (*reserve.begin()).first;
+        reserve.erase(reserve.begin());
+        delete temp;
+    }
+
+    delete dummyTile;
 }
 
 void MapManager::reinit() {
@@ -120,40 +148,16 @@ void MapManager::reinit() {
     registerListeners();
 }
 
-MapManager::~MapManager() {
-
-    // dump all of our allocated lists
-    std::list<GridElement*> list;
-    while (!gridElements.empty())
-    {
-        list=gridElements.front();
-        while(!list.empty())
-        {
-            delete list.front();
-            list.erase(list.begin());
-        }
-        gridElements.erase(gridElements.begin());
-    }
-    while(!reserve.empty())
-    {
-        GridElement* temp = (*reserve.begin()).first;
-        reserve.erase(reserve.begin());
-        delete temp;
-    }
-
-    delete dummyTile;
-}
-
 void MapManager::debug() const{
     std::cerr << "Tile width is " << tileWidth << std::endl;
     std::cerr << "Tile height is " << tileHeight << std::endl;
     std::cerr << "Map width is " << mapWidth << std::endl;
     std::cerr << "Map height is " << mapHeight << std::endl;
-}
 
-// Returns coordinate of beginning of tile list on bottom layer
-Vector2f MapManager::getOrigin() const {
-    return ( (*(*mapLayers.begin()).begin()).getCoord()) + Vector2f(tileWidth/2,0);
+    // Spit out what the parser is storing
+    parser.setCurDocument("xmlSpec/testMap.xml");
+    parser.displayData();
+
 }
 
 // XXX THE EXCEPTION IN THIS FUNCTION ISN'T CATCHING WHEN YOU TRY TO ADD TO AN INVALID INDEX
@@ -162,13 +166,9 @@ void MapManager::addGridElement(GridElement* gridE) {
     // increment gridElement counter
     numGridElements++;
 
-    //Find the max index between the bottom corner of the movebox and the bottom right corner of the gridSprite
-    
     // Calculate how wide the gridElement is
-    float diffX = gridE->getMoveboxVertices()[2].fromIso(getOrigin())[0] - gridE->getMoveboxVertices()[3].fromIso(getOrigin())[0];
+    float diffX = gridE->getMoveboxVertices()[2].fromIso(origin)[0] - gridE->getMoveboxVertices()[3].fromIso(origin)[0];
 
-    // XXX why are we converting grid to world then world to grid here?
-    
     // find which is further a full length on either side? (???)
     int index = getIndexAt(gridE->getMoveboxVertices()[3] + Vector2f(diffX,0));
 
@@ -426,21 +426,20 @@ void MapManager::validateMovement(GridElement* g) const{
         g->setMoveDelta(Vector2f(0,0));
         collision = true;
     }
-    tile = findTileAt((g->getPosition()+Vector2f(0,g->getSprite().getH())).toIso(getOrigin())+delta);
+    tile = findTileAt((g->getPosition()+Vector2f(0,g->getSprite().getH())).toIso(origin)+delta);
     if( (tile.getName().compare(std::string("uninitialized tile")) ==0) ||
         (!tile.isCollidable())) {
-        std::cerr << " bottom left " << getIndexAt((g->getPosition()+Vector2f(0,g->getSprite().getH())).toIso(getOrigin()))<< std::endl;
+        std::cerr << " bottom left " << getIndexAt((g->getPosition()+Vector2f(0,g->getSprite().getH())).toIso(origin))<< std::endl;
         g->setMoveDelta(Vector2f(0,0));
         collision = true;
     }
-    tile = findTileAt((g->getPosition()+Vector2f(g->getSprite().getW(),g->getSprite().getH())).toIso(getOrigin())+delta);
+    tile = findTileAt((g->getPosition()+Vector2f(g->getSprite().getW(),g->getSprite().getH())).toIso(origin)+delta);
     if( (tile.getName().compare(std::string("uninitialized tile")) ==0) ||
         (!tile.isCollidable())) {
-        std::cerr << " bottom right " << getIndexAt((g->getPosition()+Vector2f(g->getSprite().getW(),g->getSprite().getH())).toIso(getOrigin()))<< std::endl;
+        std::cerr << " bottom right " << getIndexAt((g->getPosition()+Vector2f(g->getSprite().getW(),g->getSprite().getH())).toIso(origin))<< std::endl;
         g->setMoveDelta(Vector2f(0,0));
         collision = true;
     }
-
 
     for(int i=0; i < mapWidth * mapHeight; ++i){
 	collideGridEles(i,g);
@@ -453,7 +452,6 @@ void MapManager::validateMovement(GridElement* g) const{
     }
 
 }
-
 
 void MapManager::draw() const {
     int max=0;
@@ -546,8 +544,8 @@ void MapManager::drawGridElements(int index) const {
 #ifdef HITBOX
 	for(int i=0; i<4; ++i){
 	    SDL_Rect mb;
-            mb.x = (*it)->getMoveboxVertex(i).fromIso(getOrigin())[0] - Viewport::getInstance().X();
-            mb.y = (*it)->getMoveboxVertex(i).fromIso(getOrigin())[1] - Viewport::getInstance().Y();
+            mb.x = (*it)->getMoveboxVertex(i).fromIso(origin)[0] - Viewport::getInstance().X();
+            mb.y = (*it)->getMoveboxVertex(i).fromIso(origin)[1] - Viewport::getInstance().Y();
 	    mb.w = 10;
 	    mb.h= 10;
 	    Uint32 color2 = SDL_MapRGB(IOManager::getInstance().getScreen()->format,0,255,0);
@@ -612,7 +610,7 @@ void MapManager::update(Uint32& ticks) {
 
             // put it into the temp vector at its assigned position
  	    //int index = getIndexAt((*l_it)->getMoveboxVertices()[3]);
-            int index = getIndexAt(((*l_it)->getPosition()+Vector2f((*l_it)->getSprite().getW(),(*l_it)->getSprite().getH())).toIso(getOrigin()));
+            int index = getIndexAt(((*l_it)->getPosition()+Vector2f((*l_it)->getSprite().getW(),(*l_it)->getSprite().getH())).toIso(origin));
 
             try {tempVec[index].push_back(*l_it); }
             catch(const std::out_of_range& e) {
@@ -649,12 +647,6 @@ int MapManager::getIndexAt(const Vector2f& coord) const {
     return indexX+(indexY*mapHeight)+1;
 }
 
-// Spit out what the parser is storing
-void MapManager::displayData() const {
-    parser.setCurDocument("xmlSpec/testMap.xml");
-    parser.displayData();
-}
-
 void MapManager::onDeath(const GameEvents::Event *e) {
     // Don't delete the player plz
     if(player->getName().compare(e->getSource()) == 0) {
@@ -674,17 +666,17 @@ void MapManager::onCreate(const GameEvents::Event *e) {
         return; 
     
     // If the requested location is legal
-    else if(getIndexAt(e->getPosition().toIso(getOrigin()))>0)
+    else if(getIndexAt(e->getPosition().toIso(origin))>0)
     {
         // If create is requested immediately, add it directly to the map
         if(c->getTimer()==0)
         {
-            addGridElement(newGE = new GridElement(c->getSprite(), e->getPosition().toIso(getOrigin()), c->getDir(), c->getStrat(), c->getTarget()));
+            addGridElement(newGE = new GridElement(c->getSprite(), e->getPosition().toIso(origin), c->getDir(), c->getStrat(), c->getTarget()));
 
         }
         // otherwise store it until it's ready
         else {
-            reserve.insert(std::pair<GridElement*, int>(newGE = new GridElement(c->getSprite(), e->getPosition().toIso(getOrigin()), c->getDir(), c->getStrat(), c->getTarget()), c->getTimer()));
+            reserve.insert(std::pair<GridElement*, int>(newGE = new GridElement(c->getSprite(), e->getPosition().toIso(origin), c->getDir(), c->getStrat(), c->getTarget()), c->getTimer()));
             newGE->getStrat()->suppress();
         }
         // set it up if it's a bullet XXX TODO THE MAP SHOULDN'T BE HANDLING THIS

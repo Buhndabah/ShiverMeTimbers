@@ -13,21 +13,21 @@ class GridElement;
 class MapManager : public Listener {
 public:
     static MapManager& getInstance();
-    void displayData() const;
 
     ~MapManager();
+    void reinit();
 
-    //void load();
+    void debug() const;
+
     void draw() const;
     void drawGridElements(int) const;
     void update(Uint32& ticks);
 
-    void debug() const;
-
     void addGridElement(GridElement*);
     void removeGridElement(const std::string&);
-    const Tile& findTileAt(const Vector2f&) const;
 
+    GridElement* getPlayer() const { return player; }
+    void setPlayer(GridElement* p) { player = p; }
 
     void collideGridEles(int, GridElement*) const;
     void validateMovement(GridElement*) const;
@@ -39,25 +39,17 @@ public:
     int getTileRise() const { return tileRise; }
     int getGridTileWidth() const { return  sqrt(pow(tileWidth/2.0,2) + pow(tileHeight/2.0,2)) ;}
     int getGridTileHeight() const { return  sqrt(pow(tileWidth/2.0,2) + pow(tileHeight/2.0,2)) ;}
-    int getNumGridElements() const {
-        return numGridElements;
-    }
-    Vector2f getOrigin() const;
-    int getIndexAt(const Vector2f&) const;
+    int getNumGridElements() const { return numGridElements; }
+    Vector2f getOrigin() const { return origin; }
 
-    GridElement* getPlayer() const { return player; }
-    void setPlayer(GridElement* p) { player = p; }
+    int getIndexAt(const Vector2f&) const;
+    const Tile& findTileAt(const Vector2f&) const;
 
     virtual void onDeath(const GameEvents::Event*);
     virtual void onCreate(const GameEvents::Event*);
-
-    void reinit();
     
 private:
     MapManager(const std::string& fn = "xml/xmlSpec/416Final.xml");
-//    MapManager(const std::string& fn = "xml/xmlSpec/testCube.xml");
-//    MapManager(const std::string& fn = "xml/xmlSpec/416Final.xml");
-//    MapManager(const std::string& fn = "xml/xmlSpec/wuh.xml");
     MapManager(const MapManager&);
     MapManager& operator=(const MapManager&);
 
@@ -73,7 +65,6 @@ private:
 
     /* Storage Structures */
 
-
     std::map<std::string, std::string> tiles;
     std::map<GridElement*, int> reserve;
     std::list<Tile*> updateTiles;
@@ -87,6 +78,7 @@ private:
     unsigned int tileRise;
     int mapWidth;
     int mapHeight;
+    Vector2f origin;
     std::string weather;
     virtual void registerListeners();
 };
