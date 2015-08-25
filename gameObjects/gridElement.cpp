@@ -24,6 +24,8 @@ GridElement::GridElement(const std::string& name, int stratNum) :
   myStrat(NULL),
   solid(Gamedata::getInstance().getXmlBool(name+"Solid"))
 {
+  
+  Vector2f mapOriginAsWorld = MapManager::getInstance().getOrigin();
 
   // initially set all move states to false
   moveDir.reserve(8);
@@ -32,18 +34,18 @@ GridElement::GridElement(const std::string& name, int stratNum) :
   }
 
   // Grab position from map
-  gridSprite.setPosition(MapManager::getInstance().gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
+  gridSprite.setPosition(gridPosition.fromIso(mapOriginAsWorld)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
 
   //fill in the movebox vertices
   moveboxVertices.reserve(4);
   Vector2f offset(gridSprite.getW() * 0.5, gridSprite.getH() * (2./3.));
-  offset += MapManager::getInstance().getOrigin();
+  offset += mapOriginAsWorld;
 
   Vector2f topcorner(gridPosition);
   moveboxVertices.push_back(topcorner); // middle top
-  moveboxVertices.push_back(topcorner + MapManager::getInstance().worldToGrid(MapManager::getInstance().getOrigin() + Vector2f(-gridSprite.getW() * .5,gridSprite.getH() * 0.25))); // left
-  moveboxVertices.push_back(topcorner + MapManager::getInstance().worldToGrid(MapManager::getInstance().getOrigin() + Vector2f(gridSprite.getW() * .5,gridSprite.getH() * 0.25))); // right
-  moveboxVertices.push_back(topcorner + MapManager::getInstance().worldToGrid(MapManager::getInstance().getOrigin() + Vector2f(0,gridSprite.getH() * .5))); // bottom
+  moveboxVertices.push_back(topcorner + (mapOriginAsWorld + Vector2f(-gridSprite.getW() * .5,gridSprite.getH() * .25)).toIso(mapOriginAsWorld)); // left
+  moveboxVertices.push_back(topcorner + (mapOriginAsWorld + Vector2f(gridSprite.getW() * .5,gridSprite.getH() * .25)).toIso(mapOriginAsWorld)); // right
+  moveboxVertices.push_back(topcorner + (mapOriginAsWorld + Vector2f(0,gridSprite.getH() *.5)).toIso(mapOriginAsWorld)); // bottom
 
   // Assign ourself an ID from MapManager::getInstance().
   // XXX We shouldn't be referencing the MapManager::getInstance().for this. It should either be passed in or a static var
@@ -94,6 +96,8 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, 
     solid(Gamedata::getInstance().getXmlBool(name+"Solid"))
 {
 
+    Vector2f mapOriginAsWorld = MapManager::getInstance().getOrigin();
+
     // initially we are not moving
     moveDir.reserve(8);
     for(int i=0; i<8; i++)
@@ -102,17 +106,17 @@ GridElement::GridElement(const std::string& name, const Vector2f& pos, int dir, 
     }
 
     // set position
-    gridSprite.setPosition(MapManager::getInstance().gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
+    gridSprite.setPosition(gridPosition.fromIso(mapOriginAsWorld)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
 
     // fill in hitbox vertices
   moveboxVertices.reserve(4);
   Vector2f offset(gridSprite.getW() * 0.5, gridSprite.getH() * (2./3.));
-  offset += MapManager::getInstance().getOrigin();
+  offset += mapOriginAsWorld;
   Vector2f topcorner(gridPosition);
   moveboxVertices.push_back(topcorner);
-  moveboxVertices.push_back(topcorner + MapManager::getInstance().worldToGrid(MapManager::getInstance().getOrigin() + Vector2f(-gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
-  moveboxVertices.push_back(topcorner + MapManager::getInstance().worldToGrid(MapManager::getInstance().getOrigin() + Vector2f(gridSprite.getW() * .5,gridSprite.getH() * 0.25)));
-  moveboxVertices.push_back(topcorner + MapManager::getInstance().worldToGrid(MapManager::getInstance().getOrigin() + Vector2f(0,gridSprite.getH() * .5)));
+  moveboxVertices.push_back(topcorner + (mapOriginAsWorld + Vector2f(-gridSprite.getW() * .5,gridSprite.getH() * .25)).toIso(mapOriginAsWorld));
+  moveboxVertices.push_back(topcorner + (mapOriginAsWorld + Vector2f(gridSprite.getW() * .5,gridSprite.getH() * .25)).toIso(mapOriginAsWorld));
+  moveboxVertices.push_back(topcorner + (mapOriginAsWorld + Vector2f(0,gridSprite.getH() * .5)).toIso(mapOriginAsWorld));
 
   // Assign self id
   std::ostringstream sstream;
@@ -252,7 +256,7 @@ void GridElement::applyMoveDelta() {
   gridPosition += moveDelta;
 
   // set gridSprite position to that
-  gridSprite.setPosition(MapManager::getInstance().gridToWorld(gridPosition)+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
+  gridSprite.setPosition(gridPosition.fromIso(MapManager::getInstance().getOrigin())+Vector2f(-gridSprite.getW()/2,-gridSprite.getH()/2));
 
   // fire off a move event
   GameEvents::EventQueue::getInstance().push(new GameEvents::MoveEvent(getName(), getPosition(), moveDelta));
@@ -272,9 +276,9 @@ void GridElement::moveUp() {
   clearMoveDir();
   moveDir[UP] = true;
   getSprite().velocityX(0.);
-  getSprite().velocityY(-moveSpeed * (cos(26.565*3.141592653589/180) / cos(45*3.141592653589/180) * 0.5));
+  getSprite().velocityY(-moveSpeed * (cos(26.565*M_PI/180) / cos(45*M_PI/180) * 0.5));
 
-  gridVelocityX(-moveSpeed * cos(45*3.141592653589/180));
+  gridVelocityX(-moveSpeed * cos(45*M_PI/180));
   gridVelocityY(gridVelocityX());
 }
 
@@ -282,8 +286,8 @@ void GridElement::moveUpLeft() {
   clearMoveDir();
   moveDir[UPLEFT] = true;
 
-  getSprite().velocityX(-moveSpeed * cos(26.565*3.141592653589/180));
-  getSprite().velocityY(-moveSpeed * sin(26.565*3.141592653589/180));
+  getSprite().velocityX(-moveSpeed * cos(26.565*M_PI/180));
+  getSprite().velocityY(-moveSpeed * sin(26.565*M_PI/180));
 
   gridVelocityX(0.);
   gridVelocityY(-moveSpeed);
@@ -293,8 +297,8 @@ void GridElement::moveUpRight() {
   clearMoveDir();
   moveDir[UPRIGHT] = true;
 
-  getSprite().velocityX(moveSpeed * cos(26.565*3.141592653589/180));
-  getSprite().velocityY(-moveSpeed * sin(26.565*3.141592653589/180));
+  getSprite().velocityX(moveSpeed * cos(26.565*M_PI/180));
+  getSprite().velocityY(-moveSpeed * sin(26.565*M_PI/180));
 
   gridVelocityX(-moveSpeed);
   gridVelocityY(0.);
@@ -306,9 +310,9 @@ void GridElement::moveDown() {
 
   getSprite().velocityX(0.);
   //getSprite().velocityY(moveSpeed/sqrt(2));
-  getSprite().velocityY(moveSpeed * (cos(26.565*3.141592653589/180) / cos(45*3.141592653589/180) * 0.5));
+  getSprite().velocityY(moveSpeed * (cos(26.565*M_PI/180) / cos(45*M_PI/180) * 0.5));
 
-  gridVelocityX(moveSpeed * cos(45*3.141592653589/180));
+  gridVelocityX(moveSpeed * cos(45*M_PI/180));
   gridVelocityY(gridVelocityX());
 }
 
@@ -316,8 +320,8 @@ void GridElement::moveDownLeft() {
   clearMoveDir();
   moveDir[DOWNLEFT] = true;
 
-  getSprite().velocityX(-moveSpeed * cos(26.565*3.141592653589/180));
-  getSprite().velocityY(moveSpeed * sin(26.565*3.141592653589/180));
+  getSprite().velocityX(-moveSpeed * cos(26.565*M_PI/180));
+  getSprite().velocityY(moveSpeed * sin(26.565*M_PI/180));
 
   gridVelocityX(moveSpeed);
   gridVelocityY(0.);
@@ -327,8 +331,8 @@ void GridElement::moveDownRight() {
   clearMoveDir();
   moveDir[DOWNRIGHT] = true;
 
-  getSprite().velocityX(moveSpeed * cos(26.565*3.141592653589/180));
-  getSprite().velocityY(moveSpeed * sin(26.565*3.141592653589/180));
+  getSprite().velocityX(moveSpeed * cos(26.565*M_PI/180));
+  getSprite().velocityY(moveSpeed * sin(26.565*M_PI/180));
 
   gridVelocityX(0.);
   gridVelocityY(moveSpeed);
@@ -338,10 +342,10 @@ void GridElement::moveLeft() {
   clearMoveDir();
   moveDir[LEFT] = true;
 
-  getSprite().velocityX(-moveSpeed *(cos(26.565*3.141592653589/180) / cos(45*3.141592653589/180)));
+  getSprite().velocityX(-moveSpeed *(cos(26.565*M_PI/180) / cos(45*M_PI/180)));
   getSprite().velocityY(0.);
 
-  gridVelocityX(moveSpeed * cos(45*3.141592653589/180));
+  gridVelocityX(moveSpeed * cos(45*M_PI/180));
   gridVelocityY(-gridVelocityX());
 }
 
@@ -349,10 +353,10 @@ void GridElement::moveRight() {
   clearMoveDir();
   moveDir[RIGHT] = true;
 
-  getSprite().velocityX(moveSpeed *(cos(26.565*3.141592653589/180) / cos(45*3.141592653589/180)));
+  getSprite().velocityX(moveSpeed *(cos(26.565*M_PI/180) / cos(45*M_PI/180)));
   getSprite().velocityY(0.);
 
-  gridVelocityX(-moveSpeed * cos(45*3.141592653589/180));
+  gridVelocityX(-moveSpeed * cos(45*M_PI/180));
   gridVelocityY(-gridVelocityX());
 }
 
@@ -366,8 +370,8 @@ void GridElement::stop() {
 
 // run at position
 void GridElement::moveTowards(Vector2f target){
-  Vector2f worldDir = target - MapManager::getInstance().gridToWorld(gridPosition);
-  Vector2f gridDir = MapManager::getInstance().worldToGrid(target) - gridPosition;
+  Vector2f worldDir = target - gridPosition.fromIso(MapManager::getInstance().getOrigin());
+  Vector2f gridDir = target.toIso(MapManager::getInstance().getOrigin()) - gridPosition;
   worldDir = worldDir.normalize();
   gridDir = gridDir.normalize();
 
@@ -393,7 +397,7 @@ void GridElement::shoot() {
         int i=0;
         for(i; i<moveDir.size(); ++i) { if(moveDir[i]) break; }
 
-        GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", MapManager::getInstance().gridToWorld(gridPosition), i, Vector2f(0,0), BULLET_STRAT));
+        GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", gridPosition.fromIso(MapManager::getInstance().getOrigin()), i, Vector2f(0,0), BULLET_STRAT));
         SoundManager::getInstance()[1];
     }
 }
@@ -406,7 +410,7 @@ void GridElement::shoot(Vector2f target) {
 
         shootTimer = curTicks;
 
-        GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", MapManager::getInstance().gridToWorld(gridPosition), -1, target, BULLET_STRAT));
+        GameEvents::EventQueue::getInstance().push(new GameEvents::CreateEvent(getName(), "snowball", gridPosition.fromIso(MapManager::getInstance().getOrigin()), -1, target, BULLET_STRAT));
         SoundManager::getInstance()[1];
     }
 }

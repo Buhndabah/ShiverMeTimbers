@@ -3,6 +3,8 @@
 #include <iostream>
 #include "vector2f.h"
 
+#define ISO_ANGLE 26.565
+
 Vector2f& Vector2f::operator=(const Vector2f& rhs) {
   if ( this != &rhs ) {
 	  v[0] = rhs[0];
@@ -107,3 +109,25 @@ std::ostream &operator<<(std::ostream &output, const Vector2f &v) {
 	return output;
 }
 
+Vector2f Vector2f::fromIso(const Vector2f& origin) const {
+    Vector2f isoVec = origin;
+    
+    isoVec[0] -= v[0] * cos(ISO_ANGLE * M_PI/180);
+    isoVec[0] += v[1] * cos(ISO_ANGLE * M_PI/180);
+    isoVec[1] += v[0] * sin(ISO_ANGLE * M_PI/180);
+    isoVec[1] += v[1] * sin(ISO_ANGLE * M_PI/180);
+
+    return isoVec;
+}
+
+Vector2f Vector2f::toIso(const Vector2f& origin) const {
+    Vector2f diff = *this - origin;
+    Vector2f isoVec(0,0);
+
+    isoVec[0] -= diff[0] / cos(ISO_ANGLE * M_PI/180) * 0.5;
+    isoVec[0] += diff[1] / cos(ISO_ANGLE * M_PI/180);
+    isoVec[1] += diff[0] / cos(ISO_ANGLE * M_PI/180) * 0.5;
+    isoVec[1] += diff[1] / cos(ISO_ANGLE * M_PI/180);
+
+    return isoVec;
+}

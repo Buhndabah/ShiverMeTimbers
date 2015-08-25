@@ -43,8 +43,6 @@ public:
         return numGridElements;
     }
     Vector2f getOrigin() const;
-    Vector2f gridToWorld(Vector2f) const;
-    Vector2f worldToGrid(Vector2f) const;
     int getIndexAt(const Vector2f&) const;
 
     GridElement* getPlayer() const { return player; }

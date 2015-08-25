@@ -103,10 +103,6 @@ bool Manager::play() {
 // go until told to quit
   while ( not done ) {
 
-//std::cout << "display: " << player->getSprite().getPosition() << std::endl;
-//std::cout << "grid: " << player->getGridPosition() << std::endl;
-
-
     // move the player depending on what keys are currently down
     
     // opposites - stop

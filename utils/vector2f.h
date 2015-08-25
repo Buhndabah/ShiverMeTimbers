@@ -29,18 +29,22 @@ public:
   const Vector2f &operator/=(float scale);
   const Vector2f &operator+=(const Vector2f &other);
   const Vector2f &operator-=(const Vector2f &other);
-		
+
   float magnitude() const;
   float magnitudeSquared() const;
   Vector2f normalize() const;
   float dot(const Vector2f &other) const;
   Vector2f cross(const Vector2f &other) const;
   Vector2f& operator=(const Vector2f&);
+
+  Vector2f toIso(const Vector2f&) const;
+  Vector2f fromIso(const Vector2f&) const;
 private:
   float v[2];
 };
 
 Vector2f operator*(float scale, const Vector2f &v);
 std::ostream &operator<<(std::ostream &output, const Vector2f &v);
+
 
 #endif
